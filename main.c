@@ -1,4 +1,6 @@
-#include "mylib.h"
+#include <stdlib.h>
+#include <stdio.h>
+#include "myLib.h"
 #include "game.h"
 
 //Prototypes
