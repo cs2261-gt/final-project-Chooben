@@ -27,10 +27,12 @@ unsigned short oldButtons;
 
 int seed;
 
+//Run through whole game
 int main() {
 
     while(1) {
         
+        //Update buttons
         oldButtons = buttons;
         buttons = BUTTONS;
 
@@ -100,16 +102,33 @@ void game(){
 }   
 //Setup pause menu
 void goToPause(){
+
     state = PAUSE;
 }
 //Pause menu logic
-void pause(){}
+void pause(){
+
+    waitForVBlank();
+
+    //Go back to game from pause
+    if (BUTTON_PRESSED(BUTTON_START))
+        goToGame();
+    //Restart game from pause
+    else if (BUTTON_PRESSED(BUTTON_SELECT))
+        goToStart();
+}
 //Setup win screen
 void goToWin(){
+
     state = WIN;
 }
 //Win screen
 void win(){
+
+    //Restart game from win
+    if (BUTTON_PRESSED(BUTTON_START))
+        goToStart();
+}
 }
 //Setup lose screen
 void goToLose(){
@@ -118,4 +137,9 @@ void goToLose(){
 }
 //Lose screen
 void lose(){
+
+    //Restart game from loss
+    if (BUTTON_PRESSED(BUTTON_START))
+        goToStart();
+}
 }
