@@ -30,6 +30,8 @@ int seed;
 //Run through whole game
 int main() {
 
+    initialize();
+
     while(1) {
         
         //Update buttons
@@ -85,23 +87,33 @@ void start(){
         srand(seed);
 
         goToGame();
+        initGame();
     }
 }
 //Setup game
 void goToGame(){
+
+    waitForVBlank();
 
     state = GAME;
 }
 //Game logic
 void game(){
 
+    updateGame();
+    drawGame();
+
+    //Go to pause screen
     if(BUTTON_PRESSED(BUTTON_START))
         goToPause();
+    //Loss condition
     if(player.health == 0)
         goToLose();
 }   
 //Setup pause menu
 void goToPause(){
+
+    waitForVBlank();
 
     state = PAUSE;
 }
@@ -125,11 +137,13 @@ void goToWin(){
 //Win screen
 void win(){
 
+    waitForVBlank();
+
     //Restart game from win
     if (BUTTON_PRESSED(BUTTON_START))
         goToStart();
 }
-}
+
 //Setup lose screen
 void goToLose(){
 
@@ -138,8 +152,9 @@ void goToLose(){
 //Lose screen
 void lose(){
 
+    waitForVBlank();
+
     //Restart game from loss
     if (BUTTON_PRESSED(BUTTON_START))
         goToStart();
-}
 }

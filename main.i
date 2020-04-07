@@ -1402,9 +1402,13 @@ unsigned short oldButtons;
 
 int seed;
 
+
 int main() {
 
+    initialize();
+
     while(1) {
+
 
         oldButtons = buttons;
         buttons = (*(volatile unsigned short *)0x04000130);
@@ -1434,6 +1438,8 @@ int main() {
 void initialize() {
 
     (*(unsigned short *)0x4000000) = 0;
+
+    initGame();
 
     goToStart();
 }
@@ -1468,24 +1474,49 @@ void goToGame(){
 
 void game(){
 
+    waitForVBlank();
+
+
     if((!(~(oldButtons)&((1<<3))) && (~buttons & ((1<<3)))))
         goToPause();
+
     if(player.health == 0)
         goToLose();
 }
 
 void goToPause(){
+
+    waitForVBlank();
+
     state = PAUSE;
 }
 
-void pause(){}
+void pause(){
+
+    waitForVBlank();
+
+
+    if ((!(~(oldButtons)&((1<<3))) && (~buttons & ((1<<3)))))
+        goToGame();
+
+    else if ((!(~(oldButtons)&((1<<2))) && (~buttons & ((1<<2)))))
+        goToStart();
+}
 
 void goToWin(){
+
     state = WIN;
 }
 
 void win(){
+
+    waitForVBlank();
+
+
+    if ((!(~(oldButtons)&((1<<3))) && (~buttons & ((1<<3)))))
+        goToStart();
 }
+
 
 void goToLose(){
 
@@ -1493,4 +1524,10 @@ void goToLose(){
 }
 
 void lose(){
+
+    waitForVBlank();
+
+
+    if ((!(~(oldButtons)&((1<<3))) && (~buttons & ((1<<3)))))
+        goToStart();
 }
