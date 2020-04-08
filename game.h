@@ -1,12 +1,3 @@
-//Player struct
-typedef struct {
-    int col;
-    int row;
-    int width;
-    int height;
-    int health;
-}PLAYER;
-
 //Bullet struct
 typedef struct {
     int col;
@@ -29,7 +20,8 @@ typedef struct {
 #define ENEMYCOUNT 6
 
 //Variables
-extern PLAYER player;
+extern ANISPRITE player;
+extern int health;
 extern BULLET bullets[BULLETCOUNT];
 extern ENEMY enemies[ENEMYCOUNT];
 extern int enemiesRemaining;
@@ -41,3 +33,4 @@ extern OBJ_ATTR shadowOAM[128];
 void initGame();
 void updateGame();
 void drawGame();
+void initPlayer();

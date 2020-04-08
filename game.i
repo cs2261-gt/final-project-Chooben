@@ -928,15 +928,6 @@ typedef struct {
     int row;
     int width;
     int height;
-    int health;
-}PLAYER;
-
-
-typedef struct {
-    int col;
-    int row;
-    int width;
-    int height;
 }BULLET;
 
 
@@ -953,7 +944,8 @@ typedef struct {
 
 
 
-extern PLAYER player;
+extern ANISPRITE player;
+extern int health;
 extern BULLET bullets[2];
 extern ENEMY enemies[6];
 extern int enemiesRemaining;
@@ -965,10 +957,12 @@ extern OBJ_ATTR shadowOAM[128];
 void initGame();
 void updateGame();
 void drawGame();
+void initPlayer();
 # 4 "game.c" 2
 
 
-PLAYER player;
+ANISPRITE player;
+int health;
 BULLET bullets[2];
 ENEMY enemies[6];
 int enemiesRemaining;
@@ -979,6 +973,11 @@ OBJ_ATTR shadowOAM[128];
 
 
 void initGame() {
+
+    hOff = 0;
+    vOff = 0;
+
+    initPlayer();
 }
 
 
@@ -987,4 +986,14 @@ void updateGame() {
 
 
 void drawGame() {
+
+    waitForVBlank();
+    DMANow(3, shadowOAM, ((OBJ_ATTR*)(0x7000000)), 128 * 4);
+
+    (*(volatile unsigned short *)0x04000010) = hOff;
+    (*(volatile unsigned short *)0x04000012) = vOff;
+}
+
+void initPlayer() {
+    health = 3;
 }

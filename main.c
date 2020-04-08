@@ -2,6 +2,11 @@
 #include <stdio.h>
 #include "myLib.h"
 #include "game.h"
+#include "startScreen.h"
+#include "background.h"
+#include "pause.h"
+#include "win.h"
+#include "lose.h"
 
 //Prototypes
 void initialize();
@@ -62,7 +67,11 @@ int main() {
 //Setup game
 void initialize() {
 
-    REG_DISPCTL = MODE0;
+    REG_DISPCTL = MODE0 | BG0_ENABLE | SPRITE_ENABLE;
+
+    REG_BG0CNT = BG_CHARBLOCK(0) | BG_SCREENBLOCK(31) | BG_SIZE_SMALL;
+
+    buttons = BUTTONS;
 
     goToStart();
 }
@@ -71,6 +80,15 @@ void initialize() {
 void goToStart(){
 
     seed = 0;
+
+    DMANow(3, startScreenPal, PALETTE, 256);
+    DMANow(3, startScreenTiles, &CHARBLOCK[0], startScreenTilesLen/2);
+    DMANow(3, startScreenMap, &SCREENBLOCK[31], startScreenMapLen/2);
+
+    REG_BG0VOFF = vOff;
+    REG_BG0HOFF = hOff;
+
+    DMANow(3, shadowOAM, OAM, 128 * 4);
 
     state = START;
 }
@@ -95,6 +113,13 @@ void goToGame(){
 
     waitForVBlank();
 
+    DMANow(3, backgroundPal, PALETTE, 256);
+    DMANow(3, backgroundTiles, &CHARBLOCK[0], backgroundTilesLen/2);
+    DMANow(3, backgroundMap, &SCREENBLOCK[31], backgroundMapLen/2);    
+
+    REG_BG0VOFF = vOff;
+    REG_BG0HOFF = hOff;
+
     state = GAME;
 }
 //Game logic
@@ -107,13 +132,20 @@ void game(){
     if(BUTTON_PRESSED(BUTTON_START))
         goToPause();
     //Loss condition
-    if(player.health == 0)
+    if(health == 0)
         goToLose();
 }   
 //Setup pause menu
 void goToPause(){
 
     waitForVBlank();
+
+    DMANow(3, pausePal, PALETTE, 256);
+    DMANow(3, pauseTiles, &CHARBLOCK[0], pauseTilesLen/2);
+    DMANow(3, pauseMap, &SCREENBLOCK[31], pauseMapLen/2);
+
+    REG_BG0VOFF = vOff;
+    REG_BG0HOFF = hOff;
 
     state = PAUSE;
 }
@@ -128,9 +160,19 @@ void pause(){
     //Restart game from pause
     else if (BUTTON_PRESSED(BUTTON_SELECT))
         goToStart();
+    else if (BUTTON_PRESSED(BUTTON_B))
+        goToLose();
+    else if (BUTTON_PRESSED(BUTTON_A))
+        goToWin();
 }
 //Setup win screen
 void goToWin(){
+
+    waitForVBlank();
+
+    DMANow(3, winPal, PALETTE, 256);
+    DMANow(3, winTiles, &CHARBLOCK[0], winTilesLen/2);
+    DMANow(3, winMap, &SCREENBLOCK[31], winMapLen/2);
 
     state = WIN;
 }
@@ -146,6 +188,12 @@ void win(){
 
 //Setup lose screen
 void goToLose(){
+
+    waitForVBlank();
+
+    DMANow(3, losePal, PALETTE, 256);
+    DMANow(3, loseTiles, &CHARBLOCK[0], loseTilesLen/2);
+    DMANow(3, loseMap, &SCREENBLOCK[31], loseMapLen/2);
 
     state = LOSE;
 }
