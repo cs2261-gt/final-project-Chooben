@@ -7,6 +7,7 @@
 #include "pause.h"
 #include "win.h"
 #include "lose.h"
+#include "spritesheet.h"
 
 //Prototypes
 void initialize();
@@ -85,8 +86,8 @@ void goToStart(){
     DMANow(3, startScreenTiles, &CHARBLOCK[0], startScreenTilesLen/2);
     DMANow(3, startScreenMap, &SCREENBLOCK[31], startScreenMapLen/2);
 
-    REG_BG0VOFF = vOff;
-    REG_BG0HOFF = hOff;
+    REG_BG0VOFF = 0;
+    REG_BG0HOFF = 0;
 
     DMANow(3, shadowOAM, OAM, 128 * 4);
 
@@ -113,12 +114,18 @@ void goToGame(){
 
     waitForVBlank();
 
+    //Setup game background
     DMANow(3, backgroundPal, PALETTE, 256);
     DMANow(3, backgroundTiles, &CHARBLOCK[0], backgroundTilesLen/2);
     DMANow(3, backgroundMap, &SCREENBLOCK[31], backgroundMapLen/2);    
 
     REG_BG0VOFF = vOff;
     REG_BG0HOFF = hOff;
+
+    DMANow(3, spritesheetPal, SPRITEPALETTE, spritesheetPalLen/2);
+    DMANow(3, spritesheetTiles, & CHARBLOCK[4], spritesheetTilesLen/2);
+    hideSprites();
+    DMANow(3, shadowOAM, OAM, 128*4);
 
     state = GAME;
 }
@@ -140,12 +147,14 @@ void goToPause(){
 
     waitForVBlank();
 
+    hideSprites();
+
     DMANow(3, pausePal, PALETTE, 256);
     DMANow(3, pauseTiles, &CHARBLOCK[0], pauseTilesLen/2);
     DMANow(3, pauseMap, &SCREENBLOCK[31], pauseMapLen/2);
 
-    REG_BG0VOFF = vOff;
-    REG_BG0HOFF = hOff;
+    REG_BG0VOFF = 0;
+    REG_BG0HOFF = 0;
 
     state = PAUSE;
 }
@@ -153,6 +162,8 @@ void goToPause(){
 void pause(){
 
     waitForVBlank();
+
+    hideSprites();
 
     //Go back to game from pause
     if (BUTTON_PRESSED(BUTTON_START))
@@ -174,6 +185,10 @@ void goToWin(){
     DMANow(3, winTiles, &CHARBLOCK[0], winTilesLen/2);
     DMANow(3, winMap, &SCREENBLOCK[31], winMapLen/2);
 
+    
+    REG_BG0VOFF = 0;
+    REG_BG0HOFF = 0;
+
     state = WIN;
 }
 //Win screen
@@ -194,6 +209,9 @@ void goToLose(){
     DMANow(3, losePal, PALETTE, 256);
     DMANow(3, loseTiles, &CHARBLOCK[0], loseTilesLen/2);
     DMANow(3, loseMap, &SCREENBLOCK[31], loseMapLen/2);
+
+    REG_BG0VOFF = 0;
+    REG_BG0HOFF = 0;
 
     state = LOSE;
 }

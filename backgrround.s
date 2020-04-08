@@ -8,16 +8,16 @@
 	.eabi_attribute 30, 2
 	.eabi_attribute 34, 0
 	.eabi_attribute 18, 4
-	.file	"background.c"
+	.file	"backgrround.c"
 	.text
-	.global	backgroundPal
-	.global	backgroundMap
-	.global	backgroundTiles
+	.global	backgrroundPal
+	.global	backgrroundMap
+	.global	backgrroundTiles
 	.section	.rodata
 	.align	2
-	.type	backgroundPal, %object
-	.size	backgroundPal, 512
-backgroundPal:
+	.type	backgrroundPal, %object
+	.size	backgrroundPal, 512
+backgrroundPal:
 	.short	31775
 	.short	19150
 	.short	9800
@@ -274,9 +274,9 @@ backgroundPal:
 	.short	0
 	.short	0
 	.short	0
-	.type	backgroundMap, %object
-	.size	backgroundMap, 2048
-backgroundMap:
+	.type	backgrroundMap, %object
+	.size	backgrroundMap, 2048
+backgrroundMap:
 	.short	1
 	.short	1
 	.short	1
@@ -1301,9 +1301,9 @@ backgroundMap:
 	.short	1
 	.short	1
 	.short	1
-	.type	backgroundTiles, %object
-	.size	backgroundTiles, 96
-backgroundTiles:
+	.type	backgrroundTiles, %object
+	.size	backgrroundTiles, 96
+backgrroundTiles:
 	.short	0
 	.short	0
 	.short	0

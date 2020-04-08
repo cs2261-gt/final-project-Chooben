@@ -928,6 +928,7 @@ typedef struct {
     int row;
     int width;
     int height;
+    int damage;
 }BULLET;
 
 
@@ -936,18 +937,14 @@ typedef struct {
     int row;
     int width;
     int height;
+    int health;
     int active;
 }ENEMY;
-
-
-
-
-
-
+# 28 "game.h"
 extern ANISPRITE player;
 extern int health;
-extern BULLET bullets[2];
-extern ENEMY enemies[6];
+extern BULLET bullets[1];
+extern ENEMY enemies[1];
 extern int enemiesRemaining;
 extern int hOff;
 extern int vOff;
@@ -958,18 +955,22 @@ void initGame();
 void updateGame();
 void drawGame();
 void initPlayer();
+void updatePlayer();
+void drawPlayer();
+void animatePlayer();
 # 4 "game.c" 2
 
 
 ANISPRITE player;
 int health;
-BULLET bullets[2];
-ENEMY enemies[6];
+BULLET bullets[1];
+ENEMY enemies[1];
 int enemiesRemaining;
-
 int hOff;
 int vOff;
 OBJ_ATTR shadowOAM[128];
+
+enum{PFRONT, PBACK, PLEFT, PRIGHT, PIDLE};
 
 
 void initGame() {
@@ -980,12 +981,14 @@ void initGame() {
     initPlayer();
 }
 
-
 void updateGame() {
+
+    updatePlayer();
 }
 
-
 void drawGame() {
+
+    drawPlayer();
 
     waitForVBlank();
     DMANow(3, shadowOAM, ((OBJ_ATTR*)(0x7000000)), 128 * 4);
@@ -995,5 +998,96 @@ void drawGame() {
 }
 
 void initPlayer() {
+
+    player.width = 16;
+    player.height = 16;
+    player.rdel = 1;
+    player.cdel = 1;
+    player.worldRow = 20;
+    player.worldCol = 20;
+    player.curFrame = 0;
+    player.numFrames = 3;
+    player.aniState = PFRONT;
     health = 3;
+}
+
+void updatePlayer() {
+
+    if((~((*(volatile unsigned short *)0x04000130)) & ((1<<6)))) {
+        if(player.worldRow > 0) {
+            player.worldRow-=player.rdel;
+        }
+        if((vOff >- 0) && (player.screenRow < 160/2)) {
+            vOff--;
+        }
+    }
+    if((~((*(volatile unsigned short *)0x04000130)) & ((1<<7)))) {
+        if(player.worldRow < 256 - player.height) {
+            player.worldRow+=player.rdel;
+        }
+        if((vOff < 256 - 160) && (player.screenRow > 160/2)) {
+            vOff++;
+        }
+    }
+    if((~((*(volatile unsigned short *)0x04000130)) & ((1<<5)))) {
+        if(player.worldCol > 0) {
+            player.worldCol-=player.cdel;
+        }
+        if((hOff >= 0) && (player.screenCol < 240/2)) {
+            hOff--;
+        }
+    }
+    if((~((*(volatile unsigned short *)0x04000130)) & ((1<<4)))) {
+        if(player.worldCol < 256 - player.width) {
+            player.worldCol+=player.cdel;
+        }
+        if((hOff < 256 - 240) && (player.screenCol > 240/2)) {
+            hOff++;
+        }
+    }
+
+
+    player.screenRow = player.worldRow - vOff;
+    player.screenCol = player.worldCol - hOff;
+
+
+    animatePlayer();
+}
+
+void animatePlayer() {
+
+    player.prevAniState = player.aniState;
+    player.aniState = PIDLE;
+
+    if(player.aniCounter % 20 == 0) {
+        player.curFrame = (player.curFrame + 1) % player.numFrames;
+    }
+
+    if((~((*(volatile unsigned short *)0x04000130)) & ((1<<6))))
+        player.aniState = PBACK;
+    if((~((*(volatile unsigned short *)0x04000130)) & ((1<<7))))
+        player.aniState = PFRONT;
+    if((~((*(volatile unsigned short *)0x04000130)) & ((1<<5))))
+        player.aniState = PLEFT;
+    if((~((*(volatile unsigned short *)0x04000130)) & ((1<<4))))
+        player.aniState = PRIGHT;
+
+    if(player.aniState == PIDLE) {
+        player.curFrame = 0;
+        player.aniCounter = 0;
+        player.aniState = player.prevAniState;
+    } else {
+        player.aniCounter++;
+    }
+}
+
+void drawPlayer() {
+
+    if (player.hide) {
+        shadowOAM[0].attr0 |= (2<<8);
+    } else {
+        shadowOAM[0].attr0 = (0xFF & player.screenRow) | (0<<14);
+        shadowOAM[0].attr1 = (0x1FF & player.screenCol) | (1<<14);
+        shadowOAM[0].attr2 = ((0)<<12) | ((player.curFrame*2)*32+(player.aniState*2));
+    }
 }

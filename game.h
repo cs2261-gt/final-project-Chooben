@@ -4,6 +4,7 @@ typedef struct {
     int row;
     int width;
     int height;
+    int damage;
 }BULLET;
 
 //Enemy struct
@@ -12,12 +13,16 @@ typedef struct {
     int row;
     int width;
     int height;
+    int health;
     int active;
 }ENEMY;
 
 //Constants
-#define BULLETCOUNT 2
-#define ENEMYCOUNT 6
+#define MAPHEIGHT 256
+#define MAPWIDTH 256
+#define BULLETCOUNT 1
+#define ENEMYCOUNT 1
+
 
 //Variables
 extern ANISPRITE player;
@@ -34,3 +39,6 @@ void initGame();
 void updateGame();
 void drawGame();
 void initPlayer();
+void updatePlayer();
+void drawPlayer();
+void animatePlayer();

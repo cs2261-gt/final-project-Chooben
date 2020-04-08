@@ -1,21 +1,21 @@
 
-//{{BLOCK(background)
+//{{BLOCK(backgrround)
 
 //======================================================================
 //
-//	background, 256x256@4, 
+//	backgrround, 256x256@4, 
 //	+ palette 256 entries, not compressed
 //	+ 3 tiles (t|f|p reduced) not compressed
 //	+ regular map (in SBBs), not compressed, 32x32 
 //	Total size: 512 + 96 + 2048 = 2656
 //
-//	Time-stamp: 2020-04-08, 18:42:17
+//	Time-stamp: 2020-04-08, 18:41:52
 //	Exported by Cearn's GBA Image Transmogrifier, v0.8.3
 //	( http://www.coranac.com/projects/#grit )
 //
 //======================================================================
 
-const unsigned short backgroundTiles[48] __attribute__((aligned(4)))=
+const unsigned short backgrroundTiles[48] __attribute__((aligned(4)))=
 {
 	0x0000,0x0000,0x0000,0x0000,0x0000,0x0000,0x0000,0x0000,
 	0x0000,0x0000,0x0000,0x0000,0x0000,0x0000,0x0000,0x0000,
@@ -25,7 +25,7 @@ const unsigned short backgroundTiles[48] __attribute__((aligned(4)))=
 	0xBBBB,0xBBBB,0xBBBB,0xBBBB,0xBBBB,0xBBBB,0xBBBB,0xBBBB,
 };
 
-const unsigned short backgroundMap[1024] __attribute__((aligned(4)))=
+const unsigned short backgrroundMap[1024] __attribute__((aligned(4)))=
 {
 	0x0001,0x0001,0x0001,0x0001,0x0001,0x0001,0x0001,0x0001,
 	0x0001,0x0001,0x0001,0x0001,0x0001,0x0001,0x0001,0x0001,
@@ -172,7 +172,7 @@ const unsigned short backgroundMap[1024] __attribute__((aligned(4)))=
 	0x0001,0x0001,0x0001,0x0001,0x0001,0x0001,0x0001,0x0001,
 };
 
-const unsigned short backgroundPal[256] __attribute__((aligned(4)))=
+const unsigned short backgrroundPal[256] __attribute__((aligned(4)))=
 {
 	0x7C1F,0x4ACE,0x2648,0x5794,0x1D8F,0x3125,0x46B6,0x45A8,
 	0x1565,0x3633,0x14A4,0x3677,0x25D2,0x152C,0x19C6,0x0000,
@@ -211,4 +211,4 @@ const unsigned short backgroundPal[256] __attribute__((aligned(4)))=
 	0x0000,0x0000,0x0000,0x0000,0x0000,0x0000,0x0000,0x0000,
 };
 
-//}}BLOCK(background)
+//}}BLOCK(backgrround)

@@ -1339,6 +1339,7 @@ typedef struct {
     int row;
     int width;
     int height;
+    int damage;
 }BULLET;
 
 
@@ -1347,18 +1348,14 @@ typedef struct {
     int row;
     int width;
     int height;
+    int health;
     int active;
 }ENEMY;
-
-
-
-
-
-
+# 28 "game.h"
 extern ANISPRITE player;
 extern int health;
-extern BULLET bullets[2];
-extern ENEMY enemies[6];
+extern BULLET bullets[1];
+extern ENEMY enemies[1];
 extern int enemiesRemaining;
 extern int hOff;
 extern int vOff;
@@ -1369,10 +1366,13 @@ void initGame();
 void updateGame();
 void drawGame();
 void initPlayer();
+void updatePlayer();
+void drawPlayer();
+void animatePlayer();
 # 5 "main.c" 2
 # 1 "startScreen.h" 1
 # 22 "startScreen.h"
-extern const unsigned short startScreenTiles[800];
+extern const unsigned short startScreenTiles[832];
 
 
 extern const unsigned short startScreenMap[1024];
@@ -1382,7 +1382,7 @@ extern const unsigned short startScreenPal[256];
 # 6 "main.c" 2
 # 1 "background.h" 1
 # 22 "background.h"
-extern const unsigned short backgroundTiles[32];
+extern const unsigned short backgroundTiles[48];
 
 
 extern const unsigned short backgroundMap[1024];
@@ -1392,7 +1392,7 @@ extern const unsigned short backgroundPal[256];
 # 7 "main.c" 2
 # 1 "pause.h" 1
 # 22 "pause.h"
-extern const unsigned short pauseTiles[592];
+extern const unsigned short pauseTiles[944];
 
 
 extern const unsigned short pauseMap[1024];
@@ -1402,7 +1402,7 @@ extern const unsigned short pausePal[256];
 # 8 "main.c" 2
 # 1 "win.h" 1
 # 22 "win.h"
-extern const unsigned short winTiles[688];
+extern const unsigned short winTiles[752];
 
 
 extern const unsigned short winMap[1024];
@@ -1420,6 +1420,13 @@ extern const unsigned short loseMap[1024];
 
 extern const unsigned short losePal[256];
 # 10 "main.c" 2
+# 1 "spritesheet.h" 1
+# 21 "spritesheet.h"
+extern const unsigned short spritesheetTiles[16384];
+
+
+extern const unsigned short spritesheetPal[256];
+# 11 "main.c" 2
 
 
 void initialize();
@@ -1495,11 +1502,11 @@ void goToStart(){
     seed = 0;
 
     DMANow(3, startScreenPal, ((unsigned short *)0x5000000), 256);
-    DMANow(3, startScreenTiles, &((charblock *)0x6000000)[0], 1600/2);
+    DMANow(3, startScreenTiles, &((charblock *)0x6000000)[0], 1664/2);
     DMANow(3, startScreenMap, &((screenblock *)0x6000000)[31], 2048/2);
 
-    (*(volatile unsigned short *)0x04000012) = vOff;
-    (*(volatile unsigned short *)0x04000010) = hOff;
+    (*(volatile unsigned short *)0x04000012) = 0;
+    (*(volatile unsigned short *)0x04000010) = 0;
 
     DMANow(3, shadowOAM, ((OBJ_ATTR*)(0x7000000)), 128 * 4);
 
@@ -1526,12 +1533,18 @@ void goToGame(){
 
     waitForVBlank();
 
+
     DMANow(3, backgroundPal, ((unsigned short *)0x5000000), 256);
-    DMANow(3, backgroundTiles, &((charblock *)0x6000000)[0], 64/2);
+    DMANow(3, backgroundTiles, &((charblock *)0x6000000)[0], 96/2);
     DMANow(3, backgroundMap, &((screenblock *)0x6000000)[31], 2048/2);
 
     (*(volatile unsigned short *)0x04000012) = vOff;
     (*(volatile unsigned short *)0x04000010) = hOff;
+
+    DMANow(3, spritesheetPal, ((unsigned short *)0x5000200), 512/2);
+    DMANow(3, spritesheetTiles, & ((charblock *)0x6000000)[4], 32768/2);
+    hideSprites();
+    DMANow(3, shadowOAM, ((OBJ_ATTR*)(0x7000000)), 128*4);
 
     state = GAME;
 }
@@ -1553,12 +1566,14 @@ void goToPause(){
 
     waitForVBlank();
 
+    hideSprites();
+
     DMANow(3, pausePal, ((unsigned short *)0x5000000), 256);
-    DMANow(3, pauseTiles, &((charblock *)0x6000000)[0], 1184/2);
+    DMANow(3, pauseTiles, &((charblock *)0x6000000)[0], 1888/2);
     DMANow(3, pauseMap, &((screenblock *)0x6000000)[31], 2048/2);
 
-    (*(volatile unsigned short *)0x04000012) = vOff;
-    (*(volatile unsigned short *)0x04000010) = hOff;
+    (*(volatile unsigned short *)0x04000012) = 0;
+    (*(volatile unsigned short *)0x04000010) = 0;
 
     state = PAUSE;
 }
@@ -1566,6 +1581,8 @@ void goToPause(){
 void pause(){
 
     waitForVBlank();
+
+    hideSprites();
 
 
     if ((!(~(oldButtons)&((1<<3))) && (~buttons & ((1<<3)))))
@@ -1584,8 +1601,12 @@ void goToWin(){
     waitForVBlank();
 
     DMANow(3, winPal, ((unsigned short *)0x5000000), 256);
-    DMANow(3, winTiles, &((charblock *)0x6000000)[0], 1376/2);
+    DMANow(3, winTiles, &((charblock *)0x6000000)[0], 1504/2);
     DMANow(3, winMap, &((screenblock *)0x6000000)[31], 2048/2);
+
+
+    (*(volatile unsigned short *)0x04000012) = 0;
+    (*(volatile unsigned short *)0x04000010) = 0;
 
     state = WIN;
 }
@@ -1607,6 +1628,9 @@ void goToLose(){
     DMANow(3, losePal, ((unsigned short *)0x5000000), 256);
     DMANow(3, loseTiles, &((charblock *)0x6000000)[0], 1408/2);
     DMANow(3, loseMap, &((screenblock *)0x6000000)[31], 2048/2);
+
+    (*(volatile unsigned short *)0x04000012) = 0;
+    (*(volatile unsigned short *)0x04000010) = 0;
 
     state = LOSE;
 }
