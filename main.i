@@ -1340,6 +1340,9 @@ typedef struct {
     int width;
     int height;
     int damage;
+    int del;
+    int active;
+    int direction;
 }BULLET;
 
 
@@ -1350,8 +1353,10 @@ typedef struct {
     int height;
     int health;
     int active;
+    int cdel;
+    int rdel;
 }ENEMY;
-# 28 "game.h"
+# 33 "game.h"
 extern ANISPRITE player;
 extern int health;
 extern BULLET bullets[1];
@@ -1369,6 +1374,13 @@ void initPlayer();
 void updatePlayer();
 void drawPlayer();
 void animatePlayer();
+void initBullet();
+void fireBullet();
+void updateBullet();
+void drawBullet();
+void initEnemy();
+void updateEnemy();
+void drawEnemy();
 # 5 "main.c" 2
 # 1 "startScreen.h" 1
 # 22 "startScreen.h"
@@ -1543,6 +1555,7 @@ void goToGame(){
 
     DMANow(3, spritesheetPal, ((unsigned short *)0x5000200), 512/2);
     DMANow(3, spritesheetTiles, & ((charblock *)0x6000000)[4], 32768/2);
+
     hideSprites();
     DMANow(3, shadowOAM, ((OBJ_ATTR*)(0x7000000)), 128*4);
 
@@ -1566,14 +1579,15 @@ void goToPause(){
 
     waitForVBlank();
 
-    hideSprites();
-
     DMANow(3, pausePal, ((unsigned short *)0x5000000), 256);
     DMANow(3, pauseTiles, &((charblock *)0x6000000)[0], 1888/2);
     DMANow(3, pauseMap, &((screenblock *)0x6000000)[31], 2048/2);
 
     (*(volatile unsigned short *)0x04000012) = 0;
     (*(volatile unsigned short *)0x04000010) = 0;
+
+    hideSprites();
+    DMANow(3, shadowOAM, ((OBJ_ATTR*)(0x7000000)), 128 * 4);
 
     state = PAUSE;
 }
@@ -1608,6 +1622,9 @@ void goToWin(){
     (*(volatile unsigned short *)0x04000012) = 0;
     (*(volatile unsigned short *)0x04000010) = 0;
 
+    hideSprites();
+    DMANow(3, shadowOAM, ((OBJ_ATTR*)(0x7000000)), 128 * 4);
+
     state = WIN;
 }
 
@@ -1631,6 +1648,9 @@ void goToLose(){
 
     (*(volatile unsigned short *)0x04000012) = 0;
     (*(volatile unsigned short *)0x04000010) = 0;
+
+    hideSprites();
+    DMANow(3, shadowOAM, ((OBJ_ATTR*)(0x7000000)), 128 * 4);
 
     state = LOSE;
 }

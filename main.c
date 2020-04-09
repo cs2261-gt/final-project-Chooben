@@ -124,6 +124,7 @@ void goToGame(){
 
     DMANow(3, spritesheetPal, SPRITEPALETTE, spritesheetPalLen/2);
     DMANow(3, spritesheetTiles, & CHARBLOCK[4], spritesheetTilesLen/2);
+
     hideSprites();
     DMANow(3, shadowOAM, OAM, 128*4);
 
@@ -147,14 +148,15 @@ void goToPause(){
 
     waitForVBlank();
 
-    hideSprites();
-
     DMANow(3, pausePal, PALETTE, 256);
     DMANow(3, pauseTiles, &CHARBLOCK[0], pauseTilesLen/2);
     DMANow(3, pauseMap, &SCREENBLOCK[31], pauseMapLen/2);
 
     REG_BG0VOFF = 0;
     REG_BG0HOFF = 0;
+
+    hideSprites();
+    DMANow(3, shadowOAM, OAM, 128 * 4);
 
     state = PAUSE;
 }
@@ -189,6 +191,9 @@ void goToWin(){
     REG_BG0VOFF = 0;
     REG_BG0HOFF = 0;
 
+    hideSprites();
+    DMANow(3, shadowOAM, OAM, 128 * 4);
+
     state = WIN;
 }
 //Win screen
@@ -212,6 +217,9 @@ void goToLose(){
 
     REG_BG0VOFF = 0;
     REG_BG0HOFF = 0;
+
+    hideSprites();
+    DMANow(3, shadowOAM, OAM, 128 * 4);
 
     state = LOSE;
 }

@@ -13,6 +13,7 @@ int vOff;
 OBJ_ATTR shadowOAM[128];
 
 enum{PFRONT, PBACK, PLEFT, PRIGHT, PIDLE};
+enum{DOWN, UP, LEFT, RIGHT};
 
 //Initialize all game attributes
 void initGame() {
@@ -21,16 +22,25 @@ void initGame() {
     vOff = 0;
 
     initPlayer();
+    initBullet();
 }
 //Update game attributes
 void updateGame() {
 
     updatePlayer();
+
+    for(int i = 0; i < BULLETCOUNT; i++) {
+        updateBullet(&bullets[i]);
+    }
 }
 //Draw all game attributes
 void drawGame() {
 
     drawPlayer();
+
+    for(int i = 0; i < BULLETCOUNT; i++) {
+        drawBullet(&bullets[i]);
+    }
 
     waitForVBlank();
     DMANow(3, shadowOAM, OAM, 128 * 4);
@@ -94,6 +104,10 @@ void updatePlayer() {
 
     //Animate player sprite
     animatePlayer();
+
+    if(BUTTON_PRESSED(BUTTON_A)) {
+
+    }
 }
 //Player sprite animation
 void animatePlayer() {
@@ -131,5 +145,86 @@ void drawPlayer() {
         shadowOAM[0].attr0 = (ROWMASK & player.screenRow) | ATTR0_SQUARE;
         shadowOAM[0].attr1 = (COLMASK & player.screenCol) | ATTR1_SMALL;
         shadowOAM[0].attr2 = ATTR2_PALROW(0) | ATTR2_TILEID(player.aniState*2, player.curFrame*2);
+    }
+}
+
+//Initialize bullet(s)
+void initBullet() {
+    for(int i = 0; i < BULLETCOUNT; i++) {
+        bullets[i].active = 0;
+        bullets[i].del = 2;
+        bullets[i].col = 0;
+        bullets[i].row = 0;
+        bullets[i].damage = 1;
+        bullets[i].direction = DOWN;
+        bullets[i].width = 8;
+        bullets[i].height = 8;
+    }    
+}
+void fireBullet() {
+    for(int i = 0; i < BULLETCOUNT; i++) {
+        if(bullets[i].active == 0) {
+            bullets[i].active = 1;
+            if(player.aniState == PFRONT) {
+                bullets[i].direction = DOWN;
+                bullets[i].col = player.worldCol;
+                bullets[i].row = player.worldRow;
+            } else if(player.aniState == PBACK) {
+                bullets[i].direction = UP;
+                bullets[i].col = player.worldCol;
+                bullets[i].row = player.worldRow;
+            } else if(player.aniState == PLEFT) {
+                bullets[i].direction = LEFT;
+                bullets[i].row = player.worldRow;
+                bullets[i].col = player.worldCol + bullets[i].width;
+            } else if(player.aniState == PRIGHT) {
+                bullets[i].direction = RIGHT;
+                bullets[i].row = player.worldRow;
+                bullets[i].col = player.worldCol;
+            }
+        }
+    }
+}
+//Update bullets
+void updateBullet(BULLET*b) {
+    if(b -> active) {
+        if(b->direction == DOWN) {
+            if(b->row > MAPHEIGHT) {
+                b->active = 0;
+            } else {
+                b->row += b->del;
+            }
+        } else if(b->direction == UP) {
+            if(b->row < 0) {
+                b->active = 0;
+            } else {
+                b->row -=b->del;
+            }
+        } else if(b->direction == LEFT) {
+            if(b->col < 0) {
+                b->active = 0;
+            } else {
+                b->col -= b->del;
+            }
+        } else {
+            if(b->col > MAPWIDTH) {
+                b->active = 0;
+            } else {
+                b->col += b->del;
+            }
+        }
+    }
+}
+//Draw bullets
+void drawBullet(BULLET* b) {
+    if(b->active) {
+        shadowOAM[1].attr0 = ATTR0_SQUARE;
+        shadowOAM[1].attr1 = ATTR1_SMALL;
+        if(b->direction == UP || b->direction == DOWN) {
+            
+            shadowOAM[1].attr2 = ATTR2_TILEID(10, 2);
+        } else {
+            shadowOAM[1].attr2 = ATTR2_TILEID(6*player.width, 1);
+        }
     }
 }

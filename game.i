@@ -929,6 +929,9 @@ typedef struct {
     int width;
     int height;
     int damage;
+    int del;
+    int active;
+    int direction;
 }BULLET;
 
 
@@ -939,8 +942,10 @@ typedef struct {
     int height;
     int health;
     int active;
+    int cdel;
+    int rdel;
 }ENEMY;
-# 28 "game.h"
+# 33 "game.h"
 extern ANISPRITE player;
 extern int health;
 extern BULLET bullets[1];
@@ -958,6 +963,13 @@ void initPlayer();
 void updatePlayer();
 void drawPlayer();
 void animatePlayer();
+void initBullet();
+void fireBullet();
+void updateBullet();
+void drawBullet();
+void initEnemy();
+void updateEnemy();
+void drawEnemy();
 # 4 "game.c" 2
 
 
@@ -971,6 +983,7 @@ int vOff;
 OBJ_ATTR shadowOAM[128];
 
 enum{PFRONT, PBACK, PLEFT, PRIGHT, PIDLE};
+enum{DOWN, UP, LEFT, RIGHT};
 
 
 void initGame() {
@@ -979,16 +992,25 @@ void initGame() {
     vOff = 0;
 
     initPlayer();
+    initBullet();
 }
 
 void updateGame() {
 
     updatePlayer();
+
+    for(int i = 0; i < 1; i++) {
+        updateBullet(&bullets[i]);
+    }
 }
 
 void drawGame() {
 
     drawPlayer();
+
+    for(int i = 0; i < 1; i++) {
+        drawBullet(&bullets[i]);
+    }
 
     waitForVBlank();
     DMANow(3, shadowOAM, ((OBJ_ATTR*)(0x7000000)), 128 * 4);
@@ -1052,6 +1074,10 @@ void updatePlayer() {
 
 
     animatePlayer();
+
+    if((!(~(oldButtons)&((1<<0))) && (~buttons & ((1<<0))))) {
+
+    }
 }
 
 void animatePlayer() {
@@ -1089,5 +1115,87 @@ void drawPlayer() {
         shadowOAM[0].attr0 = (0xFF & player.screenRow) | (0<<14);
         shadowOAM[0].attr1 = (0x1FF & player.screenCol) | (1<<14);
         shadowOAM[0].attr2 = ((0)<<12) | ((player.curFrame*2)*32+(player.aniState*2));
+    }
+}
+
+
+void initBullet() {
+    for(int i = 0; i < 1; i++) {
+        bullets[i].active = 0;
+        bullets[i].del = 2;
+        bullets[i].col = 0;
+        bullets[i].row = 0;
+        bullets[i].damage = 1;
+        bullets[i].direction = DOWN;
+        bullets[i].width = 8;
+        bullets[i].height = 8;
+    }
+}
+void fireBullet() {
+    for(int i = 0; i < 1; i++) {
+        if(bullets[i].active == 0) {
+            bullets[i].active = 1;
+            if(player.aniState == PFRONT) {
+                bullets[i].direction = DOWN;
+                bullets[i].col = player.worldCol;
+                bullets[i].row = player.worldRow;
+            } else if(player.aniState == PBACK) {
+                bullets[i].direction = UP;
+                bullets[i].col = player.worldCol;
+                bullets[i].row = player.worldRow;
+            } else if(player.aniState == PLEFT) {
+                bullets[i].direction = LEFT;
+                bullets[i].row = player.worldRow;
+                bullets[i].col = player.worldCol + bullets[i].width;
+            } else if(player.aniState == PRIGHT) {
+                bullets[i].direction = RIGHT;
+                bullets[i].row = player.worldRow;
+                bullets[i].col = player.worldCol;
+            }
+        }
+    }
+}
+
+void updateBullet(BULLET*b) {
+    if(b -> active) {
+        if(b->direction == DOWN) {
+            if(b->row > 256) {
+                b->active = 0;
+            } else {
+                b->row += b->del;
+            }
+        } else if(b->direction == UP) {
+            if(b->row < 0) {
+                b->active = 0;
+            } else {
+
+                b->row -=b->del;
+            }
+        } else if(b->direction == LEFT) {
+            if(b->col < 0) {
+                b->active = 0;
+            } else {
+                b->col -= b->del;
+            }
+        } else {
+            if(b->col > 256) {
+                b->active = 0;
+            } else {
+                b->col += b->del;
+            }
+        }
+    }
+}
+
+void drawBullet(BULLET* b) {
+    if(b->active) {
+        shadowOAM[1].attr0 = (0<<14);
+        shadowOAM[1].attr1 = (1<<14);
+        if(b->direction == UP || b->direction == DOWN) {
+
+            shadowOAM[1].attr2 = ((2)*32+(10));
+        } else {
+            shadowOAM[1].attr2 = ((1)*32+(6*player.width));
+        }
     }
 }

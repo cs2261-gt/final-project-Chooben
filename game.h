@@ -5,6 +5,9 @@ typedef struct {
     int width;
     int height;
     int damage;
+    int del;
+    int active;
+    int direction;
 }BULLET;
 
 //Enemy struct
@@ -15,6 +18,8 @@ typedef struct {
     int height;
     int health;
     int active;
+    int cdel;
+    int rdel;
 }ENEMY;
 
 //Constants
@@ -42,3 +47,10 @@ void initPlayer();
 void updatePlayer();
 void drawPlayer();
 void animatePlayer();
+void initBullet();
+void fireBullet();
+void updateBullet();
+void drawBullet();
+void initEnemy();
+void updateEnemy();
+void drawEnemy();

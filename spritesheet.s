@@ -404,6 +404,11 @@ spritesheetTiles:
 	.short	119
 	.short	30581
 	.short	119
+	.short	34
+	.short	0
+	.short	34
+	.short	0
+	.short	34
 	.short	0
 	.short	0
 	.short	0
@@ -431,14 +436,9 @@ spritesheetTiles:
 	.short	0
 	.short	0
 	.short	0
+	.short	546
 	.short	0
-	.short	0
-	.short	0
-	.short	0
-	.short	0
-	.short	0
-	.short	0
-	.short	0
+	.short	546
 	.short	0
 	.short	0
 	.short	0

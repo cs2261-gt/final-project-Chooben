@@ -245,47 +245,54 @@ goToPause:
 	ldr	r3, .L24
 	mov	lr, pc
 	bx	r3
-	ldr	r3, .L24+4
-	mov	lr, pc
-	bx	r3
-	ldr	r4, .L24+8
+	ldr	r4, .L24+4
 	mov	r3, #256
 	mov	r2, #83886080
 	mov	r0, #3
-	ldr	r1, .L24+12
+	ldr	r1, .L24+8
 	mov	lr, pc
 	bx	r4
 	mov	r3, #944
 	mov	r2, #100663296
 	mov	r0, #3
-	ldr	r1, .L24+16
+	ldr	r1, .L24+12
 	mov	lr, pc
 	bx	r4
-	mov	r3, #1024
 	mov	r0, #3
-	ldr	r2, .L24+20
-	ldr	r1, .L24+24
+	mov	r3, #1024
+	ldr	r2, .L24+16
+	ldr	r1, .L24+20
 	mov	lr, pc
 	bx	r4
 	mov	r3, #67108864
 	mov	r2, #0
-	mov	r0, #2
-	ldr	r1, .L24+28
+	ldr	r1, .L24+24
 	strh	r2, [r3, #18]	@ movhi
-	pop	{r4, lr}
 	strh	r2, [r3, #16]	@ movhi
-	str	r0, [r1]
+	mov	lr, pc
+	bx	r1
+	mov	r3, #512
+	mov	r2, #117440512
+	mov	r0, #3
+	ldr	r1, .L24+28
+	mov	lr, pc
+	bx	r4
+	mov	r2, #2
+	ldr	r3, .L24+32
+	pop	{r4, lr}
+	str	r2, [r3]
 	bx	lr
 .L25:
 	.align	2
 .L24:
 	.word	waitForVBlank
-	.word	hideSprites
 	.word	DMANow
 	.word	pausePal
 	.word	pauseTiles
 	.word	100726784
 	.word	pauseMap
+	.word	hideSprites
+	.word	shadowOAM
 	.word	state
 	.size	goToPause, .-goToPause
 	.align	2
@@ -315,20 +322,29 @@ goToWin:
 	ldr	r1, .L28+12
 	mov	lr, pc
 	bx	r4
-	mov	r3, #1024
 	mov	r0, #3
+	mov	r3, #1024
 	ldr	r2, .L28+16
 	ldr	r1, .L28+20
 	mov	lr, pc
 	bx	r4
 	mov	r3, #67108864
 	mov	r2, #0
-	mov	r0, #3
 	ldr	r1, .L28+24
 	strh	r2, [r3, #18]	@ movhi
-	pop	{r4, lr}
 	strh	r2, [r3, #16]	@ movhi
-	str	r0, [r1]
+	mov	lr, pc
+	bx	r1
+	mov	r3, #512
+	mov	r2, #117440512
+	mov	r0, #3
+	ldr	r1, .L28+28
+	mov	lr, pc
+	bx	r4
+	mov	r2, #3
+	ldr	r3, .L28+32
+	pop	{r4, lr}
+	str	r2, [r3]
 	bx	lr
 .L29:
 	.align	2
@@ -339,6 +355,8 @@ goToWin:
 	.word	winTiles
 	.word	100726784
 	.word	winMap
+	.word	hideSprites
+	.word	shadowOAM
 	.word	state
 	.size	goToWin, .-goToWin
 	.align	2
@@ -403,20 +421,29 @@ goToLose:
 	ldr	r1, .L41+12
 	mov	lr, pc
 	bx	r4
-	mov	r3, #1024
 	mov	r0, #3
+	mov	r3, #1024
 	ldr	r2, .L41+16
 	ldr	r1, .L41+20
 	mov	lr, pc
 	bx	r4
 	mov	r3, #67108864
 	mov	r2, #0
-	mov	r0, #4
 	ldr	r1, .L41+24
 	strh	r2, [r3, #18]	@ movhi
-	pop	{r4, lr}
 	strh	r2, [r3, #16]	@ movhi
-	str	r0, [r1]
+	mov	lr, pc
+	bx	r1
+	mov	r3, #512
+	mov	r2, #117440512
+	mov	r0, #3
+	ldr	r1, .L41+28
+	mov	lr, pc
+	bx	r4
+	mov	r2, #4
+	ldr	r3, .L41+32
+	pop	{r4, lr}
+	str	r2, [r3]
 	bx	lr
 .L42:
 	.align	2
@@ -427,6 +454,8 @@ goToLose:
 	.word	loseTiles
 	.word	100726784
 	.word	loseMap
+	.word	hideSprites
+	.word	shadowOAM
 	.word	state
 	.size	goToLose, .-goToLose
 	.align	2
