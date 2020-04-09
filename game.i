@@ -997,7 +997,9 @@ void initGame() {
 
 void updateGame() {
 
+
     updatePlayer();
+
 
     for(int i = 0; i < 1; i++) {
         updateBullet(&bullets[i]);
@@ -1006,7 +1008,9 @@ void updateGame() {
 
 void drawGame() {
 
+
     drawPlayer();
+
 
     for(int i = 0; i < 1; i++) {
         drawBullet(&bullets[i]);
@@ -1075,8 +1079,9 @@ void updatePlayer() {
 
     animatePlayer();
 
-    if((!(~(oldButtons)&((1<<0))) && (~buttons & ((1<<0))))) {
 
+    if((!(~(oldButtons)&((1<<0))) && (~buttons & ((1<<0))))) {
+        fireBullet();
     }
 }
 
@@ -1131,6 +1136,7 @@ void initBullet() {
         bullets[i].height = 8;
     }
 }
+
 void fireBullet() {
     for(int i = 0; i < 1; i++) {
         if(bullets[i].active == 0) {
@@ -1168,7 +1174,6 @@ void updateBullet(BULLET*b) {
             if(b->row < 0) {
                 b->active = 0;
             } else {
-
                 b->row -=b->del;
             }
         } else if(b->direction == LEFT) {
@@ -1189,13 +1194,12 @@ void updateBullet(BULLET*b) {
 
 void drawBullet(BULLET* b) {
     if(b->active) {
-        shadowOAM[1].attr0 = (0<<14);
-        shadowOAM[1].attr1 = (1<<14);
+        shadowOAM[1].attr0 = b->row | (0<<14);
+        shadowOAM[1].attr1 = b->col | (1<<14);
         if(b->direction == UP || b->direction == DOWN) {
-
-            shadowOAM[1].attr2 = ((2)*32+(10));
+            shadowOAM[1].attr2 = ((0)*32+(8));
         } else {
-            shadowOAM[1].attr2 = ((1)*32+(6*player.width));
+            shadowOAM[1].attr2 = ((0)*32+(10));
         }
     }
 }

@@ -27,8 +27,10 @@ void initGame() {
 //Update game attributes
 void updateGame() {
 
+    //Update player movement
     updatePlayer();
 
+    //Update bullet movement
     for(int i = 0; i < BULLETCOUNT; i++) {
         updateBullet(&bullets[i]);
     }
@@ -36,8 +38,10 @@ void updateGame() {
 //Draw all game attributes
 void drawGame() {
 
+    //Draw player
     drawPlayer();
 
+    //Draw bullets
     for(int i = 0; i < BULLETCOUNT; i++) {
         drawBullet(&bullets[i]);
     }
@@ -105,8 +109,9 @@ void updatePlayer() {
     //Animate player sprite
     animatePlayer();
 
+    //Player fires bullet
     if(BUTTON_PRESSED(BUTTON_A)) {
-
+        fireBullet();
     }
 }
 //Player sprite animation
@@ -161,6 +166,7 @@ void initBullet() {
         bullets[i].height = 8;
     }    
 }
+//Bullet fire logic
 void fireBullet() {
     for(int i = 0; i < BULLETCOUNT; i++) {
         if(bullets[i].active == 0) {
@@ -218,13 +224,12 @@ void updateBullet(BULLET*b) {
 //Draw bullets
 void drawBullet(BULLET* b) {
     if(b->active) {
-        shadowOAM[1].attr0 = ATTR0_SQUARE;
-        shadowOAM[1].attr1 = ATTR1_SMALL;
+        shadowOAM[1].attr0 = b->row | ATTR0_SQUARE;
+        shadowOAM[1].attr1 = b->col | ATTR1_SMALL;
         if(b->direction == UP || b->direction == DOWN) {
-            
-            shadowOAM[1].attr2 = ATTR2_TILEID(10, 2);
+            shadowOAM[1].attr2 = ATTR2_TILEID(8, 0);
         } else {
-            shadowOAM[1].attr2 = ATTR2_TILEID(6*player.width, 1);
+            shadowOAM[1].attr2 = ATTR2_TILEID(10, 0);
         }
     }
 }
