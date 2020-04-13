@@ -23,6 +23,7 @@ void initGame() {
 
     initPlayer();
     initBullet();
+    initEnemy();
 }
 //Update game attributes
 void updateGame() {
@@ -33,6 +34,11 @@ void updateGame() {
     //Update bullet movement
     for(int i = 0; i < BULLETCOUNT; i++) {
         updateBullet(&bullets[i]);
+    }
+
+    //Update enemy movement
+    for(int i = 0; i < ENEMYCOUNT; i++) {
+        updateEnemy(&enemies[i]);
     }
 }
 //Draw all game attributes
@@ -45,6 +51,9 @@ void drawGame() {
     for(int i = 0; i < BULLETCOUNT; i++) {
         drawBullet(&bullets[i]);
     }
+
+    //Draw enemies
+    drawEnemy();
 
     waitForVBlank();
     DMANow(3, shadowOAM, OAM, 128 * 4);
@@ -162,8 +171,8 @@ void initBullet() {
         bullets[i].row = 0;
         bullets[i].damage = 1;
         bullets[i].direction = DOWN;
-        bullets[i].width = 8;
-        bullets[i].height = 8;
+        bullets[i].width = 16;
+        bullets[i].height = 16;
     }    
 }
 //Bullet fire logic
@@ -173,20 +182,20 @@ void fireBullet() {
             bullets[i].active = 1;
             if(player.aniState == PFRONT) {
                 bullets[i].direction = DOWN;
-                bullets[i].col = player.worldCol;
-                bullets[i].row = player.worldRow;
+                bullets[i].col = player.screenCol;
+                bullets[i].row = player.screenRow;
             } else if(player.aniState == PBACK) {
                 bullets[i].direction = UP;
-                bullets[i].col = player.worldCol;
-                bullets[i].row = player.worldRow;
+                bullets[i].col = player.screenCol;
+                bullets[i].row = player.screenRow;
             } else if(player.aniState == PLEFT) {
                 bullets[i].direction = LEFT;
-                bullets[i].row = player.worldRow;
-                bullets[i].col = player.worldCol + bullets[i].width;
+                bullets[i].row = player.screenRow;
+                bullets[i].col = player.screenCol;
             } else if(player.aniState == PRIGHT) {
                 bullets[i].direction = RIGHT;
-                bullets[i].row = player.worldRow;
-                bullets[i].col = player.worldCol;
+                bullets[i].row = player.screenRow;
+                bullets[i].col = player.screenCol;
             }
         }
     }
@@ -230,6 +239,45 @@ void drawBullet(BULLET* b) {
             shadowOAM[1].attr2 = ATTR2_TILEID(8, 0);
         } else {
             shadowOAM[1].attr2 = ATTR2_TILEID(10, 0);
+        }
+    }
+}
+//Initialize enemies
+void initEnemy() {
+    for(int i = 0; i < ENEMYCOUNT; i++) {
+        enemies[i].width = 16;
+        enemies[i].height = 16;
+        enemies[i].col = 50;
+        enemies[i].row = 50;
+        enemies[i].health = 1;
+        enemies[i].del = 1;
+        enemies[i].direction = rand() % 2;
+    }
+}
+//Update enemies
+void updateEnemy(ENEMY* e) {
+    //Boundary checks
+    if(e->col < 1 || ((e->col + e->width) > (MAPWIDTH - 1))) {
+        e->del *= -1;
+    } else if(e->row < 1 || ((e->row + e->height) > (MAPHEIGHT - 1))) {
+        e->del *= -1;
+    }
+
+    //Update enmey
+    if(e->direction == 0) {
+        e->col += e->del;
+    } else {
+        e->row += e->del;
+    }
+    
+}
+//Draw all enemies
+void drawEnemy() {
+    for(int i = 0; i < ENEMYCOUNT; i++) {
+        if(enemies[i].health != 0) {
+            shadowOAM[100 + i].attr0 = enemies[i].row | ATTR0_SQUARE;
+            shadowOAM[100 + i].attr1 = enemies[i].col | ATTR1_SMALL;
+            shadowOAM[100 + i].attr2 = ATTR2_TILEID(12, 0);
         }
     }
 }

@@ -1352,11 +1352,10 @@ typedef struct {
     int width;
     int height;
     int health;
-    int active;
-    int cdel;
-    int rdel;
+    int del;
+    int direction;
 }ENEMY;
-# 33 "game.h"
+# 32 "game.h"
 extern ANISPRITE player;
 extern int health;
 extern BULLET bullets[1];

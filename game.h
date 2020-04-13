@@ -17,9 +17,8 @@ typedef struct {
     int width;
     int height;
     int health;
-    int active;
-    int cdel;
-    int rdel;
+    int del;
+    int direction;
 }ENEMY;
 
 //Constants
