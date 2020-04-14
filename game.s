@@ -625,9 +625,9 @@ initGame:
 	@ frame_needed = 0, uses_anonymous_args = 0
 	mov	r1, #0
 	mov	r2, #3
-	mov	ip, #1
+	mov	r0, #1
 	push	{r4, lr}
-	mov	r0, #16
+	mov	ip, #16
 	mov	lr, #20
 	mov	r4, #2
 	ldr	r3, .L102
@@ -637,25 +637,27 @@ initGame:
 	ldr	r3, .L102+8
 	str	r2, [r3, #48]
 	ldr	r2, .L102+12
-	str	ip, [r2]
+	str	r0, [r2]
 	ldr	r2, .L102+16
+	str	r0, [r2]
+	ldr	r2, .L102+20
 	str	lr, [r3, #8]
-	str	r4, [r2, #20]
 	str	lr, [r3, #12]
-	str	ip, [r2, #16]
+	str	r4, [r2, #20]
+	str	r0, [r2, #16]
 	str	r1, [r2, #24]
 	str	r1, [r2]
 	str	r1, [r2, #4]
 	str	r1, [r2, #28]
-	str	r0, [r2, #8]
-	str	r0, [r2, #12]
+	str	ip, [r2, #8]
+	str	ip, [r2, #12]
 	pop	{r4, lr}
 	str	r1, [r3, #44]
 	str	r1, [r3, #36]
-	str	r0, [r3, #24]
-	str	r0, [r3, #28]
-	str	ip, [r3, #16]
-	str	ip, [r3, #20]
+	str	ip, [r3, #24]
+	str	ip, [r3, #28]
+	str	r0, [r3, #16]
+	str	r0, [r3, #20]
 	b	initEnemy
 .L103:
 	.align	2
@@ -664,6 +666,7 @@ initGame:
 	.word	vOff
 	.word	player
 	.word	health
+	.word	enemiesRemaining
 	.word	bullets
 	.size	initGame, .-initGame
 	.align	2
@@ -735,7 +738,7 @@ updateEnemy:
 .L115:
 	.word	bullets
 	.word	collision
-	.word	.LANCHOR0
+	.word	enemiesRemaining
 	.size	updateEnemy, .-updateEnemy
 	.align	2
 	.global	updateGame
@@ -793,16 +796,9 @@ drawEnemy:
 	.comm	shadowOAM,1024,4
 	.comm	vOff,4,4
 	.comm	hOff,4,4
-	.global	enemiesRemaining
+	.comm	enemiesRemaining,4,4
 	.comm	enemies,32,4
 	.comm	bullets,32,4
 	.comm	health,4,4
 	.comm	player,56,4
-	.data
-	.align	2
-	.set	.LANCHOR0,. + 0
-	.type	enemiesRemaining, %object
-	.size	enemiesRemaining, 4
-enemiesRemaining:
-	.word	1
 	.ident	"GCC: (devkitARM release 53) 9.1.0"

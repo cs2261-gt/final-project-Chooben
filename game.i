@@ -977,7 +977,7 @@ ANISPRITE player;
 int health;
 BULLET bullets[1];
 ENEMY enemies[1];
-int enemiesRemaining = 1;
+int enemiesRemaining;
 int hOff;
 int vOff;
 OBJ_ATTR shadowOAM[128];
@@ -993,6 +993,8 @@ void initGame() {
 
     initPlayer();
     initBullet();
+
+    enemiesRemaining = 1;
     initEnemy();
 }
 

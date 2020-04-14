@@ -7,7 +7,7 @@ ANISPRITE player;
 int health;
 BULLET bullets[BULLETCOUNT];
 ENEMY enemies[ENEMYCOUNT];
-int enemiesRemaining = ENEMYCOUNT;
+int enemiesRemaining;
 int hOff;
 int vOff;
 OBJ_ATTR shadowOAM[128];
@@ -23,6 +23,8 @@ void initGame() {
 
     initPlayer();
     initBullet();
+
+    enemiesRemaining = ENEMYCOUNT;
     initEnemy();
 }
 //Update game attributes
