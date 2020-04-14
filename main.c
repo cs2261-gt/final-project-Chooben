@@ -3,19 +3,22 @@
 #include "myLib.h"
 #include "game.h"
 #include "startScreen.h"
-#include "background.h"
+#include "region1.h"
 #include "pause.h"
 #include "win.h"
 #include "lose.h"
 #include "spritesheet.h"
+#include "region2.h"
 
 //Prototypes
 void initialize();
 
 void goToStart();
 void start();
-void goToGame();
-void game();
+void goToGame1();
+void game1();
+void goToGame2();
+void game2();
 void goToPause();
 void pause();
 void goToWin();
@@ -24,7 +27,7 @@ void goToLose();
 void lose();
 
 //States
-enum{START, GAME, PAUSE, WIN, LOSE};
+enum{START, GAME1, GAME2, PAUSE, WIN, LOSE};
 int state;
 
 //Variables
@@ -49,8 +52,11 @@ int main() {
             case START:
                 start();
                 break;
-            case GAME:
-                game();
+            case GAME1:
+                game1();
+                break;
+            case GAME2:
+                game2();
                 break;
             case PAUSE:
                 pause();
@@ -105,19 +111,19 @@ void start(){
 
         srand(seed);
 
-        goToGame();
+        goToGame1();
         initGame();
     }
 }
 //Setup game
-void goToGame(){
+void goToGame1(){
 
     waitForVBlank();
 
     //Setup game background
-    DMANow(3, backgroundPal, PALETTE, 256);
-    DMANow(3, backgroundTiles, &CHARBLOCK[0], backgroundTilesLen/2);
-    DMANow(3, backgroundMap, &SCREENBLOCK[31], backgroundMapLen/2);    
+    DMANow(3, region1Pal, PALETTE, 256);
+    DMANow(3, region1Tiles, &CHARBLOCK[0], region1TilesLen/2);
+    DMANow(3, region1Map, &SCREENBLOCK[31], region1MapLen/2);    
 
     REG_BG0VOFF = vOff;
     REG_BG0HOFF = hOff;
@@ -128,10 +134,10 @@ void goToGame(){
     hideSprites();
     DMANow(3, shadowOAM, OAM, 128*4);
 
-    state = GAME;
+    state = GAME1;
 }
 //Game logic
-void game(){
+void game1(){
 
     updateGame();
     drawGame();
@@ -142,7 +148,45 @@ void game(){
     //Loss condition
     if(health == 0)
         goToLose();
+    if(player.worldCol < 0)
+        goToGame2();
 }   
+//Setup region 2
+void goToGame2() {
+    waitForVBlank();
+
+    //Setup game background
+    DMANow(3, region2Pal, PALETTE, 256);
+    DMANow(3, region2Tiles, &CHARBLOCK[0], region2TilesLen/2);
+    DMANow(3, region2Map, &SCREENBLOCK[31], region2MapLen/2);    
+
+    REG_BG0VOFF = vOff;
+    REG_BG0HOFF = hOff;
+
+    DMANow(3, spritesheetPal, SPRITEPALETTE, spritesheetPalLen/2);
+    DMANow(3, spritesheetTiles, & CHARBLOCK[4], spritesheetTilesLen/2);
+
+    player.worldCol = MAPWIDTH - player.width;
+
+    hideSprites();
+    DMANow(3, shadowOAM, OAM, 128*4);
+
+    state = GAME2;
+
+}
+//Region 2
+void game2() {
+
+    updateGame();
+    drawGame();
+
+    //Go to pause screen
+    if(BUTTON_PRESSED(BUTTON_START))
+        goToPause();
+    //Loss condition
+    if(health == 0)
+        goToLose();
+}
 //Setup pause menu
 void goToPause(){
 
@@ -169,7 +213,7 @@ void pause(){
 
     //Go back to game from pause
     if (BUTTON_PRESSED(BUTTON_START))
-        goToGame();
+        goToGame1();
     //Restart game from pause
     else if (BUTTON_PRESSED(BUTTON_SELECT))
         goToStart();

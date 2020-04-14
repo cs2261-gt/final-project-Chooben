@@ -1064,9 +1064,7 @@ void updatePlayer() {
         }
     }
     if((~((*(volatile unsigned short *)0x04000130)) & ((1<<5)))) {
-        if(player.worldCol > 0) {
-            player.worldCol-=player.cdel;
-        }
+        player.worldCol-=player.cdel;
         if((hOff >= 0) && (player.screenCol < 240/2)) {
             hOff--;
         }

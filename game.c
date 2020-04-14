@@ -95,9 +95,7 @@ void updatePlayer() {
         }
     }
     if(BUTTON_HELD(BUTTON_LEFT)) {
-        if(player.worldCol > 0) {
-            player.worldCol-=player.cdel;
-        }
+        player.worldCol-=player.cdel;
         if((hOff >= 0) && (player.screenCol < SCREENWIDTH/2)) {
             hOff--;
         }

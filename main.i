@@ -1391,15 +1391,15 @@ extern const unsigned short startScreenMap[1024];
 
 extern const unsigned short startScreenPal[256];
 # 6 "main.c" 2
-# 1 "background.h" 1
-# 22 "background.h"
-extern const unsigned short backgroundTiles[48];
+# 1 "region1.h" 1
+# 22 "region1.h"
+extern const unsigned short region1Tiles[128];
 
 
-extern const unsigned short backgroundMap[1024];
+extern const unsigned short region1Map[1024];
 
 
-extern const unsigned short backgroundPal[256];
+extern const unsigned short region1Pal[256];
 # 7 "main.c" 2
 # 1 "pause.h" 1
 # 22 "pause.h"
@@ -1438,14 +1438,26 @@ extern const unsigned short spritesheetTiles[16384];
 
 extern const unsigned short spritesheetPal[256];
 # 11 "main.c" 2
+# 1 "region2.h" 1
+# 22 "region2.h"
+extern const unsigned short region2Tiles[320];
+
+
+extern const unsigned short region2Map[1024];
+
+
+extern const unsigned short region2Pal[256];
+# 12 "main.c" 2
 
 
 void initialize();
 
 void goToStart();
 void start();
-void goToGame();
-void game();
+void goToGame1();
+void game1();
+void goToGame2();
+void game2();
 void goToPause();
 void pause();
 void goToWin();
@@ -1454,7 +1466,7 @@ void goToLose();
 void lose();
 
 
-enum{START, GAME, PAUSE, WIN, LOSE};
+enum{START, GAME1, GAME2, PAUSE, WIN, LOSE};
 int state;
 
 
@@ -1479,8 +1491,11 @@ int main() {
             case START:
                 start();
                 break;
-            case GAME:
-                game();
+            case GAME1:
+                game1();
+                break;
+            case GAME2:
+                game2();
                 break;
             case PAUSE:
                 pause();
@@ -1535,19 +1550,19 @@ void start(){
 
         srand(seed);
 
-        goToGame();
+        goToGame1();
         initGame();
     }
 }
 
-void goToGame(){
+void goToGame1(){
 
     waitForVBlank();
 
 
-    DMANow(3, backgroundPal, ((unsigned short *)0x5000000), 256);
-    DMANow(3, backgroundTiles, &((charblock *)0x6000000)[0], 96/2);
-    DMANow(3, backgroundMap, &((screenblock *)0x6000000)[31], 2048/2);
+    DMANow(3, region1Pal, ((unsigned short *)0x5000000), 256);
+    DMANow(3, region1Tiles, &((charblock *)0x6000000)[0], 256/2);
+    DMANow(3, region1Map, &((screenblock *)0x6000000)[31], 2048/2);
 
     (*(volatile unsigned short *)0x04000012) = vOff;
     (*(volatile unsigned short *)0x04000010) = hOff;
@@ -1558,10 +1573,48 @@ void goToGame(){
     hideSprites();
     DMANow(3, shadowOAM, ((OBJ_ATTR*)(0x7000000)), 128*4);
 
-    state = GAME;
+    state = GAME1;
 }
 
-void game(){
+void game1(){
+
+    updateGame();
+    drawGame();
+
+
+    if((!(~(oldButtons)&((1<<3))) && (~buttons & ((1<<3)))))
+        goToPause();
+
+    if(health == 0)
+        goToLose();
+    if(player.worldCol < 0)
+        goToGame2();
+}
+
+void goToGame2() {
+    waitForVBlank();
+
+
+    DMANow(3, region2Pal, ((unsigned short *)0x5000000), 256);
+    DMANow(3, region2Tiles, &((charblock *)0x6000000)[0], 640/2);
+    DMANow(3, region2Map, &((screenblock *)0x6000000)[31], 2048/2);
+
+    (*(volatile unsigned short *)0x04000012) = vOff;
+    (*(volatile unsigned short *)0x04000010) = hOff;
+
+    DMANow(3, spritesheetPal, ((unsigned short *)0x5000200), 512/2);
+    DMANow(3, spritesheetTiles, & ((charblock *)0x6000000)[4], 32768/2);
+
+    player.worldCol = 256 - player.width;
+
+    hideSprites();
+    DMANow(3, shadowOAM, ((OBJ_ATTR*)(0x7000000)), 128*4);
+
+    state = GAME2;
+
+}
+
+void game2() {
 
     updateGame();
     drawGame();
@@ -1599,7 +1652,7 @@ void pause(){
 
 
     if ((!(~(oldButtons)&((1<<3))) && (~buttons & ((1<<3)))))
-        goToGame();
+        goToGame1();
 
     else if ((!(~(oldButtons)&((1<<2))) && (~buttons & ((1<<2)))))
         goToStart();
