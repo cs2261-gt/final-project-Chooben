@@ -153,14 +153,16 @@ goToGame1:
 	bx	r3
 	mov	r3, #512
 	mov	r2, #117440512
-	mov	r0, #3
 	ldr	r1, .L11+52
+	mov	r0, #3
 	mov	lr, pc
 	bx	r4
-	mov	r2, #1
-	ldr	r3, .L11+56
+	mov	r3, #1
+	ldr	r1, .L11+56
+	ldr	r2, .L11+60
+	str	r3, [r1]
+	str	r3, [r2]
 	pop	{r4, lr}
-	str	r2, [r3]
 	bx	lr
 .L12:
 	.align	2
@@ -179,6 +181,7 @@ goToGame1:
 	.word	spritesheetTiles
 	.word	hideSprites
 	.word	shadowOAM
+	.word	currRegion
 	.word	state
 	.size	goToGame1, .-goToGame1
 	.align	2
@@ -292,14 +295,16 @@ goToGame2:
 	bx	r1
 	mov	r3, #512
 	mov	r2, #117440512
-	mov	r0, #3
 	ldr	r1, .L24+56
+	mov	r0, #3
 	mov	lr, pc
 	bx	r4
-	mov	r2, #2
-	ldr	r3, .L24+60
+	mov	r3, #2
+	ldr	r1, .L24+60
+	ldr	r2, .L24+64
+	str	r3, [r1]
+	str	r3, [r2]
 	pop	{r4, lr}
-	str	r2, [r3]
 	bx	lr
 .L25:
 	.align	2
@@ -319,6 +324,7 @@ goToGame2:
 	.word	player
 	.word	hideSprites
 	.word	shadowOAM
+	.word	currRegion
 	.word	state
 	.size	goToGame2, .-goToGame2
 	.align	2
@@ -665,63 +671,70 @@ pause:
 	@ args = 0, pretend = 0, frame = 0
 	@ frame_needed = 0, uses_anonymous_args = 0
 	push	{r4, lr}
-	ldr	r3, .L93
+	ldr	r3, .L94
 	mov	lr, pc
 	bx	r3
-	ldr	r3, .L93+4
+	ldr	r3, .L94+4
 	mov	lr, pc
 	bx	r3
-	ldr	r3, .L93+8
+	ldr	r3, .L94+8
 	ldrh	r3, [r3]
 	tst	r3, #8
 	beq	.L72
-	ldr	r2, .L93+12
+	ldr	r2, .L94+12
 	ldrh	r2, [r2]
 	tst	r2, #8
-	beq	.L89
+	bne	.L72
+	ldr	r3, .L94+16
+	ldr	r3, [r3]
+	cmp	r3, #1
+	beq	.L90
+	pop	{r4, lr}
+	b	goToGame2
 .L72:
 	tst	r3, #4
-	beq	.L73
-	ldr	r2, .L93+12
+	beq	.L74
+	ldr	r2, .L94+12
 	ldrh	r2, [r2]
 	tst	r2, #4
-	beq	.L90
-.L73:
-	tst	r3, #2
-	beq	.L74
-	ldr	r2, .L93+12
-	ldrh	r2, [r2]
-	tst	r2, #2
 	beq	.L91
 .L74:
+	tst	r3, #2
+	beq	.L75
+	ldr	r2, .L94+12
+	ldrh	r2, [r2]
+	tst	r2, #2
+	beq	.L92
+.L75:
 	tst	r3, #1
 	beq	.L71
-	ldr	r3, .L93+12
+	ldr	r3, .L94+12
 	ldrh	r3, [r3]
 	tst	r3, #1
-	beq	.L92
+	beq	.L93
 .L71:
 	pop	{r4, lr}
 	bx	lr
-.L89:
-	pop	{r4, lr}
-	b	goToGame1
-.L90:
-	pop	{r4, lr}
-	b	goToStart
 .L91:
 	pop	{r4, lr}
-	b	goToLose
+	b	goToStart
 .L92:
 	pop	{r4, lr}
-	b	goToWin
-.L94:
-	.align	2
+	b	goToLose
 .L93:
+	pop	{r4, lr}
+	b	goToWin
+.L90:
+	pop	{r4, lr}
+	b	goToGame1
+.L95:
+	.align	2
+.L94:
 	.word	waitForVBlank
 	.word	hideSprites
 	.word	oldButtons
 	.word	buttons
+	.word	currRegion
 	.size	pause, .-pause
 	.section	.text.startup,"ax",%progbits
 	.align	2
@@ -740,61 +753,61 @@ main:
 	mov	r0, #4352
 	push	{r4, r7, fp, lr}
 	strh	r2, [r3, #8]	@ movhi
-	ldr	r4, .L107
-	ldr	r8, .L107+4
+	ldr	r4, .L108
+	ldr	r8, .L108+4
 	ldrh	r2, [r4, #48]
 	strh	r0, [r3]	@ movhi
-	ldr	r3, .L107+8
+	ldr	r3, .L108+8
 	strh	r2, [r8]	@ movhi
 	mov	lr, pc
 	bx	r3
-	ldr	r6, .L107+12
-	ldr	r5, .L107+16
-	ldr	fp, .L107+20
-	ldr	r10, .L107+24
-	ldr	r9, .L107+28
-	ldr	r7, .L107+32
-.L96:
+	ldr	r6, .L108+12
+	ldr	r5, .L108+16
+	ldr	fp, .L108+20
+	ldr	r10, .L108+24
+	ldr	r9, .L108+28
+	ldr	r7, .L108+32
+.L97:
 	ldr	r2, [r6]
 	ldrh	r3, [r8]
-.L97:
+.L98:
 	strh	r3, [r5]	@ movhi
 	ldrh	r3, [r4, #48]
 	strh	r3, [r8]	@ movhi
 	cmp	r2, #5
 	ldrls	pc, [pc, r2, asl #2]
-	b	.L97
-.L99:
+	b	.L98
+.L100:
+	.word	.L104
 	.word	.L103
 	.word	.L102
 	.word	.L101
-	.word	.L100
-	.word	.L98
-	.word	.L98
-.L98:
+	.word	.L99
+	.word	.L99
+.L99:
 	mov	lr, pc
 	bx	r7
-	b	.L96
-.L100:
-	ldr	r3, .L107+36
+	b	.L97
+.L101:
+	ldr	r3, .L108+36
 	mov	lr, pc
 	bx	r3
-	b	.L96
-.L101:
-	mov	lr, pc
-	bx	r9
-	b	.L96
+	b	.L97
 .L102:
 	mov	lr, pc
-	bx	r10
-	b	.L96
+	bx	r9
+	b	.L97
 .L103:
 	mov	lr, pc
+	bx	r10
+	b	.L97
+.L104:
+	mov	lr, pc
 	bx	fp
-	b	.L96
-.L108:
+	b	.L97
+.L109:
 	.align	2
-.L107:
+.L108:
 	.word	67109120
 	.word	buttons
 	.word	goToStart
@@ -823,5 +836,6 @@ lose:
 	.comm	seed,4,4
 	.comm	oldButtons,2,2
 	.comm	buttons,2,2
+	.comm	currRegion,4,4
 	.comm	state,4,4
 	.ident	"GCC: (devkitARM release 53) 9.1.0"

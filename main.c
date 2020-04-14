@@ -29,6 +29,7 @@ void lose();
 //States
 enum{START, GAME1, GAME2, PAUSE, WIN, LOSE};
 int state;
+int currRegion;
 
 //Variables
 unsigned short buttons;
@@ -134,6 +135,7 @@ void goToGame1(){
     hideSprites();
     DMANow(3, shadowOAM, OAM, 128*4);
 
+    currRegion = GAME1;
     state = GAME1;
 }
 //Game logic
@@ -171,6 +173,7 @@ void goToGame2() {
     hideSprites();
     DMANow(3, shadowOAM, OAM, 128*4);
 
+    currRegion = GAME2;
     state = GAME2;
 
 }
@@ -213,7 +216,11 @@ void pause(){
 
     //Go back to game from pause
     if (BUTTON_PRESSED(BUTTON_START))
-        goToGame1();
+        if(currRegion == GAME1) {
+            goToGame1();
+        } else {
+            goToGame2();
+        }
     //Restart game from pause
     else if (BUTTON_PRESSED(BUTTON_SELECT))
         goToStart();
