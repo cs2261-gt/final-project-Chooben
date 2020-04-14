@@ -246,6 +246,8 @@ void drawBullet(BULLET* b) {
         } else {
             shadowOAM[1].attr2 = ATTR2_TILEID(10, 0);
         }
+    } else {
+        shadowOAM[1].attr0 = ATTR0_HIDE;
     }
 }
 //Initialize enemies
@@ -296,6 +298,8 @@ void drawEnemy() {
             shadowOAM[100 + i].attr0 = enemies[i].row | ATTR0_SQUARE;
             shadowOAM[100 + i].attr1 = enemies[i].col | ATTR1_SMALL;
             shadowOAM[100 + i].attr2 = ATTR2_TILEID(12, 0);
+        } else {
+            shadowOAM[100 + i].attr0 = ATTR0_HIDE;
         }
     }
 }

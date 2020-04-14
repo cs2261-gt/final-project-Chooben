@@ -1360,7 +1360,7 @@ typedef struct {
 extern ANISPRITE player;
 extern int health;
 extern BULLET bullets[1];
-extern ENEMY enemies[1];
+extern ENEMY enemies[2];
 extern int enemiesRemaining;
 extern int hOff;
 extern int vOff;
