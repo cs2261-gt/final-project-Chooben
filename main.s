@@ -619,9 +619,9 @@ game1:
 	.word	drawGame
 	.word	oldButtons
 	.word	buttons
-	.word	health
+	.word	playerHealth
 	.word	player
-	.word	enemiesRemaining
+	.word	badHealth
 	.size	game1, .-game1
 	.align	2
 	.global	game2
@@ -676,8 +676,8 @@ game2:
 	.word	drawGame
 	.word	oldButtons
 	.word	buttons
-	.word	health
-	.word	enemiesRemaining
+	.word	playerHealth
+	.word	badHealth
 	.size	game2, .-game2
 	.align	2
 	.global	pause

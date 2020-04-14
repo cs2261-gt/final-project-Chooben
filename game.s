@@ -191,7 +191,7 @@ initPlayer:
 	.align	2
 .L25:
 	.word	player
-	.word	health
+	.word	playerHealth
 	.size	initPlayer, .-initPlayer
 	.global	__aeabi_idivmod
 	.align	2
@@ -521,7 +521,7 @@ updatePlayer:
 	.word	hOff
 	.word	enemies
 	.word	collision
-	.word	health
+	.word	playerHealth
 	.word	oldButtons
 	.word	buttons
 	.size	updatePlayer, .-updatePlayer
@@ -676,50 +676,55 @@ initGame:
 	@ args = 0, pretend = 0, frame = 0
 	@ frame_needed = 0, uses_anonymous_args = 0
 	mov	r1, #0
-	push	{r4, lr}
 	mov	r2, #16
+	push	{r4, lr}
 	mov	r4, #3
-	mov	ip, #1
-	mov	r0, #2
+	mov	r0, #1
+	mov	ip, #2
 	mov	lr, #20
 	ldr	r3, .L109
 	str	r1, [r3]
 	ldr	r3, .L109+4
 	str	r1, [r3]
 	ldr	r3, .L109+8
-	str	r4, [r3, #48]
 	str	r2, [r3, #24]
-	ldr	r4, .L109+12
 	str	r2, [r3, #28]
-	ldr	r2, .L109+16
-	str	ip, [r4]
-	str	ip, [r3, #16]
-	str	ip, [r3, #20]
-	str	ip, [r2, #16]
-	ldr	ip, .L109+20
-	str	lr, [r3, #8]
-	str	lr, [r3, #12]
+	ldr	r2, .L109+12
+	str	r4, [r3, #48]
+	ldr	r4, .L109+16
+	str	r0, [r2, #16]
 	str	r1, [r2, #24]
 	str	r1, [r2]
 	str	r1, [r2, #4]
 	str	r1, [r2, #28]
-	str	r0, [r2, #20]
-	str	r0, [r2, #8]
-	str	r0, [r2, #12]
-	pop	{r4, lr}
+	str	ip, [r2, #20]
+	str	ip, [r2, #8]
+	str	ip, [r2, #12]
+	str	lr, [r3, #8]
+	str	lr, [r3, #12]
 	str	r1, [r3, #44]
 	str	r1, [r3, #36]
-	str	r0, [ip]
-	b	initEnemy
+	str	r0, [r3, #16]
+	str	r0, [r3, #20]
+	str	r0, [r4]
+	bl	initEnemy
+	ldr	r3, .L109+20
+	ldr	r3, [r3, #16]
+	ldr	r2, .L109+24
+	lsl	r3, r3, #1
+	str	r3, [r2]
+	pop	{r4, lr}
+	bx	lr
 .L110:
 	.align	2
 .L109:
 	.word	hOff
 	.word	vOff
 	.word	player
-	.word	health
 	.word	bullets
-	.word	enemiesRemaining
+	.word	playerHealth
+	.word	enemies
+	.word	badHealth
 	.size	initGame, .-initGame
 	.align	2
 	.global	updateEnemy
@@ -749,8 +754,8 @@ updateEnemy:
 	ldr	lr, [r4, #24]
 	ldr	r5, .L122
 	cmp	lr, #0
-	addne	r1, r1, ip
 	addeq	r0, r0, ip
+	addne	r1, r1, ip
 	add	ip, r5, #8
 	ldm	ip, {ip, lr}
 	streq	r0, [r4]
@@ -764,18 +769,21 @@ updateEnemy:
 	mov	lr, pc
 	bx	r6
 	cmp	r0, #0
-	movne	r2, #0
-	ldrne	r3, [r4, #16]
 	ldreq	r3, [r4, #16]
-	subne	r3, r3, #1
-	strne	r3, [r4, #16]
-	strne	r2, [r5, #24]
+	beq	.L119
+	mov	r0, #0
+	ldr	r1, .L122+8
+	ldr	r3, [r4, #16]
+	ldr	r2, [r1]
+	ldr	ip, [r5, #16]
+	sub	r2, r2, #1
+	sub	r3, r3, ip
+	str	r3, [r4, #16]
+	str	r2, [r1]
+	str	r0, [r5, #24]
+.L119:
 	cmp	r3, #0
-	ldreq	r1, .L122+8
-	ldreq	r2, [r1]
-	subeq	r2, r2, #1
 	streq	r3, [r4, #28]
-	streq	r2, [r1]
 	add	sp, sp, #16
 	@ sp needed
 	pop	{r4, r5, r6, lr}
@@ -792,7 +800,7 @@ updateEnemy:
 .L122:
 	.word	bullets
 	.word	collision
-	.word	enemiesRemaining
+	.word	badHealth
 	.size	updateEnemy, .-updateEnemy
 	.align	2
 	.global	updateGame
@@ -878,9 +886,9 @@ drawEnemy:
 	.comm	shadowOAM,1024,4
 	.comm	vOff,4,4
 	.comm	hOff,4,4
-	.comm	enemiesRemaining,4,4
+	.comm	badHealth,4,4
 	.comm	enemies,64,4
 	.comm	bullets,32,4
-	.comm	health,4,4
+	.comm	playerHealth,4,4
 	.comm	player,56,4
 	.ident	"GCC: (devkitARM release 53) 9.1.0"

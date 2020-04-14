@@ -1358,10 +1358,10 @@ typedef struct {
 }ENEMY;
 # 33 "game.h"
 extern ANISPRITE player;
-extern int health;
+extern int playerHealth;
 extern BULLET bullets[1];
 extern ENEMY enemies[2];
-extern int enemiesRemaining;
+extern int badHealth;
 extern int hOff;
 extern int vOff;
 extern OBJ_ATTR shadowOAM[128];
@@ -1588,11 +1588,11 @@ void game1(){
     if((!(~(oldButtons)&((1<<3))) && (~buttons & ((1<<3)))))
         goToPause();
 
-    if(health == 0)
+    if(playerHealth == 0)
         goToLose();
     if(player.worldCol < 0)
         goToGame2();
-    if(enemiesRemaining == 0)
+    if(badHealth == 0)
         goToWin();
 }
 
@@ -1630,9 +1630,9 @@ void game2() {
     if((!(~(oldButtons)&((1<<3))) && (~buttons & ((1<<3)))))
         goToPause();
 
-    if(health == 0)
+    if(playerHealth == 0)
         goToLose();
-    if(enemiesRemaining == 0)
+    if(badHealth == 0)
         goToWin();
 }
 

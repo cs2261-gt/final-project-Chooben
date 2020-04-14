@@ -31,10 +31,10 @@ typedef struct {
 
 //Variables
 extern ANISPRITE player;
-extern int health;
+extern int playerHealth;
 extern BULLET bullets[BULLETCOUNT];
 extern ENEMY enemies[ENEMYCOUNT];
-extern int enemiesRemaining;
+extern int badHealth;
 extern int hOff;
 extern int vOff;
 extern OBJ_ATTR shadowOAM[128];

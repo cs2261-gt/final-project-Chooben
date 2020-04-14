@@ -148,11 +148,11 @@ void game1(){
     if(BUTTON_PRESSED(BUTTON_START))
         goToPause();
     //Loss condition
-    if(health == 0)
+    if(playerHealth == 0)
         goToLose();
     if(player.worldCol < 0)
         goToGame2();
-    if(enemiesRemaining == 0)
+    if(badHealth == 0)
         goToWin();
 }   
 //Setup region 2
@@ -190,9 +190,9 @@ void game2() {
     if(BUTTON_PRESSED(BUTTON_START))
         goToPause();
     //Loss condition
-    if(health == 0)
+    if(playerHealth == 0)
         goToLose();
-    if(enemiesRemaining == 0)
+    if(badHealth == 0)
         goToWin();
 }
 //Setup pause menu

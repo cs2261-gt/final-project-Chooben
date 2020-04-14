@@ -4,10 +4,10 @@
 
 //Variables
 ANISPRITE player;
-int health;
+int playerHealth;
 BULLET bullets[BULLETCOUNT];
 ENEMY enemies[ENEMYCOUNT];
-int enemiesRemaining;
+int badHealth;
 int hOff;
 int vOff;
 OBJ_ATTR shadowOAM[128];
@@ -24,8 +24,8 @@ void initGame() {
     initPlayer();
     initBullet();
 
-    enemiesRemaining = ENEMYCOUNT;
     initEnemy();
+    badHealth = enemies[0].health * ENEMYCOUNT;
 }
 //Update game attributes
 void updateGame() {
@@ -75,7 +75,7 @@ void initPlayer() {
     player.curFrame = 0;
     player.numFrames = 3;
     player.aniState = PFRONT;
-    health = 1;
+    playerHealth = 1;
 }
 //Update player movement
 void updatePlayer() {
@@ -121,7 +121,7 @@ void updatePlayer() {
     //Check player collision with enemy
     for(int i = 0; i < ENEMYCOUNT; i++) {
         if(collision(player.worldCol, player.worldRow, player.width, player.height, enemies[i].col, enemies[i].row, enemies[i].width, enemies[i].height)) {
-            health--;
+            playerHealth--;
         }
     }
 
@@ -276,18 +276,18 @@ void updateEnemy(ENEMY* e) {
         e->row += e->del;
     }
 
+    //Collision handler for enemy and bullet
     for(int i = 0; i < BULLETCOUNT; i++) {
         if(collision(e->col, e->row, e->width, e->height, bullets[i].col, bullets[i].row, bullets[i].width, bullets[i].height)) {
-            e->health-=1;
+            e->health -= bullets[0].damage;
+            badHealth--;
             bullets[i].active = 0;
         } 
     }
 
-    if(e->health == 0) {
+    //Enemy defeated when health equals 0
+    if(e->health == 0)
         e->active = 0;
-        enemiesRemaining--;
-    }
-    
 }
 //Draw all enemies
 void drawEnemy() {
