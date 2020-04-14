@@ -1361,7 +1361,9 @@ extern ANISPRITE player;
 extern int playerHealth;
 extern BULLET bullets[1];
 extern ENEMY enemies[2];
-extern int badHealth;
+extern ANISPRITE boss;
+extern int bossHealth;
+extern int currRegion;
 extern int hOff;
 extern int vOff;
 extern OBJ_ATTR shadowOAM[128];
@@ -1381,6 +1383,9 @@ void drawBullet();
 void initEnemy();
 void updateEnemy();
 void drawEnemy();
+void initboss();
+void updateBoss();
+void drawBoss();
 # 5 "main.c" 2
 # 1 "startScreen.h" 1
 # 22 "startScreen.h"
@@ -1590,9 +1595,13 @@ void game1(){
 
     if(playerHealth == 0)
         goToLose();
-    if(player.worldCol < 0)
+
+    if(player.worldCol < 0) {
         goToGame2();
-    if(badHealth == 0)
+        hOff = 17;
+    }
+
+    if(bossHealth == 0)
         goToWin();
 }
 
@@ -1611,7 +1620,6 @@ void goToGame2() {
     DMANow(3, spritesheetTiles, & ((charblock *)0x6000000)[4], 32768/2);
 
     player.worldCol = 256 - player.width;
-    hOff += 8;
 
     hideSprites();
     DMANow(3, shadowOAM, ((OBJ_ATTR*)(0x7000000)), 128*4);
@@ -1632,7 +1640,8 @@ void game2() {
 
     if(playerHealth == 0)
         goToLose();
-    if(badHealth == 0)
+
+    if(bossHealth == 0)
         goToWin();
 }
 

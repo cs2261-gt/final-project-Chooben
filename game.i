@@ -950,7 +950,9 @@ extern ANISPRITE player;
 extern int playerHealth;
 extern BULLET bullets[1];
 extern ENEMY enemies[2];
-extern int badHealth;
+extern ANISPRITE boss;
+extern int bossHealth;
+extern int currRegion;
 extern int hOff;
 extern int vOff;
 extern OBJ_ATTR shadowOAM[128];
@@ -970,6 +972,9 @@ void drawBullet();
 void initEnemy();
 void updateEnemy();
 void drawEnemy();
+void initboss();
+void updateBoss();
+void drawBoss();
 # 4 "game.c" 2
 
 
@@ -977,7 +982,9 @@ ANISPRITE player;
 int playerHealth;
 BULLET bullets[1];
 ENEMY enemies[2];
-int badHealth;
+ANISPRITE boss;
+int bossHealth;
+int currRegion;
 int hOff;
 int vOff;
 OBJ_ATTR shadowOAM[128];
@@ -995,7 +1002,7 @@ void initGame() {
     initBullet();
 
     initEnemy();
-    badHealth = enemies[0].health * 2;
+    bossHealth = 2;
 }
 
 void updateGame() {
@@ -1090,8 +1097,10 @@ void updatePlayer() {
 
 
     for(int i = 0; i < 2; i++) {
-        if(collision(player.worldCol, player.worldRow, player.width, player.height, enemies[i].col, enemies[i].row, enemies[i].width, enemies[i].height)) {
-            playerHealth--;
+        if(enemies[i].active == 1) {
+            if(collision(player.worldCol, player.worldRow, player.width, player.height, enemies[i].col, enemies[i].row, enemies[i].width, enemies[i].height)) {
+                playerHealth--;
+            }
         }
     }
 
@@ -1222,8 +1231,8 @@ void initEnemy() {
     for(int i = 0; i < 2; i++) {
         enemies[i].width = 16;
         enemies[i].height = 16;
-        enemies[i].col = 50;
-        enemies[i].row = 50;
+        enemies[i].col = (rand() % 240) + 50;
+        enemies[i].row = (rand() % 160) + 50;
         enemies[i].health = 1;
         enemies[i].del = 1;
         enemies[i].direction = rand() % 2;
@@ -1246,17 +1255,25 @@ void updateEnemy(ENEMY* e) {
         e->row += e->del;
     }
 
+
     for(int i = 0; i < 1; i++) {
         if(collision(e->col, e->row, e->width, e->height, bullets[i].col, bullets[i].row, bullets[i].width, bullets[i].height)) {
             e->health -= bullets[0].damage;
-            badHealth--;
+            bossHealth--;
             bullets[i].active = 0;
         }
     }
 
+
     if(e->health == 0)
         e->active = 0;
 
+    if(currRegion == 2) {
+        for(int i = 0; i < 2; i++) {
+            e->active = 0;
+            shadowOAM[100 + i].attr0 = (2<<8);
+        }
+    }
 }
 
 void drawEnemy() {
@@ -1264,9 +1281,15 @@ void drawEnemy() {
         if(enemies[i].active == 1) {
             shadowOAM[100 + i].attr0 = enemies[i].row | (0<<14);
             shadowOAM[100 + i].attr1 = enemies[i].col | (1<<14);
-            shadowOAM[100 + i].attr2 = ((0)*32+(12));
+            shadowOAM[100 + i].attr2 = ((0)*32+(10));
         } else {
             shadowOAM[100 + i].attr0 = (2<<8);
         }
     }
+}
+void initBoss() {
+}
+void updateBoss() {
+}
+void drawBoss() {
 }

@@ -150,9 +150,13 @@ void game1(){
     //Loss condition
     if(playerHealth == 0)
         goToLose();
-    if(player.worldCol < 0)
+    //Transition to region 2
+    if(player.worldCol < 0) {
         goToGame2();
-    if(badHealth == 0)
+        hOff = 17;
+    }
+    //Win condition
+    if(bossHealth == 0)
         goToWin();
 }   
 //Setup region 2
@@ -171,7 +175,6 @@ void goToGame2() {
     DMANow(3, spritesheetTiles, & CHARBLOCK[4], spritesheetTilesLen/2);
 
     player.worldCol = MAPWIDTH - player.width;
-    hOff += 8;
 
     hideSprites();
     DMANow(3, shadowOAM, OAM, 128*4);
@@ -192,7 +195,8 @@ void game2() {
     //Loss condition
     if(playerHealth == 0)
         goToLose();
-    if(badHealth == 0)
+    //Win condition
+    if(bossHealth == 0)
         goToWin();
 }
 //Setup pause menu
