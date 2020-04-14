@@ -114,7 +114,7 @@ void start(){
 
         initGame();
         goToGame1();
-    }
+    }initGame();
 }
 //Setup game
 void goToGame1(){

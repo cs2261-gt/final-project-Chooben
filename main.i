@@ -1554,7 +1554,7 @@ void start(){
 
         initGame();
         goToGame1();
-    }
+    }initGame();
 }
 
 void goToGame1(){
