@@ -112,8 +112,8 @@ void start(){
 
         srand(seed);
 
-        goToGame1();
         initGame();
+        goToGame1();
     }
 }
 //Setup game
@@ -152,6 +152,8 @@ void game1(){
         goToLose();
     if(player.worldCol < 0)
         goToGame2();
+    if(enemiesRemaining == 0)
+        goToWin();
 }   
 //Setup region 2
 void goToGame2() {
@@ -189,6 +191,8 @@ void game2() {
     //Loss condition
     if(health == 0)
         goToLose();
+    if(enemiesRemaining == 0)
+        goToWin();
 }
 //Setup pause menu
 void goToPause(){

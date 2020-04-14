@@ -1354,8 +1354,9 @@ typedef struct {
     int health;
     int del;
     int direction;
+    int active;
 }ENEMY;
-# 32 "game.h"
+# 33 "game.h"
 extern ANISPRITE player;
 extern int health;
 extern BULLET bullets[1];
@@ -1551,8 +1552,8 @@ void start(){
 
         srand(seed);
 
-        goToGame1();
         initGame();
+        goToGame1();
     }
 }
 
@@ -1591,6 +1592,8 @@ void game1(){
         goToLose();
     if(player.worldCol < 0)
         goToGame2();
+    if(enemiesRemaining == 0)
+        goToWin();
 }
 
 void goToGame2() {
@@ -1628,6 +1631,8 @@ void game2() {
 
     if(health == 0)
         goToLose();
+    if(enemiesRemaining == 0)
+        goToWin();
 }
 
 void goToPause(){

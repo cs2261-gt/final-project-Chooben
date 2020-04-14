@@ -943,8 +943,9 @@ typedef struct {
     int health;
     int del;
     int direction;
+    int active;
 }ENEMY;
-# 32 "game.h"
+# 33 "game.h"
 extern ANISPRITE player;
 extern int health;
 extern BULLET bullets[1];
@@ -976,7 +977,7 @@ ANISPRITE player;
 int health;
 BULLET bullets[1];
 ENEMY enemies[1];
-int enemiesRemaining;
+int enemiesRemaining = 1;
 int hOff;
 int vOff;
 OBJ_ATTR shadowOAM[128];
@@ -1042,7 +1043,7 @@ void initPlayer() {
     player.curFrame = 0;
     player.numFrames = 3;
     player.aniState = PFRONT;
-    health = 3;
+    health = 1;
 }
 
 void updatePlayer() {
@@ -1084,6 +1085,12 @@ void updatePlayer() {
 
 
     animatePlayer();
+
+    for(int i = 0; i < 1; i++) {
+        if(collision(player.worldCol, player.worldRow, player.width, player.height, enemies[i].col, enemies[i].row, enemies[i].width, enemies[i].height)) {
+            health--;
+        }
+    }
 
 
     if((!(~(oldButtons)&((1<<0))) && (~buttons & ((1<<0))))) {
@@ -1219,6 +1226,7 @@ void initEnemy() {
         enemies[i].health = 1;
         enemies[i].del = 1;
         enemies[i].direction = rand() % 2;
+        enemies[i].active = 1;
     }
 }
 
@@ -1237,11 +1245,22 @@ void updateEnemy(ENEMY* e) {
         e->row += e->del;
     }
 
+    for(int i = 0; i < 1; i++) {
+        if(collision(e->col, e->row, e->width, e->height, bullets[i].col, bullets[i].row, 2, 3)) {
+            e->health-=1;
+        }
+    }
+
+    if(e->health == 0) {
+        e->active = 0;
+        enemiesRemaining--;
+    }
+
 }
 
 void drawEnemy() {
     for(int i = 0; i < 1; i++) {
-        if(enemies[i].health != 0) {
+        if(enemies[i].active == 1) {
             shadowOAM[100 + i].attr0 = enemies[i].row | (0<<14);
             shadowOAM[100 + i].attr1 = enemies[i].col | (1<<14);
             shadowOAM[100 + i].attr2 = ((0)*32+(12));

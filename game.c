@@ -7,7 +7,7 @@ ANISPRITE player;
 int health;
 BULLET bullets[BULLETCOUNT];
 ENEMY enemies[ENEMYCOUNT];
-int enemiesRemaining;
+int enemiesRemaining = ENEMYCOUNT;
 int hOff;
 int vOff;
 OBJ_ATTR shadowOAM[128];
@@ -73,7 +73,7 @@ void initPlayer() {
     player.curFrame = 0;
     player.numFrames = 3;
     player.aniState = PFRONT;
-    health = 3;
+    health = 1;
 }
 //Update player movement
 void updatePlayer() {
@@ -115,6 +115,12 @@ void updatePlayer() {
 
     //Animate player sprite
     animatePlayer();
+
+    for(int i = 0; i < ENEMYCOUNT; i++) {
+        if(collision(player.worldCol, player.worldRow, player.width, player.height, enemies[i].col, enemies[i].row, enemies[i].width, enemies[i].height)) {
+            health--;
+        }
+    }
 
     //Player fires bullet
     if(BUTTON_PRESSED(BUTTON_A)) {
@@ -250,6 +256,7 @@ void initEnemy() {
         enemies[i].health = 1;
         enemies[i].del = 1;
         enemies[i].direction = rand() % 2;
+        enemies[i].active = 1;
     }
 }
 //Update enemies
@@ -267,12 +274,23 @@ void updateEnemy(ENEMY* e) {
     } else {
         e->row += e->del;
     }
+
+    for(int i = 0; i < BULLETCOUNT; i++) {
+        if(collision(e->col, e->row, e->width, e->height, bullets[i].col, bullets[i].row, 2, 3)) {
+            e->health-=1;
+        }
+    }
+
+    if(e->health == 0) {
+        e->active = 0;
+        enemiesRemaining--;
+    }
     
 }
 //Draw all enemies
 void drawEnemy() {
     for(int i = 0; i < ENEMYCOUNT; i++) {
-        if(enemies[i].health != 0) {
+        if(enemies[i].active == 1) {
             shadowOAM[100 + i].attr0 = enemies[i].row | ATTR0_SQUARE;
             shadowOAM[100 + i].attr1 = enemies[i].col | ATTR1_SMALL;
             shadowOAM[100 + i].attr2 = ATTR2_TILEID(12, 0);

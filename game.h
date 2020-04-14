@@ -19,6 +19,7 @@ typedef struct {
     int health;
     int del;
     int direction;
+    int active;
 }ENEMY;
 
 //Constants
