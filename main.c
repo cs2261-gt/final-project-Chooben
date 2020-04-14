@@ -171,6 +171,7 @@ void goToGame2() {
     DMANow(3, spritesheetTiles, & CHARBLOCK[4], spritesheetTilesLen/2);
 
     player.worldCol = MAPWIDTH - player.width;
+    hOff += 8;
 
     hideSprites();
     DMANow(3, shadowOAM, OAM, 128*4);

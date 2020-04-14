@@ -1088,6 +1088,7 @@ void updatePlayer() {
 
     animatePlayer();
 
+
     for(int i = 0; i < 2; i++) {
         if(collision(player.worldCol, player.worldRow, player.width, player.height, enemies[i].col, enemies[i].row, enemies[i].width, enemies[i].height)) {
             health--;
@@ -1147,8 +1148,8 @@ void initBullet() {
         bullets[i].row = 0;
         bullets[i].damage = 1;
         bullets[i].direction = DOWN;
-        bullets[i].width = 16;
-        bullets[i].height = 16;
+        bullets[i].width = 2;
+        bullets[i].height = 2;
     }
 }
 
@@ -1211,11 +1212,8 @@ void drawBullet(BULLET* b) {
     if(b->active) {
         shadowOAM[1].attr0 = b->row | (0<<14);
         shadowOAM[1].attr1 = b->col | (1<<14);
-        if(b->direction == UP || b->direction == DOWN) {
-            shadowOAM[1].attr2 = ((0)*32+(8));
-        } else {
-            shadowOAM[1].attr2 = ((0)*32+(10));
-        }
+        shadowOAM[1].attr2 = ((0)*32+(8));
+
     } else {
         shadowOAM[1].attr0 = (2<<8);
     }
@@ -1250,14 +1248,9 @@ void updateEnemy(ENEMY* e) {
     }
 
     for(int i = 0; i < 1; i++) {
-        if(bullets[i].direction == UP || bullets[i].direction == DOWN) {
-            if(collision(e->col, e->row, e->width, e->height, bullets[i].col, bullets[i].row, 2, 3)) {
-                e->health-=1;
-            }
-        } else {
-            if(collision(e->col, e->row, e->width, e->height, bullets[i].col, bullets[i].row, 3, 2)) {
-                e->health-=1;
-            }
+        if(collision(e->col, e->row, e->width, e->height, bullets[i].col, bullets[i].row, bullets[i].width, bullets[i].height)) {
+            e->health-=1;
+            bullets[i].active = 0;
         }
     }
 

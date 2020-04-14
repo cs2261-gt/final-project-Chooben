@@ -243,7 +243,7 @@ goToGame2:
 	@ Function supports interworking.
 	@ args = 0, pretend = 0, frame = 0
 	@ frame_needed = 0, uses_anonymous_args = 0
-	push	{r4, lr}
+	push	{r4, r5, r6, lr}
 	ldr	r3, .L24
 	ldr	r4, .L24+4
 	mov	lr, pc
@@ -267,31 +267,34 @@ goToGame2:
 	mov	lr, pc
 	bx	r4
 	mov	r2, #67108864
-	ldr	r3, .L24+24
-	ldrh	r1, [r3]
+	ldr	r5, .L24+24
 	ldr	r3, .L24+28
-	strh	r1, [r2, #18]	@ movhi
-	ldrh	r1, [r3]
+	ldrh	r1, [r5]
+	ldrh	r3, [r3]
 	mov	r0, #3
+	strh	r3, [r2, #18]	@ movhi
 	strh	r1, [r2, #16]	@ movhi
 	mov	r3, #256
 	ldr	r2, .L24+32
 	ldr	r1, .L24+36
 	mov	lr, pc
 	bx	r4
-	mov	r0, #3
 	mov	r3, #16384
+	mov	r0, #3
 	ldr	r2, .L24+40
 	ldr	r1, .L24+44
 	mov	lr, pc
 	bx	r4
-	ldr	r2, .L24+48
-	ldr	r3, [r2, #24]
-	ldr	r1, .L24+52
+	ldr	r1, .L24+48
+	ldr	r2, [r5]
+	ldr	r3, [r1, #24]
+	add	r2, r2, #8
 	rsb	r3, r3, #256
-	str	r3, [r2, #12]
+	ldr	r0, .L24+52
+	str	r2, [r5]
+	str	r3, [r1, #12]
 	mov	lr, pc
-	bx	r1
+	bx	r0
 	mov	r3, #512
 	mov	r2, #117440512
 	ldr	r1, .L24+56
@@ -303,7 +306,7 @@ goToGame2:
 	ldr	r2, .L24+64
 	str	r3, [r1]
 	str	r3, [r2]
-	pop	{r4, lr}
+	pop	{r4, r5, r6, lr}
 	bx	lr
 .L25:
 	.align	2
@@ -314,8 +317,8 @@ goToGame2:
 	.word	region2Tiles
 	.word	100726784
 	.word	region2Map
-	.word	vOff
 	.word	hOff
+	.word	vOff
 	.word	83886592
 	.word	spritesheetPal
 	.word	100728832

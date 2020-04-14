@@ -1611,6 +1611,7 @@ void goToGame2() {
     DMANow(3, spritesheetTiles, & ((charblock *)0x6000000)[4], 32768/2);
 
     player.worldCol = 256 - player.width;
+    hOff += 8;
 
     hideSprites();
     DMANow(3, shadowOAM, ((OBJ_ATTR*)(0x7000000)), 128*4);
