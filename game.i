@@ -1250,8 +1250,14 @@ void updateEnemy(ENEMY* e) {
     }
 
     for(int i = 0; i < 1; i++) {
-        if(collision(e->col, e->row, e->width, e->height, bullets[i].col, bullets[i].row, 2, 3)) {
-            e->health-=1;
+        if(bullets[i].direction == UP || bullets[i].direction == DOWN) {
+            if(collision(e->col, e->row, e->width, e->height, bullets[i].col, bullets[i].row, 2, 3)) {
+                e->health-=1;
+            }
+        } else {
+            if(collision(e->col, e->row, e->width, e->height, bullets[i].col, bullets[i].row, 3, 2)) {
+                e->health-=1;
+            }
         }
     }
 

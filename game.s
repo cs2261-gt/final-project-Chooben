@@ -761,21 +761,26 @@ updateEnemy:
 	str	ip, [r4, #20]
 .L118:
 	ldr	lr, [r4, #24]
-	mov	r5, #3
 	cmp	lr, #0
-	mov	lr, #2
-	addne	r1, r1, ip
 	addeq	r0, r0, ip
-	ldr	ip, .L126
-	ldr	r6, [ip, #4]
-	ldr	ip, [ip]
+	addne	r1, r1, ip
+	ldr	ip, .L131
+	ldr	lr, [ip, #28]
 	streq	r0, [r4]
 	strne	r1, [r4, #4]
-	str	r5, [sp, #12]
-	str	r6, [sp, #4]
-	str	ip, [sp]
-	str	lr, [sp, #8]
-	ldr	r5, .L126+4
+	cmp	lr, #1
+	movhi	r6, #2
+	ldr	lr, [ip]
+	movhi	r5, #3
+	ldr	ip, [ip, #4]
+	movls	r6, #3
+	movls	r5, #2
+.L130:
+	str	r5, [sp, #8]
+	str	ip, [sp, #4]
+	str	lr, [sp]
+	str	r6, [sp, #12]
+	ldr	r5, .L131+4
 	mov	lr, pc
 	bx	r5
 	ldr	r3, [r4, #16]
@@ -783,11 +788,13 @@ updateEnemy:
 	subne	r3, r3, #1
 	strne	r3, [r4, #16]
 	cmp	r3, #0
-	ldreq	r1, .L126+8
-	ldreq	r2, [r1]
-	subeq	r2, r2, #1
-	streq	r3, [r4, #28]
-	streq	r2, [r1]
+	bne	.L115
+	ldr	r1, .L131+8
+	ldr	r2, [r1]
+	sub	r2, r2, #1
+	str	r3, [r4, #28]
+	str	r2, [r1]
+.L115:
 	add	sp, sp, #16
 	@ sp needed
 	pop	{r4, r5, r6, lr}
@@ -799,9 +806,9 @@ updateEnemy:
 	cmp	lr, #255
 	ble	.L118
 	b	.L119
-.L127:
+.L132:
 	.align	2
-.L126:
+.L131:
 	.word	bullets
 	.word	collision
 	.word	enemiesRemaining
@@ -817,18 +824,18 @@ updateGame:
 	@ args = 0, pretend = 0, frame = 0
 	@ frame_needed = 0, uses_anonymous_args = 0
 	push	{r4, lr}
-	ldr	r4, .L130
+	ldr	r4, .L135
 	bl	updatePlayer
-	ldr	r0, .L130+4
+	ldr	r0, .L135+4
 	bl	updateBullet
 	mov	r0, r4
 	bl	updateEnemy
 	add	r0, r4, #32
 	pop	{r4, lr}
 	b	updateEnemy
-.L131:
+.L136:
 	.align	2
-.L130:
+.L135:
 	.word	enemies
 	.word	bullets
 	.size	updateGame, .-updateGame
@@ -843,25 +850,25 @@ drawEnemy:
 	@ args = 0, pretend = 0, frame = 0
 	@ frame_needed = 0, uses_anonymous_args = 0
 	@ link register save eliminated.
-	ldr	r3, .L138
+	ldr	r3, .L143
 	ldr	r2, [r3, #28]
 	cmp	r2, #1
-	beq	.L133
+	beq	.L138
 	mov	r1, #512
-	ldr	r2, .L138+4
+	ldr	r2, .L143+4
 	strh	r1, [r2]	@ movhi
 	ldr	r2, [r3, #60]
 	cmp	r2, #1
-	beq	.L135
-.L137:
+	beq	.L140
+.L142:
 	mov	r2, #512
-	ldr	r3, .L138+8
+	ldr	r3, .L143+8
 	strh	r2, [r3]	@ movhi
 	bx	lr
-.L133:
+.L138:
 	mov	r0, #12
 	ldr	r1, [r3]
-	ldr	r2, .L138+4
+	ldr	r2, .L143+4
 	ldr	ip, [r3, #4]
 	orr	r1, r1, #16384
 	strh	r1, [r2, #2]	@ movhi
@@ -869,20 +876,20 @@ drawEnemy:
 	strh	r0, [r2, #4]	@ movhi
 	ldr	r2, [r3, #60]
 	cmp	r2, #1
-	bne	.L137
-.L135:
+	bne	.L142
+.L140:
 	mov	r1, #12
 	ldr	r2, [r3, #32]
 	ldr	r0, [r3, #36]
-	ldr	r3, .L138+8
+	ldr	r3, .L143+8
 	orr	r2, r2, #16384
 	strh	r2, [r3, #2]	@ movhi
 	strh	r0, [r3]	@ movhi
 	strh	r1, [r3, #4]	@ movhi
 	bx	lr
-.L139:
+.L144:
 	.align	2
-.L138:
+.L143:
 	.word	enemies
 	.word	shadowOAM+800
 	.word	shadowOAM+808
