@@ -7,7 +7,7 @@ ANISPRITE player;
 int playerHealth;
 BULLET bullets[BULLETCOUNT];
 ENEMY enemies[ENEMYCOUNT];
-ANISPRITE boss;
+BOSS boss;
 int bossHealth;
 int currRegion;
 int hOff;
@@ -16,9 +16,11 @@ OBJ_ATTR shadowOAM[128];
 
 enum{PFRONT, PBACK, PLEFT, PRIGHT, PIDLE};
 enum{DOWN, UP, LEFT, RIGHT};
+enum{BFRONT, BBACK, BLEFT, BRIGHT, BIDLE};
 
 //Initialize all game attributes
 void initGame() {
+    bossHealth = 2;
 
     hOff = 0;
     vOff = 0;
@@ -27,7 +29,11 @@ void initGame() {
     initBullet();
 
     initEnemy();
-    bossHealth = 2;
+
+    //Initialize boss if in boss area
+    if(currRegion == 2) {
+        initBoss();
+    }
 }
 //Update game attributes
 void updateGame() {
@@ -59,6 +65,11 @@ void drawGame() {
     //Draw enemies
     drawEnemy();
 
+    //Draw boss if in boss area
+    if(currRegion == 2) {
+        drawBoss();
+    }
+
     waitForVBlank();
     DMANow(3, shadowOAM, OAM, 128 * 4);
 
@@ -82,6 +93,7 @@ void initPlayer() {
 //Update player movement
 void updatePlayer() {
 
+    //Complex player movement
     if(BUTTON_HELD(BUTTON_UP)) {
         if(player.worldRow > 0) {
             player.worldRow-=player.rdel;
@@ -282,17 +294,20 @@ void updateEnemy(ENEMY* e) {
 
     //Collision handler for enemy and bullet
     for(int i = 0; i < BULLETCOUNT; i++) {
-        if(collision(e->col, e->row, e->width, e->height, bullets[i].col, bullets[i].row, bullets[i].width, bullets[i].height)) {
-            e->health -= bullets[0].damage;
-            bossHealth--;
-            bullets[i].active = 0;
-        } 
+        if(e->active == 1) {
+            if(collision(e->col, e->row, e->width, e->height, bullets[i].col, bullets[i].row, bullets[i].width, bullets[i].height)) {
+                e->health -= bullets[0].damage;
+                bossHealth--;
+                bullets[i].active = 0;
+            } 
+        }
     }
 
     //Enemy defeated when health equals 0
     if(e->health == 0)
         e->active = 0;
 
+    //Deactivates enemies if in boss area
     if(currRegion == 2) {
         for(int i = 0; i < ENEMYCOUNT; i++) {
             e->active = 0;
@@ -312,9 +327,23 @@ void drawEnemy() {
         }
     }
 }
+//Initialize boss attributes
 void initBoss() {
+    boss.col = MAPWIDTH/2;
+    boss.row = MAPHEIGHT/2;
+    boss.curFrame = 0;
+    boss.numFrames = 3;
+    boss.aniState = BFRONT;
 }
+//Update boss attributes
 void updateBoss() {
 }
+//Animate boss sprite
+void animateBoss() {
+}
+//Draw boss sprite
 void drawBoss() {
+    shadowOAM[127].attr0 = boss.row | ATTR0_SQUARE;
+    shadowOAM[127].attr1 = boss.col | ATTR1_MEDIUM;
+    shadowOAM[127].attr2 = ATTR2_TILEID(12, 0);
 }

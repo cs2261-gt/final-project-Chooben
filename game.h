@@ -22,6 +22,20 @@ typedef struct {
     int active;
 }ENEMY;
 
+typedef struct {
+    int col;
+    int row;
+    int rdel;
+    int cdel;
+    int width;
+    int height;
+    int aniCounter;
+    int aniState;
+    int prevAniState;
+    int curFrame;
+    int numFrames;
+} BOSS;
+
 //Constants
 #define MAPHEIGHT 256
 #define MAPWIDTH 256
@@ -34,7 +48,7 @@ extern ANISPRITE player;
 extern int playerHealth;
 extern BULLET bullets[BULLETCOUNT];
 extern ENEMY enemies[ENEMYCOUNT];
-extern ANISPRITE boss;
+extern BOSS boss;
 extern int bossHealth;
 extern int currRegion;
 extern int hOff;
@@ -58,4 +72,5 @@ void updateEnemy();
 void drawEnemy();
 void initboss();
 void updateBoss();
+void animateBoss();
 void drawBoss();

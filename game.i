@@ -945,12 +945,26 @@ typedef struct {
     int direction;
     int active;
 }ENEMY;
-# 33 "game.h"
+
+typedef struct {
+    int col;
+    int row;
+    int rdel;
+    int cdel;
+    int width;
+    int height;
+    int aniCounter;
+    int aniState;
+    int prevAniState;
+    int curFrame;
+    int numFrames;
+} BOSS;
+# 47 "game.h"
 extern ANISPRITE player;
 extern int playerHealth;
 extern BULLET bullets[1];
 extern ENEMY enemies[2];
-extern ANISPRITE boss;
+extern BOSS boss;
 extern int bossHealth;
 extern int currRegion;
 extern int hOff;
@@ -974,6 +988,7 @@ void updateEnemy();
 void drawEnemy();
 void initboss();
 void updateBoss();
+void animateBoss();
 void drawBoss();
 # 4 "game.c" 2
 
@@ -982,7 +997,7 @@ ANISPRITE player;
 int playerHealth;
 BULLET bullets[1];
 ENEMY enemies[2];
-ANISPRITE boss;
+BOSS boss;
 int bossHealth;
 int currRegion;
 int hOff;
@@ -991,9 +1006,11 @@ OBJ_ATTR shadowOAM[128];
 
 enum{PFRONT, PBACK, PLEFT, PRIGHT, PIDLE};
 enum{DOWN, UP, LEFT, RIGHT};
+enum{BFRONT, BBACK, BLEFT, BRIGHT, BIDLE};
 
 
 void initGame() {
+    bossHealth = 2;
 
     hOff = 0;
     vOff = 0;
@@ -1002,7 +1019,10 @@ void initGame() {
     initBullet();
 
     initEnemy();
-    bossHealth = 2;
+
+    if(currRegion == 2) {
+        initBoss();
+    }
 }
 
 void updateGame() {
@@ -1033,6 +1053,10 @@ void drawGame() {
 
 
     drawEnemy();
+
+    if(currRegion == 2) {
+        drawBoss();
+    }
 
     waitForVBlank();
     DMANow(3, shadowOAM, ((OBJ_ATTR*)(0x7000000)), 128 * 4);
@@ -1257,10 +1281,12 @@ void updateEnemy(ENEMY* e) {
 
 
     for(int i = 0; i < 1; i++) {
-        if(collision(e->col, e->row, e->width, e->height, bullets[i].col, bullets[i].row, bullets[i].width, bullets[i].height)) {
-            e->health -= bullets[0].damage;
-            bossHealth--;
-            bullets[i].active = 0;
+        if(e->active == 1) {
+            if(collision(e->col, e->row, e->width, e->height, bullets[i].col, bullets[i].row, bullets[i].width, bullets[i].height)) {
+                e->health -= bullets[0].damage;
+                bossHealth--;
+                bullets[i].active = 0;
+            }
         }
     }
 
@@ -1288,8 +1314,18 @@ void drawEnemy() {
     }
 }
 void initBoss() {
+    boss.col = 256/2;
+    boss.row = 256/2;
+    boss.curFrame = 0;
+    boss.numFrames = 3;
+    boss.aniState = BFRONT;
 }
 void updateBoss() {
 }
+void animateBoss() {
+}
 void drawBoss() {
+    shadowOAM[127].attr0 = boss.row | (0<<14);
+    shadowOAM[127].attr1 = boss.col | (2<<14);
+    shadowOAM[127].attr2 = ((0)*32+(12));
 }

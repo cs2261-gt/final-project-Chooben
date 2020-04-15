@@ -1356,12 +1356,26 @@ typedef struct {
     int direction;
     int active;
 }ENEMY;
-# 33 "game.h"
+
+typedef struct {
+    int col;
+    int row;
+    int rdel;
+    int cdel;
+    int width;
+    int height;
+    int aniCounter;
+    int aniState;
+    int prevAniState;
+    int curFrame;
+    int numFrames;
+} BOSS;
+# 47 "game.h"
 extern ANISPRITE player;
 extern int playerHealth;
 extern BULLET bullets[1];
 extern ENEMY enemies[2];
-extern ANISPRITE boss;
+extern BOSS boss;
 extern int bossHealth;
 extern int currRegion;
 extern int hOff;
@@ -1385,6 +1399,7 @@ void updateEnemy();
 void drawEnemy();
 void initboss();
 void updateBoss();
+void animateBoss();
 void drawBoss();
 # 5 "main.c" 2
 # 1 "startScreen.h" 1
