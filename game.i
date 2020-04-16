@@ -926,6 +926,8 @@ int collision(int colA, int rowA, int widthA, int heightA, int colB, int rowB, i
 typedef struct {
     int col;
     int row;
+    int scol;
+    int srow;
     int width;
     int height;
     int damage;
@@ -938,6 +940,8 @@ typedef struct {
 typedef struct {
     int col;
     int row;
+    int scol;
+    int srow;
     int width;
     int height;
     int health;
@@ -949,17 +953,20 @@ typedef struct {
 typedef struct {
     int col;
     int row;
+    int scol;
+    int srow;
     int rdel;
     int cdel;
     int width;
     int height;
+    int active;
     int aniCounter;
     int aniState;
     int prevAniState;
     int curFrame;
     int numFrames;
 } BOSS;
-# 47 "game.h"
+# 54 "game.h"
 extern ANISPRITE player;
 extern int playerHealth;
 extern BULLET bullets[1];
@@ -1020,10 +1027,7 @@ void initGame() {
 
     initEnemy();
 
-
-    if(currRegion == 2) {
-        initBoss();
-    }
+    initBoss();
 }
 
 void updateGame() {
@@ -1043,6 +1047,7 @@ void updateGame() {
 
 
     if(currRegion == 2) {
+        boss.active = 1;
         updateBoss();
     }
 }
@@ -1106,7 +1111,12 @@ void updatePlayer() {
         }
     }
     if((~((*(volatile unsigned short *)0x04000130)) & ((1<<5)))) {
-        player.worldCol-=player.cdel;
+        if(currRegion == 1) {
+            player.worldCol-=player.cdel;
+        } else if(player.worldCol > 0) {
+            player.worldCol-=player.cdel;
+        }
+
         if((hOff >= 0) && (player.screenCol < 240/2)) {
             hOff--;
         }
@@ -1200,20 +1210,20 @@ void fireBullet() {
             bullets[i].active = 1;
             if(player.aniState == PFRONT) {
                 bullets[i].direction = DOWN;
-                bullets[i].col = player.screenCol;
-                bullets[i].row = player.screenRow;
+                bullets[i].col = player.worldCol;
+                bullets[i].row = player.worldRow;
             } else if(player.aniState == PBACK) {
                 bullets[i].direction = UP;
-                bullets[i].col = player.screenCol;
-                bullets[i].row = player.screenRow;
+                bullets[i].col = player.worldCol;
+                bullets[i].row = player.worldRow;
             } else if(player.aniState == PLEFT) {
                 bullets[i].direction = LEFT;
-                bullets[i].row = player.screenRow;
-                bullets[i].col = player.screenCol;
+                bullets[i].row = player.worldRow;
+                bullets[i].col = player.worldCol;
             } else if(player.aniState == PRIGHT) {
                 bullets[i].direction = RIGHT;
-                bullets[i].row = player.screenRow;
-                bullets[i].col = player.screenCol;
+                bullets[i].row = player.worldRow;
+                bullets[i].col = player.worldCol;
             }
         }
     }
@@ -1247,12 +1257,15 @@ void updateBullet(BULLET*b) {
             }
         }
     }
+
+    b->scol = b->col - hOff;
+    b->srow = b->row - vOff;
 }
 
 void drawBullet(BULLET* b) {
     if(b->active) {
-        shadowOAM[1].attr0 = b->row | (0<<14);
-        shadowOAM[1].attr1 = b->col | (1<<14);
+        shadowOAM[1].attr0 = (0xFF & b->srow) | (0<<14);
+        shadowOAM[1].attr1 = (0x1FF & b->scol) | (1<<14);
         shadowOAM[1].attr2 = ((0)*32+(8));
     } else {
         shadowOAM[1].attr0 = (2<<8);
@@ -1263,8 +1276,8 @@ void initEnemy() {
     for(int i = 0; i < 2; i++) {
         enemies[i].width = 16;
         enemies[i].height = 16;
-        enemies[i].col = (rand() % 240) + 50;
-        enemies[i].row = (rand() % 160) + 50;
+        enemies[i].col = (rand() % 240);
+        enemies[i].row = (rand() % 160);
         enemies[i].health = 1;
         enemies[i].del = 1;
         enemies[i].direction = rand() % 2;
@@ -1286,6 +1299,9 @@ void updateEnemy(ENEMY* e) {
     } else {
         e->row += e->del;
     }
+
+    e->scol = e->col - hOff;
+    e->srow = e->row - vOff;
 
 
     for(int i = 0; i < 1; i++) {
@@ -1314,8 +1330,8 @@ void updateEnemy(ENEMY* e) {
 void drawEnemy() {
     for(int i = 0; i < 2; i++) {
         if(enemies[i].active == 1) {
-            shadowOAM[100 + i].attr0 = enemies[i].row | (0<<14);
-            shadowOAM[100 + i].attr1 = enemies[i].col | (1<<14);
+            shadowOAM[100 + i].attr0 = (0xFF & enemies[i].srow) | (0<<14);
+            shadowOAM[100 + i].attr1 = (0x1FF & enemies[i].scol) | (1<<14);
             shadowOAM[100 + i].attr2 = ((0)*32+(10));
         } else {
             shadowOAM[100 + i].attr0 = (2<<8);
@@ -1324,10 +1340,11 @@ void drawEnemy() {
 }
 
 void initBoss() {
-    boss.col = 256/2;
-    boss.row = 256/2;
+    boss.col = 100;
+    boss.row = 100;
     boss.width = 32;
     boss.height = 32;
+    boss.active = 0;
     boss.curFrame = 0;
     boss.numFrames = 3;
     boss.aniState = BFRONT;
@@ -1335,12 +1352,23 @@ void initBoss() {
 
 void updateBoss() {
 
+
+    boss.scol = boss.col - hOff;
+    boss.srow = boss.row - vOff;
+
+
     for(int i = 0; i < 1; i++) {
-        if(bullets[i].active == 1) {
+        if((bullets[i].active == 1) && (boss.active == 1)) {
             if(collision(boss.col, boss.row, boss.width, boss.height, bullets[i].col, bullets[i].row, bullets[i].width, bullets[i].height)) {
                 bossHealth--;
                 bullets[i].active = 0;
             }
+        }
+    }
+
+    if(boss.active == 1) {
+        if(collision(boss.col, boss.row, boss.width, boss.height, player.worldCol, player.worldRow, player.width, player.height)) {
+            playerHealth--;
         }
     }
 }
@@ -1349,7 +1377,7 @@ void animateBoss() {
 }
 
 void drawBoss() {
-    shadowOAM[127].attr0 = boss.row | (0<<14);
-    shadowOAM[127].attr1 = boss.col | (2<<14);
+    shadowOAM[127].attr0 = (0xFF & boss.srow) | (0<<14);
+    shadowOAM[127].attr1 = (0x1FF & boss.scol) | (2<<14);
     shadowOAM[127].attr2 = ((0)*32+(boss.aniState + 12));
 }

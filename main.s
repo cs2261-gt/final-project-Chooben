@@ -605,7 +605,7 @@ game1:
 	bge	.L50
 .L58:
 	bl	goToGame2
-	mov	r2, #17
+	mov	r2, #16
 	ldr	r3, .L60+28
 	str	r2, [r3]
 	b	.L50

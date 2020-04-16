@@ -30,10 +30,7 @@ void initGame() {
 
     initEnemy();
 
-    //Initialize boss if in boss area
-    if(currRegion == 2) {
-        initBoss();
-    }
+    initBoss();
 }
 //Update game attributes
 void updateGame() {
@@ -53,6 +50,7 @@ void updateGame() {
 
     //Update boss if in boss area
     if(currRegion == 2) {
+        boss.active = 1;
         updateBoss();
     }
 }
@@ -116,7 +114,12 @@ void updatePlayer() {
         }
     }
     if(BUTTON_HELD(BUTTON_LEFT)) {
-        player.worldCol-=player.cdel;
+        if(currRegion == 1) {
+            player.worldCol-=player.cdel;
+        } else if(player.worldCol > 0) {
+            player.worldCol-=player.cdel;
+        }
+
         if((hOff >= 0) && (player.screenCol < SCREENWIDTH/2)) {
             hOff--;
         }
@@ -210,20 +213,20 @@ void fireBullet() {
             bullets[i].active = 1;
             if(player.aniState == PFRONT) {
                 bullets[i].direction = DOWN;
-                bullets[i].col = player.screenCol;
-                bullets[i].row = player.screenRow;
+                bullets[i].col = player.worldCol;
+                bullets[i].row = player.worldRow;
             } else if(player.aniState == PBACK) {
                 bullets[i].direction = UP;
-                bullets[i].col = player.screenCol;
-                bullets[i].row = player.screenRow;
+                bullets[i].col = player.worldCol;
+                bullets[i].row = player.worldRow;
             } else if(player.aniState == PLEFT) {
                 bullets[i].direction = LEFT;
-                bullets[i].row = player.screenRow;
-                bullets[i].col = player.screenCol;
+                bullets[i].row = player.worldRow;
+                bullets[i].col = player.worldCol;
             } else if(player.aniState == PRIGHT) {
                 bullets[i].direction = RIGHT;
-                bullets[i].row = player.screenRow;
-                bullets[i].col = player.screenCol;
+                bullets[i].row = player.worldRow;
+                bullets[i].col = player.worldCol;
             }
         }
     }
@@ -257,12 +260,15 @@ void updateBullet(BULLET*b) {
             }
         }
     }
+
+    b->scol = b->col - hOff;
+    b->srow = b->row - vOff;
 }
 //Draw bullets
 void drawBullet(BULLET* b) {
     if(b->active) {
-        shadowOAM[1].attr0 = b->row | ATTR0_SQUARE;
-        shadowOAM[1].attr1 = b->col | ATTR1_SMALL;
+        shadowOAM[1].attr0 = (ROWMASK & b->srow) | ATTR0_SQUARE;
+        shadowOAM[1].attr1 = (COLMASK & b->scol) | ATTR1_SMALL;
         shadowOAM[1].attr2 = ATTR2_TILEID(8, 0);
     } else {
         shadowOAM[1].attr0 = ATTR0_HIDE;
@@ -273,8 +279,8 @@ void initEnemy() {
     for(int i = 0; i < ENEMYCOUNT; i++) {
         enemies[i].width = 16;
         enemies[i].height = 16;
-        enemies[i].col = (rand() % 240) + 50;
-        enemies[i].row = (rand() % 160) + 50;
+        enemies[i].col = (rand() % 240);
+        enemies[i].row = (rand() % 160);
         enemies[i].health = 1;
         enemies[i].del = 1;
         enemies[i].direction = rand() % 2;
@@ -296,6 +302,9 @@ void updateEnemy(ENEMY* e) {
     } else {
         e->row += e->del;
     }
+
+    e->scol = e->col - hOff;
+    e->srow = e->row - vOff;
 
     //Collision handler for enemy and bullet
     for(int i = 0; i < BULLETCOUNT; i++) {
@@ -324,8 +333,8 @@ void updateEnemy(ENEMY* e) {
 void drawEnemy() {
     for(int i = 0; i < ENEMYCOUNT; i++) {
         if(enemies[i].active == 1) {
-            shadowOAM[100 + i].attr0 = enemies[i].row | ATTR0_SQUARE;
-            shadowOAM[100 + i].attr1 = enemies[i].col | ATTR1_SMALL;
+            shadowOAM[100 + i].attr0 = (ROWMASK & enemies[i].srow) | ATTR0_SQUARE;
+            shadowOAM[100 + i].attr1 = (COLMASK & enemies[i].scol) | ATTR1_SMALL;
             shadowOAM[100 + i].attr2 = ATTR2_TILEID(10, 0);
         } else {
             shadowOAM[100 + i].attr0 = ATTR0_HIDE;
@@ -334,23 +343,35 @@ void drawEnemy() {
 }
 //Initialize boss attributes
 void initBoss() {
-    boss.col = MAPWIDTH/2;
-    boss.row = MAPHEIGHT/2;
+    boss.col = 100;
+    boss.row = 100;
     boss.width = 32;
     boss.height = 32;
+    boss.active = 0;
     boss.curFrame = 0;
     boss.numFrames = 3;
     boss.aniState = BFRONT;
 }
 //Update boss attributes
 void updateBoss() {
+
+    //Update screen coordinates
+    boss.scol = boss.col - hOff;
+    boss.srow = boss.row - vOff;
+
     //Collision handler for boss and bullets
     for(int i = 0; i < BULLETCOUNT; i++) {
-        if(bullets[i].active == 1) {
+        if((bullets[i].active == 1) && (boss.active == 1)) {
             if(collision(boss.col, boss.row, boss.width, boss.height, bullets[i].col, bullets[i].row, bullets[i].width, bullets[i].height)) {
                 bossHealth--;
                 bullets[i].active = 0;
             }
+        }
+    }
+
+    if(boss.active == 1) {
+        if(collision(boss.col, boss.row, boss.width, boss.height, player.worldCol, player.worldRow, player.width, player.height)) {
+            playerHealth--;
         }
     }
 }
@@ -359,7 +380,7 @@ void animateBoss() {
 }
 //Draw boss sprite
 void drawBoss() {
-    shadowOAM[127].attr0 = boss.row | ATTR0_SQUARE;
-    shadowOAM[127].attr1 = boss.col | ATTR1_MEDIUM;
+    shadowOAM[127].attr0 = (ROWMASK & boss.srow) | ATTR0_SQUARE;
+    shadowOAM[127].attr1 = (COLMASK & boss.scol) | ATTR1_MEDIUM;
     shadowOAM[127].attr2 = ATTR2_TILEID(boss.aniState + 12, 0);
 }

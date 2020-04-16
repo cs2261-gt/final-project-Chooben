@@ -2,6 +2,8 @@
 typedef struct {
     int col;
     int row;
+    int scol;
+    int srow;
     int width;
     int height;
     int damage;
@@ -14,6 +16,8 @@ typedef struct {
 typedef struct {
     int col;
     int row;
+    int scol;
+    int srow;
     int width;
     int height;
     int health;
@@ -25,10 +29,13 @@ typedef struct {
 typedef struct {
     int col;
     int row;
+    int scol;
+    int srow;
     int rdel;
     int cdel;
     int width;
     int height;
+    int active;
     int aniCounter;
     int aniState;
     int prevAniState;

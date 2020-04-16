@@ -1337,6 +1337,8 @@ int collision(int colA, int rowA, int widthA, int heightA, int colB, int rowB, i
 typedef struct {
     int col;
     int row;
+    int scol;
+    int srow;
     int width;
     int height;
     int damage;
@@ -1349,6 +1351,8 @@ typedef struct {
 typedef struct {
     int col;
     int row;
+    int scol;
+    int srow;
     int width;
     int height;
     int health;
@@ -1360,17 +1364,20 @@ typedef struct {
 typedef struct {
     int col;
     int row;
+    int scol;
+    int srow;
     int rdel;
     int cdel;
     int width;
     int height;
+    int active;
     int aniCounter;
     int aniState;
     int prevAniState;
     int curFrame;
     int numFrames;
 } BOSS;
-# 47 "game.h"
+# 54 "game.h"
 extern ANISPRITE player;
 extern int playerHealth;
 extern BULLET bullets[1];
@@ -1613,7 +1620,7 @@ void game1(){
 
     if(player.worldCol < 0) {
         goToGame2();
-        hOff = 17;
+        hOff = 16;
     }
 
     if(bossHealth == 0)
