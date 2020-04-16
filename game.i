@@ -986,7 +986,7 @@ void drawBullet();
 void initEnemy();
 void updateEnemy();
 void drawEnemy();
-void initboss();
+void initBoss();
 void updateBoss();
 void animateBoss();
 void drawBoss();
@@ -1020,6 +1020,7 @@ void initGame() {
 
     initEnemy();
 
+
     if(currRegion == 2) {
         initBoss();
     }
@@ -1039,6 +1040,11 @@ void updateGame() {
     for(int i = 0; i < 2; i++) {
         updateEnemy(&enemies[i]);
     }
+
+
+    if(currRegion == 2) {
+        updateBoss();
+    }
 }
 
 void drawGame() {
@@ -1053,6 +1059,7 @@ void drawGame() {
 
 
     drawEnemy();
+
 
     if(currRegion == 2) {
         drawBoss();
@@ -1080,6 +1087,7 @@ void initPlayer() {
 }
 
 void updatePlayer() {
+
 
     if((~((*(volatile unsigned short *)0x04000130)) & ((1<<6)))) {
         if(player.worldRow > 0) {
@@ -1226,7 +1234,7 @@ void updateBullet(BULLET*b) {
                 b->row -=b->del;
             }
         } else if(b->direction == LEFT) {
-            if(b->col < 0) {
+            if(b->col < 1) {
                 b->active = 0;
             } else {
                 b->col -= b->del;
@@ -1294,6 +1302,7 @@ void updateEnemy(ENEMY* e) {
     if(e->health == 0)
         e->active = 0;
 
+
     if(currRegion == 2) {
         for(int i = 0; i < 2; i++) {
             e->active = 0;
@@ -1313,19 +1322,34 @@ void drawEnemy() {
         }
     }
 }
+
 void initBoss() {
     boss.col = 256/2;
     boss.row = 256/2;
+    boss.width = 32;
+    boss.height = 32;
     boss.curFrame = 0;
     boss.numFrames = 3;
     boss.aniState = BFRONT;
 }
+
 void updateBoss() {
+
+    for(int i = 0; i < 1; i++) {
+        if(bullets[i].active == 1) {
+            if(collision(boss.col, boss.row, boss.width, boss.height, bullets[i].col, bullets[i].row, bullets[i].width, bullets[i].height)) {
+                bossHealth--;
+                bullets[i].active = 0;
+            }
+        }
+    }
 }
+
 void animateBoss() {
 }
+
 void drawBoss() {
     shadowOAM[127].attr0 = boss.row | (0<<14);
     shadowOAM[127].attr1 = boss.col | (2<<14);
-    shadowOAM[127].attr2 = ((0)*32+(12));
+    shadowOAM[127].attr2 = ((0)*32+(boss.aniState + 12));
 }

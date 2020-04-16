@@ -1397,7 +1397,7 @@ void drawBullet();
 void initEnemy();
 void updateEnemy();
 void drawEnemy();
-void initboss();
+void initBoss();
 void updateBoss();
 void animateBoss();
 void drawBoss();

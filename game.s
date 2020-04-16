@@ -92,13 +92,14 @@ drawGame:
 	ldr	r3, [r3]
 	cmp	r3, #2
 	bne	.L13
-	ldr	r2, .L22+28
-	ldr	r3, [r2]
+	ldr	r0, .L22+28
+	ldr	r3, [r0]
 	mvn	r3, r3, lsl #17
-	mov	r1, #12
 	mvn	r3, r3, lsr #17
-	ldr	r0, [r2, #4]
+	ldr	r1, [r0, #28]
 	ldr	r2, .L22+32
+	ldr	r0, [r0, #4]
+	add	r1, r1, #12
 	strh	r3, [r2, #2]	@ movhi
 	strh	r0, [r2]	@ movhi
 	strh	r1, [r2, #4]	@ movhi
@@ -598,7 +599,7 @@ updateBullet:
 	bx	lr
 .L101:
 	cmp	r3, #0
-	blt	.L95
+	ble	.L95
 	ldr	r2, [r0, #20]
 	sub	r3, r3, r2
 	str	r3, [r0]
@@ -751,13 +752,16 @@ initGame:
 	ldr	r3, [r3]
 	cmp	r3, #2
 	bne	.L113
-	mov	r2, #128
+	mov	r1, #128
+	mov	r2, #32
 	ldr	r3, .L116+28
-	str	r2, [r3]
-	str	r2, [r3, #4]
+	str	r1, [r3]
+	str	r1, [r3, #4]
 	str	r4, [r3, #36]
 	str	r5, [r3, #40]
 	str	r4, [r3, #28]
+	str	r2, [r3, #16]
+	str	r2, [r3, #20]
 .L113:
 	pop	{r4, r5, r6, lr}
 	bx	lr
@@ -878,32 +882,6 @@ updateEnemy:
 	.word	bossHealth
 	.size	updateEnemy, .-updateEnemy
 	.align	2
-	.global	updateGame
-	.syntax unified
-	.arm
-	.fpu softvfp
-	.type	updateGame, %function
-updateGame:
-	@ Function supports interworking.
-	@ args = 0, pretend = 0, frame = 0
-	@ frame_needed = 0, uses_anonymous_args = 0
-	push	{r4, lr}
-	ldr	r4, .L136
-	bl	updatePlayer
-	ldr	r0, .L136+4
-	bl	updateBullet
-	mov	r0, r4
-	bl	updateEnemy
-	add	r0, r4, #32
-	pop	{r4, lr}
-	b	updateEnemy
-.L137:
-	.align	2
-.L136:
-	.word	enemies
-	.word	bullets
-	.size	updateGame, .-updateGame
-	.align	2
 	.global	drawEnemy
 	.syntax unified
 	.arm
@@ -914,25 +892,25 @@ drawEnemy:
 	@ args = 0, pretend = 0, frame = 0
 	@ frame_needed = 0, uses_anonymous_args = 0
 	@ link register save eliminated.
-	ldr	r3, .L144
+	ldr	r3, .L140
 	ldr	r2, [r3, #28]
 	cmp	r2, #1
-	beq	.L139
+	beq	.L135
 	mov	r1, #512
-	ldr	r2, .L144+4
+	ldr	r2, .L140+4
 	strh	r1, [r2]	@ movhi
 	ldr	r2, [r3, #60]
 	cmp	r2, #1
-	beq	.L141
-.L143:
+	beq	.L137
+.L139:
 	mov	r2, #512
-	ldr	r3, .L144+8
+	ldr	r3, .L140+8
 	strh	r2, [r3]	@ movhi
 	bx	lr
-.L139:
+.L135:
 	mov	r0, #10
 	ldr	r1, [r3]
-	ldr	r2, .L144+4
+	ldr	r2, .L140+4
 	ldr	ip, [r3, #4]
 	orr	r1, r1, #16384
 	strh	r1, [r2, #2]	@ movhi
@@ -940,20 +918,20 @@ drawEnemy:
 	strh	r0, [r2, #4]	@ movhi
 	ldr	r2, [r3, #60]
 	cmp	r2, #1
-	bne	.L143
-.L141:
+	bne	.L139
+.L137:
 	mov	r1, #10
 	ldr	r2, [r3, #32]
 	ldr	r0, [r3, #36]
-	ldr	r3, .L144+8
+	ldr	r3, .L140+8
 	orr	r2, r2, #16384
 	strh	r2, [r3, #2]	@ movhi
 	strh	r0, [r3]	@ movhi
 	strh	r1, [r3, #4]	@ movhi
 	bx	lr
-.L145:
+.L141:
 	.align	2
-.L144:
+.L140:
 	.word	enemies
 	.word	shadowOAM+800
 	.word	shadowOAM+808
@@ -969,19 +947,22 @@ initBoss:
 	@ args = 0, pretend = 0, frame = 0
 	@ frame_needed = 0, uses_anonymous_args = 0
 	@ link register save eliminated.
-	mov	r1, #128
+	mov	r0, #128
+	mov	r1, #32
 	mov	r2, #0
-	mov	r0, #3
-	ldr	r3, .L147
-	str	r1, [r3]
-	str	r1, [r3, #4]
-	str	r0, [r3, #40]
+	mov	ip, #3
+	ldr	r3, .L143
+	str	r0, [r3]
+	str	r0, [r3, #4]
+	str	ip, [r3, #40]
+	str	r1, [r3, #16]
+	str	r1, [r3, #20]
 	str	r2, [r3, #36]
 	str	r2, [r3, #28]
 	bx	lr
-.L148:
+.L144:
 	.align	2
-.L147:
+.L143:
 	.word	boss
 	.size	initBoss, .-initBoss
 	.align	2
@@ -994,9 +975,86 @@ updateBoss:
 	@ Function supports interworking.
 	@ args = 0, pretend = 0, frame = 0
 	@ frame_needed = 0, uses_anonymous_args = 0
-	@ link register save eliminated.
+	push	{r4, r5, r6, lr}
+	ldr	r4, .L151
+	ldr	r3, [r4, #24]
+	cmp	r3, #1
+	sub	sp, sp, #16
+	bne	.L145
+	ldr	r0, .L151+4
+	add	r5, r4, #8
+	ldm	r5, {r5, r6}
+	ldm	r4, {ip, lr}
+	add	r2, r0, #16
+	ldm	r2, {r2, r3}
+	ldm	r0, {r0, r1}
+	str	r5, [sp, #8]
+	stm	sp, {ip, lr}
+	str	r6, [sp, #12]
+	ldr	r5, .L151+8
+	mov	lr, pc
+	bx	r5
+	cmp	r0, #0
+	bne	.L150
+.L145:
+	add	sp, sp, #16
+	@ sp needed
+	pop	{r4, r5, r6, lr}
 	bx	lr
+.L150:
+	mov	r1, #0
+	ldr	r2, .L151+12
+	ldr	r3, [r2]
+	sub	r3, r3, #1
+	str	r3, [r2]
+	str	r1, [r4, #24]
+	add	sp, sp, #16
+	@ sp needed
+	pop	{r4, r5, r6, lr}
+	bx	lr
+.L152:
+	.align	2
+.L151:
+	.word	bullets
+	.word	boss
+	.word	collision
+	.word	bossHealth
 	.size	updateBoss, .-updateBoss
+	.align	2
+	.global	updateGame
+	.syntax unified
+	.arm
+	.fpu softvfp
+	.type	updateGame, %function
+updateGame:
+	@ Function supports interworking.
+	@ args = 0, pretend = 0, frame = 0
+	@ frame_needed = 0, uses_anonymous_args = 0
+	push	{r4, lr}
+	bl	updatePlayer
+	ldr	r0, .L157
+	bl	updateBullet
+	ldr	r0, .L157+4
+	bl	updateEnemy
+	ldr	r0, .L157+8
+	bl	updateEnemy
+	ldr	r3, .L157+12
+	ldr	r3, [r3]
+	cmp	r3, #2
+	beq	.L156
+	pop	{r4, lr}
+	bx	lr
+.L156:
+	pop	{r4, lr}
+	b	updateBoss
+.L158:
+	.align	2
+.L157:
+	.word	bullets
+	.word	enemies
+	.word	enemies+32
+	.word	currRegion
+	.size	updateGame, .-updateGame
 	.align	2
 	.global	animateBoss
 	.syntax unified
@@ -1021,22 +1079,23 @@ drawBoss:
 	@ args = 0, pretend = 0, frame = 0
 	@ frame_needed = 0, uses_anonymous_args = 0
 	@ link register save eliminated.
-	ldr	r1, .L152
-	ldr	r3, [r1]
+	ldr	r0, .L161
+	ldr	r3, [r0]
 	mvn	r3, r3, lsl #17
-	mov	r0, #12
 	mvn	r3, r3, lsr #17
-	ldr	r2, .L152+4
-	ldr	ip, [r1, #4]
-	add	r1, r2, #1016
+	ldr	r2, .L161+4
+	ldr	r1, [r0, #28]
+	ldr	ip, [r0, #4]
+	add	r1, r1, #12
+	add	r0, r2, #1016
 	add	r2, r2, #1020
-	strh	r3, [r1, #2]	@ movhi
-	strh	ip, [r1]	@ movhi
-	strh	r0, [r2]	@ movhi
+	strh	r3, [r0, #2]	@ movhi
+	strh	ip, [r0]	@ movhi
+	strh	r1, [r2]	@ movhi
 	bx	lr
-.L153:
+.L162:
 	.align	2
-.L152:
+.L161:
 	.word	boss
 	.word	shadowOAM
 	.size	drawBoss, .-drawBoss
