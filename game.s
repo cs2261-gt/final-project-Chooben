@@ -292,7 +292,7 @@ updatePlayer:
 	ble	.L45
 	ldr	r1, [r4]
 	cmp	r1, #79
-	suble	r0, r0, #1
+	suble	r0, r0, #2
 	strle	r0, [r3]
 .L45:
 	ldr	r1, .L72
@@ -330,7 +330,7 @@ updatePlayer:
 	blt	.L49
 	ldr	lr, [r4, #4]
 	cmp	lr, #119
-	suble	r1, r1, #1
+	suble	r1, r1, #2
 	strle	r1, [ip]
 .L49:
 	ldr	lr, .L72
@@ -402,13 +402,13 @@ updatePlayer:
 .L68:
 	ldr	r1, [r4]
 	cmp	r1, #80
-	addgt	r0, r0, #1
+	addgt	r0, r0, #2
 	strgt	r0, [r3]
 	b	.L47
 .L69:
 	ldr	lr, [r4, #4]
 	cmp	lr, #120
-	addgt	r1, r1, #1
+	addgt	r1, r1, #2
 	strgt	r1, [ip]
 	b	.L52
 .L71:
@@ -1041,8 +1041,10 @@ updateBoss:
 	cmp	r0, #0
 	movne	r1, #0
 	ldrne	r2, .L168+24
+	ldrne	r0, .L168+28
 	ldrne	r3, [r2]
-	subne	r3, r3, #1
+	ldrne	r0, [r0]
+	subne	r3, r3, r0
 	strne	r3, [r2]
 	strne	r1, [r5, #28]
 	ldr	r3, [r4, #32]
@@ -1064,7 +1066,7 @@ updateBoss:
 	mov	lr, pc
 	bx	r4
 	cmp	r0, #0
-	ldrne	r2, .L168+28
+	ldrne	r2, .L168+32
 	ldrne	r3, [r2]
 	subne	r3, r3, #1
 	strne	r3, [r2]
@@ -1087,6 +1089,7 @@ updateBoss:
 	.word	bullets
 	.word	collision
 	.word	bossHealth
+	.word	damage
 	.word	playerHealth
 	.size	updateBoss, .-updateBoss
 	.align	2

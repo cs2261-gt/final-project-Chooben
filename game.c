@@ -104,7 +104,7 @@ void updatePlayer() {
             player.worldRow-=player.rdel;
         }
         if((vOff >- 0) && (player.screenRow < SCREENHEIGHT/2)) {
-            vOff--;
+            vOff-=2;
         }
     }
     if(BUTTON_HELD(BUTTON_DOWN)) {
@@ -112,7 +112,7 @@ void updatePlayer() {
             player.worldRow+=player.rdel;
         }
         if((vOff < MAPHEIGHT - SCREENHEIGHT) && (player.screenRow > SCREENHEIGHT/2)) {
-            vOff++;
+            vOff+=2;
         }
     }
     if(BUTTON_HELD(BUTTON_LEFT)) {
@@ -123,7 +123,7 @@ void updatePlayer() {
         }
 
         if((hOff >= 0) && (player.screenCol < SCREENWIDTH/2)) {
-            hOff--;
+            hOff-=2;
         }
     }
     if(BUTTON_HELD(BUTTON_RIGHT)) {
@@ -131,7 +131,7 @@ void updatePlayer() {
             player.worldCol+=player.cdel;
         }
         if((hOff < MAPWIDTH - SCREENWIDTH) && (player.screenCol > SCREENWIDTH/2)) {
-            hOff++;
+            hOff+=2;
         }        
     }
 
@@ -384,7 +384,7 @@ void updateBoss() {
     for(int i = 0; i < BULLETCOUNT; i++) {
         if((bullets[i].active == 1) && (boss.active == 1)) {
             if(collision(boss.col, boss.row, boss.width, boss.height, bullets[i].col, bullets[i].row, bullets[i].width, bullets[i].height)) {
-                bossHealth--=damage;
+                bossHealth-=damage;
                 bullets[i].active = 0;
             }
         }

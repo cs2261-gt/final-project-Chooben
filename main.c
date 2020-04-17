@@ -1,4 +1,5 @@
 #include <stdlib.h>
+#include <string.h>
 #include <stdio.h>
 #include "myLib.h"
 #include "game.h"
@@ -9,6 +10,8 @@
 #include "lose.h"
 #include "spritesheet.h"
 #include "region2.h"
+#include "sound.h"
+#include "bossTheme.h"
 
 //Prototypes
 void initialize();
@@ -80,6 +83,10 @@ void initialize() {
     REG_BG0CNT = BG_CHARBLOCK(0) | BG_SCREENBLOCK(31) | BG_SIZE_SMALL;
 
     buttons = BUTTONS;
+    oldButtons = 0;
+
+    setupSounds();
+    setupInterrupts();
 
     goToStart();
 }
@@ -176,10 +183,16 @@ void goToGame2() {
     DMANow(3, spritesheetPal, SPRITEPALETTE, spritesheetPalLen/2);
     DMANow(3, spritesheetTiles, & CHARBLOCK[4], spritesheetTilesLen/2);
 
-    player.worldCol = MAPWIDTH - player.width;
+    if(currRegion == 1) {
+        player.worldCol = MAPWIDTH - player.width;
+        playSoundA(bossTheme, BOSSTHEMELEN, 1);
+    }
+        
 
     hideSprites();
     DMANow(3, shadowOAM, OAM, 128*4);
+
+    
 
     currRegion = GAME2;
     state = GAME2;
@@ -192,14 +205,18 @@ void game2() {
     drawGame();
 
     //Go to pause screen
-    if(BUTTON_PRESSED(BUTTON_START))
+    if(BUTTON_PRESSED(BUTTON_START)){
+        pauseSound();
         goToPause();
+    }
     //Loss condition
     if(playerHealth == 0)
         goToLose();
     //Win condition
-    if(bossHealth < 0)
+    if(bossHealth <= 0){
+        stopSound();
         goToWin();
+    }
 }
 //Setup pause menu
 void goToPause(){
@@ -226,12 +243,14 @@ void pause(){
     hideSprites();
 
     //Go back to game from pause
-    if (BUTTON_PRESSED(BUTTON_START))
+    if (BUTTON_PRESSED(BUTTON_START)){
+        unpauseSound();
         if(currRegion == GAME1) {
             goToGame1();
         } else {
             goToGame2();
         }
+    }
     //Restart game from pause
     else if (BUTTON_PRESSED(BUTTON_SELECT))
         goToStart();
@@ -291,6 +310,8 @@ void lose(){
     waitForVBlank();
 
     //Restart game from loss
-    if (BUTTON_PRESSED(BUTTON_START))
+    if (BUTTON_PRESSED(BUTTON_START)){
+        stopSound();
         goToStart();
+    }
 }

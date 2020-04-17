@@ -811,6 +811,53 @@ extern long double strtold (const char *restrict, char **restrict);
 # 336 "c:\\devkitpro\\devkitarm\\arm-none-eabi\\include\\stdlib.h" 3
 
 # 2 "main.c" 2
+# 1 "c:\\devkitpro\\devkitarm\\arm-none-eabi\\include\\string.h" 1 3
+# 17 "c:\\devkitpro\\devkitarm\\arm-none-eabi\\include\\string.h" 3
+# 1 "c:\\devkitpro\\devkitarm\\lib\\gcc\\arm-none-eabi\\9.1.0\\include\\stddef.h" 1 3 4
+# 18 "c:\\devkitpro\\devkitarm\\arm-none-eabi\\include\\string.h" 2 3
+# 27 "c:\\devkitpro\\devkitarm\\arm-none-eabi\\include\\string.h" 3
+
+
+void * memchr (const void *, int, size_t);
+int memcmp (const void *, const void *, size_t);
+void * memcpy (void *restrict, const void *restrict, size_t);
+void * memmove (void *, const void *, size_t);
+void * memset (void *, int, size_t);
+char *strcat (char *restrict, const char *restrict);
+char *strchr (const char *, int);
+int strcmp (const char *, const char *);
+int strcoll (const char *, const char *);
+char *strcpy (char *restrict, const char *restrict);
+size_t strcspn (const char *, const char *);
+char *strerror (int);
+size_t strlen (const char *);
+char *strncat (char *restrict, const char *restrict, size_t);
+int strncmp (const char *, const char *, size_t);
+char *strncpy (char *restrict, const char *restrict, size_t);
+char *strpbrk (const char *, const char *);
+char *strrchr (const char *, int);
+size_t strspn (const char *, const char *);
+char *strstr (const char *, const char *);
+
+char *strtok (char *restrict, const char *restrict);
+
+size_t strxfrm (char *restrict, const char *restrict, size_t);
+# 86 "c:\\devkitpro\\devkitarm\\arm-none-eabi\\include\\string.h" 3
+char *_strdup_r (struct _reent *, const char *);
+
+
+
+char *_strndup_r (struct _reent *, const char *, size_t);
+# 112 "c:\\devkitpro\\devkitarm\\arm-none-eabi\\include\\string.h" 3
+char * _strerror_r (struct _reent *, int, int, int *);
+# 134 "c:\\devkitpro\\devkitarm\\arm-none-eabi\\include\\string.h" 3
+char *strsignal (int __signo);
+# 175 "c:\\devkitpro\\devkitarm\\arm-none-eabi\\include\\string.h" 3
+# 1 "c:\\devkitpro\\devkitarm\\arm-none-eabi\\include\\sys\\string.h" 1 3
+# 176 "c:\\devkitpro\\devkitarm\\arm-none-eabi\\include\\string.h" 2 3
+
+
+# 3 "main.c" 2
 # 1 "c:\\devkitpro\\devkitarm\\arm-none-eabi\\include\\stdio.h" 1 3
 # 36 "c:\\devkitpro\\devkitarm\\arm-none-eabi\\include\\stdio.h" 3
 # 1 "c:\\devkitpro\\devkitarm\\lib\\gcc\\arm-none-eabi\\9.1.0\\include\\stddef.h" 1 3 4
@@ -1221,7 +1268,7 @@ _putchar_unlocked(int _c)
 }
 # 797 "c:\\devkitpro\\devkitarm\\arm-none-eabi\\include\\stdio.h" 3
 
-# 3 "main.c" 2
+# 4 "main.c" 2
 # 1 "myLib.h" 1
 
 
@@ -1331,7 +1378,7 @@ typedef struct{
 
 
 int collision(int colA, int rowA, int widthA, int heightA, int colB, int rowB, int widthB, int heightB);
-# 4 "main.c" 2
+# 5 "main.c" 2
 # 1 "game.h" 1
 
 typedef struct {
@@ -1408,7 +1455,7 @@ void initBoss();
 void updateBoss();
 void animateBoss();
 void drawBoss();
-# 5 "main.c" 2
+# 6 "main.c" 2
 # 1 "startScreen.h" 1
 # 22 "startScreen.h"
 extern const unsigned short startScreenTiles[832];
@@ -1418,7 +1465,7 @@ extern const unsigned short startScreenMap[1024];
 
 
 extern const unsigned short startScreenPal[256];
-# 6 "main.c" 2
+# 7 "main.c" 2
 # 1 "region1.h" 1
 # 22 "region1.h"
 extern const unsigned short region1Tiles[128];
@@ -1428,7 +1475,7 @@ extern const unsigned short region1Map[1024];
 
 
 extern const unsigned short region1Pal[256];
-# 7 "main.c" 2
+# 8 "main.c" 2
 # 1 "pause.h" 1
 # 22 "pause.h"
 extern const unsigned short pauseTiles[944];
@@ -1438,7 +1485,7 @@ extern const unsigned short pauseMap[1024];
 
 
 extern const unsigned short pausePal[256];
-# 8 "main.c" 2
+# 9 "main.c" 2
 # 1 "win.h" 1
 # 22 "win.h"
 extern const unsigned short winTiles[752];
@@ -1448,7 +1495,7 @@ extern const unsigned short winMap[1024];
 
 
 extern const unsigned short winPal[256];
-# 9 "main.c" 2
+# 10 "main.c" 2
 # 1 "lose.h" 1
 # 22 "lose.h"
 extern const unsigned short loseTiles[704];
@@ -1458,14 +1505,14 @@ extern const unsigned short loseMap[1024];
 
 
 extern const unsigned short losePal[256];
-# 10 "main.c" 2
+# 11 "main.c" 2
 # 1 "spritesheet.h" 1
 # 21 "spritesheet.h"
 extern const unsigned short spritesheetTiles[16384];
 
 
 extern const unsigned short spritesheetPal[256];
-# 11 "main.c" 2
+# 12 "main.c" 2
 # 1 "region2.h" 1
 # 22 "region2.h"
 extern const unsigned short region2Tiles[320];
@@ -1475,7 +1522,28 @@ extern const unsigned short region2Map[1024];
 
 
 extern const unsigned short region2Pal[256];
-# 12 "main.c" 2
+# 13 "main.c" 2
+# 1 "sound.h" 1
+SOUND soundA;
+SOUND soundB;
+
+
+
+void setupSounds();
+void playBossTheme(const signed char* sound, int length, int loops);
+void playGunSound(const signed char* sound, int length, int loops);
+
+void setupInterrupts();
+void interruptHandler();
+
+void pauseSound();
+void unpauseSound();
+void stopSound();
+# 14 "main.c" 2
+# 1 "bossTheme.h" 1
+# 20 "bossTheme.h"
+extern const unsigned char bossTheme[539712];
+# 15 "main.c" 2
 
 
 void initialize();
@@ -1547,6 +1615,10 @@ void initialize() {
     (*(volatile unsigned short*)0x4000008) = ((0)<<2) | ((31)<<8) | (0<<14);
 
     buttons = (*(volatile unsigned short *)0x04000130);
+    oldButtons = 0;
+
+    setupSounds();
+    setupInterrupts();
 
     goToStart();
 }
@@ -1627,9 +1699,6 @@ void game1(){
         goToGame2();
         hOff = 17;
     }
-
-    if(bossHealth == 0)
-        goToWin();
 }
 
 void goToGame2() {
@@ -1646,10 +1715,16 @@ void goToGame2() {
     DMANow(3, spritesheetPal, ((unsigned short *)0x5000200), 512/2);
     DMANow(3, spritesheetTiles, & ((charblock *)0x6000000)[4], 32768/2);
 
-    player.worldCol = 256 - player.width;
+    if(currRegion == 1) {
+        player.worldCol = 256 - player.width;
+        playSoundA(bossTheme, 539712, 1);
+    }
+
 
     hideSprites();
     DMANow(3, shadowOAM, ((OBJ_ATTR*)(0x7000000)), 128*4);
+
+
 
     currRegion = GAME2;
     state = GAME2;
@@ -1662,14 +1737,18 @@ void game2() {
     drawGame();
 
 
-    if((!(~(oldButtons)&((1<<3))) && (~buttons & ((1<<3)))))
+    if((!(~(oldButtons)&((1<<3))) && (~buttons & ((1<<3))))){
+        pauseSound();
         goToPause();
+    }
 
     if(playerHealth == 0)
         goToLose();
 
-    if(bossHealth == 0)
+    if(bossHealth <= 0){
+        stopSound();
         goToWin();
+    }
 }
 
 void goToPause(){
@@ -1696,12 +1775,14 @@ void pause(){
     hideSprites();
 
 
-    if ((!(~(oldButtons)&((1<<3))) && (~buttons & ((1<<3)))))
+    if ((!(~(oldButtons)&((1<<3))) && (~buttons & ((1<<3))))){
+        unpauseSound();
         if(currRegion == GAME1) {
             goToGame1();
         } else {
             goToGame2();
         }
+    }
 
     else if ((!(~(oldButtons)&((1<<2))) && (~buttons & ((1<<2)))))
         goToStart();
@@ -1761,6 +1842,8 @@ void lose(){
     waitForVBlank();
 
 
-    if ((!(~(oldButtons)&((1<<3))) && (~buttons & ((1<<3)))))
+    if ((!(~(oldButtons)&((1<<3))) && (~buttons & ((1<<3))))){
+        stopSound();
         goToStart();
+    }
 }
