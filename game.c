@@ -318,7 +318,7 @@ void updateEnemy(ENEMY* e) {
     }
 
     //Enemy defeated when health equals 0
-    if(e->health == 0)
+    if(e->health < 0)
         e->active = 0;
 
     //Deactivates enemies if in boss area
@@ -384,7 +384,7 @@ void updateBoss() {
     for(int i = 0; i < BULLETCOUNT; i++) {
         if((bullets[i].active == 1) && (boss.active == 1)) {
             if(collision(boss.col, boss.row, boss.width, boss.height, bullets[i].col, bullets[i].row, bullets[i].width, bullets[i].height)) {
-                bossHealth--;
+                bossHealth--=damage;
                 bullets[i].active = 0;
             }
         }

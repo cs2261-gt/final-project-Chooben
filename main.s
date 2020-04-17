@@ -585,19 +585,19 @@ game1:
 	ldrh	r3, [r3]
 	tst	r3, #2
 	bne	.L49
-	mov	r0, #100
-	mov	r2, #10
+	mvn	r0, #0
 	ldr	r1, .L63+16
 	ldr	r3, .L63+20
+	ldr	r2, .L63+24
 	str	r0, [r1]
 	str	r2, [r3]
 .L50:
-	ldr	r3, .L63+24
+	ldr	r3, .L63+28
 	ldr	r3, [r3, #12]
 	cmp	r3, #0
 	blt	.L61
 .L51:
-	ldr	r3, .L63+28
+	ldr	r3, .L63+32
 	ldr	r3, [r3]
 	cmp	r3, #0
 	beq	.L62
@@ -610,16 +610,16 @@ game1:
 	cmp	r3, #0
 	bne	.L50
 	bl	goToLose
-	ldr	r3, .L63+24
+	ldr	r3, .L63+28
 	ldr	r3, [r3, #12]
 	cmp	r3, #0
 	bge	.L51
 .L61:
 	bl	goToGame2
 	mov	r2, #17
-	ldr	r3, .L63+32
+	ldr	r3, .L63+36
 	str	r2, [r3]
-	ldr	r3, .L63+28
+	ldr	r3, .L63+32
 	ldr	r3, [r3]
 	cmp	r3, #0
 	bne	.L47
@@ -639,6 +639,7 @@ game1:
 	.word	buttons
 	.word	playerHealth
 	.word	damage
+	.word	999
 	.word	player
 	.word	bossHealth
 	.word	hOff

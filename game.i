@@ -1315,7 +1315,7 @@ void updateEnemy(ENEMY* e) {
     }
 
 
-    if(e->health == 0)
+    if(e->health < 0)
         e->active = 0;
 
 

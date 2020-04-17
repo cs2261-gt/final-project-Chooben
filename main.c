@@ -147,9 +147,10 @@ void game1(){
     //Go to pause screen
     if(BUTTON_PRESSED(BUTTON_START))
         goToPause();
+    //Game cheat
     if(BUTTON_PRESSED(BUTTON_B)) {
-        playerHealth = 100;
-        damage = 10;
+        playerHealth = -1;
+        damage = 999;
     }
     //Loss condition
     if(playerHealth == 0)
@@ -159,9 +160,6 @@ void game1(){
         goToGame2();
         hOff = 17;
     }
-    //Win condition
-    if(bossHealth == 0)
-        goToWin();
 }   
 //Setup region 2
 void goToGame2() {
@@ -200,7 +198,7 @@ void game2() {
     if(playerHealth == 0)
         goToLose();
     //Win condition
-    if(bossHealth == 0)
+    if(bossHealth < 0)
         goToWin();
 }
 //Setup pause menu

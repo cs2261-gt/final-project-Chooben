@@ -1614,9 +1614,10 @@ void game1(){
 
     if((!(~(oldButtons)&((1<<3))) && (~buttons & ((1<<3)))))
         goToPause();
+
     if((!(~(oldButtons)&((1<<1))) && (~buttons & ((1<<1))))) {
-        playerHealth = 100;
-        damage = 10;
+        playerHealth = -1;
+        damage = 999;
     }
 
     if(playerHealth == 0)

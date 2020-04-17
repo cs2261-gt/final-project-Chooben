@@ -735,7 +735,8 @@ updateEnemy:
 	ldr	r3, [r5, #24]
 .L115:
 	cmp	r3, #0
-	streq	r3, [r5, #36]
+	movlt	r3, #0
+	strlt	r3, [r5, #36]
 	ldr	r3, .L121+16
 	ldr	r3, [r3]
 	cmp	r3, #2
