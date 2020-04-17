@@ -749,16 +749,12 @@ updateEnemy:
 	pop	{r4, r5, r6, lr}
 	bx	lr
 .L116:
-	mov	r0, #0
-	ldr	r1, .L121+24
+	mov	r2, #0
 	ldr	r3, [r5, #24]
-	ldr	r2, [r1]
-	ldr	ip, [r4, #24]
-	sub	r2, r2, #1
-	sub	r3, r3, ip
+	ldr	r1, [r4, #24]
+	sub	r3, r3, r1
 	str	r3, [r5, #24]
-	str	r2, [r1]
-	str	r0, [r4, #32]
+	str	r2, [r4, #32]
 	b	.L115
 .L109:
 	cmp	r1, #0
@@ -777,7 +773,6 @@ updateEnemy:
 	.word	collision
 	.word	currRegion
 	.word	shadowOAM+800
-	.word	bossHealth
 	.size	updateEnemy, .-updateEnemy
 	.align	2
 	.global	drawEnemy
@@ -977,48 +972,55 @@ updateBoss:
 	@ args = 0, pretend = 0, frame = 0
 	@ frame_needed = 0, uses_anonymous_args = 0
 	push	{r4, r5, r6, r7, lr}
-	ldr	r4, .L165
-	ldr	r6, .L165+4
+	ldr	r4, .L168
+	ldr	r6, .L168+4
 	ldr	r0, [r4]
-	ldr	r2, [r6, #12]
-	sub	r2, r0, r2
+	ldr	r3, [r6, #12]
+	sub	r2, r0, r3
 	cmp	r2, #0
+	movlt	r3, #1
+	sub	sp, sp, #20
+	strlt	r3, [r4, #20]
+	blt	.L150
+	cmp	r0, r3
+	moveq	r3, #0
+	mvnne	r3, #0
+	str	r3, [r4, #20]
+.L150:
 	ldr	r1, [r4, #4]
 	ldr	r3, [r6, #8]
-	movlt	lr, #1
-	mvnge	lr, #0
-	sub	r3, r1, r3
-	cmp	r3, #0
-	movlt	ip, #1
-	mvnge	ip, #0
-	ldr	r2, .L165+8
+	sub	r2, r1, r3
+	cmp	r2, #0
+	blt	.L166
+	cmp	r1, r3
+	mvnne	r3, #0
+	moveq	r3, #0
+	strne	r3, [r4, #16]
+	streq	r3, [r4, #16]
+	addne	r1, r1, r3
+.L153:
+	ldr	ip, [r4, #20]
+	ldr	r2, .L168+8
+	ldr	r3, .L168+12
+	ldr	r5, .L168+16
+	add	r0, r0, ip
 	ldr	r2, [r2]
-	add	r0, r0, lr
-	ldr	r3, .L165+12
-	ldr	r5, .L165+16
-	sub	r2, r0, r2
 	ldr	r3, [r3]
-	str	r2, [r4, #8]
-	ldr	r2, [r5, #32]
-	add	r1, r1, ip
+	ldr	ip, [r5, #32]
 	sub	r3, r1, r3
-	cmp	r2, #1
-	str	r3, [r4, #12]
-	str	r0, [r4]
-	str	lr, [r4, #20]
-	str	r1, [r4, #4]
-	str	ip, [r4, #16]
+	sub	r2, r0, r2
+	cmp	ip, #1
+	stm	r4, {r0, r1, r2, r3}
 	ldr	r3, [r4, #32]
-	sub	sp, sp, #20
-	bne	.L151
+	bne	.L155
 	cmp	r3, #1
-	beq	.L164
+	beq	.L167
 .L148:
 	add	sp, sp, #20
 	@ sp needed
 	pop	{r4, r5, r6, r7, lr}
 	bx	lr
-.L164:
+.L167:
 	add	ip, r5, #16
 	ldm	ip, {ip, lr}
 	ldr	r2, [r5, #4]
@@ -1027,18 +1029,18 @@ updateBoss:
 	str	r3, [sp]
 	add	r2, r4, #24
 	ldm	r2, {r2, r3}
-	ldr	r7, .L165+20
+	ldr	r7, .L168+20
 	mov	lr, pc
 	bx	r7
 	cmp	r0, #0
 	movne	r1, #0
-	ldrne	r2, .L165+24
+	ldrne	r2, .L168+24
 	ldrne	r3, [r2]
 	subne	r3, r3, #1
 	strne	r3, [r2]
 	strne	r1, [r5, #32]
 	ldr	r3, [r4, #32]
-.L151:
+.L155:
 	cmp	r3, #1
 	bne	.L148
 	add	r2, r6, #8
@@ -1052,11 +1054,11 @@ updateBoss:
 	add	r2, r4, #24
 	ldm	r2, {r2, r3}
 	ldm	r4, {r0, r1}
-	ldr	r4, .L165+20
+	ldr	r4, .L168+20
 	mov	lr, pc
 	bx	r4
 	cmp	r0, #0
-	ldrne	r2, .L165+28
+	ldrne	r2, .L168+28
 	ldrne	r3, [r2]
 	subne	r3, r3, #1
 	strne	r3, [r2]
@@ -1065,8 +1067,13 @@ updateBoss:
 	pop	{r4, r5, r6, r7, lr}
 	bx	lr
 .L166:
+	mov	r3, #1
+	str	r3, [r4, #16]
+	add	r1, r1, r3
+	b	.L153
+.L169:
 	.align	2
-.L165:
+.L168:
 	.word	boss
 	.word	player
 	.word	hOff
@@ -1088,27 +1095,27 @@ updateGame:
 	@ frame_needed = 0, uses_anonymous_args = 0
 	push	{r4, lr}
 	bl	updatePlayer
-	ldr	r0, .L171
+	ldr	r0, .L174
 	bl	updateBullet
-	ldr	r0, .L171+4
+	ldr	r0, .L174+4
 	bl	updateEnemy
-	ldr	r0, .L171+8
+	ldr	r0, .L174+8
 	bl	updateEnemy
-	ldr	r3, .L171+12
+	ldr	r3, .L174+12
 	ldr	r3, [r3]
 	cmp	r3, #2
-	beq	.L170
+	beq	.L173
 	pop	{r4, lr}
 	bx	lr
-.L170:
+.L173:
 	mov	r2, #1
-	ldr	r3, .L171+16
+	ldr	r3, .L174+16
 	pop	{r4, lr}
 	str	r2, [r3, #32]
 	b	updateBoss
-.L172:
+.L175:
 	.align	2
-.L171:
+.L174:
 	.word	bullets
 	.word	enemies
 	.word	enemies+40
@@ -1139,13 +1146,13 @@ drawBoss:
 	@ args = 0, pretend = 0, frame = 0
 	@ frame_needed = 0, uses_anonymous_args = 0
 	@ link register save eliminated.
-	ldr	r0, .L175
+	ldr	r0, .L178
 	ldr	r3, [r0, #8]
 	lsl	r3, r3, #23
 	lsr	r3, r3, #23
 	mvn	r3, r3, lsl #17
 	mvn	r3, r3, lsr #17
-	ldr	r2, .L175+4
+	ldr	r2, .L178+4
 	ldr	r1, [r0, #40]
 	ldrb	ip, [r0, #12]	@ zero_extendqisi2
 	add	r1, r1, #12
@@ -1155,9 +1162,9 @@ drawBoss:
 	strh	ip, [r0]	@ movhi
 	strh	r1, [r2]	@ movhi
 	bx	lr
-.L176:
+.L179:
 	.align	2
-.L175:
+.L178:
 	.word	boss
 	.word	shadowOAM
 	.size	drawBoss, .-drawBoss

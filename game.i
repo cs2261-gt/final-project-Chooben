@@ -1308,7 +1308,6 @@ void updateEnemy(ENEMY* e) {
         if(e->active == 1) {
             if(collision(e->col, e->row, e->width, e->height, bullets[i].col, bullets[i].row, bullets[i].width, bullets[i].height)) {
                 e->health -= bullets[0].damage;
-                bossHealth--;
                 bullets[i].active = 0;
             }
         }
@@ -1357,11 +1356,15 @@ void initBoss() {
 void updateBoss() {
     if(boss.col - player.worldCol < 0) {
         boss.cdel = 1;
+    } else if(boss.col == player.worldCol) {
+        boss.cdel = 0;
     } else {
         boss.cdel = -1;
     }
     if(boss.row - player.worldRow < 0) {
         boss.rdel = 1;
+    } else if(boss.row == player.worldRow) {
+        boss.rdel = 0;
     } else {
         boss.rdel = -1;
     }
