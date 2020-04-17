@@ -6,7 +6,6 @@ typedef struct {
     int srow;
     int width;
     int height;
-    int damage;
     int del;
     int active;
     int direction;
@@ -53,6 +52,7 @@ typedef struct {
 //Variables
 extern ANISPRITE player;
 extern int playerHealth;
+extern int damage;
 extern BULLET bullets[BULLETCOUNT];
 extern ENEMY enemies[ENEMYCOUNT];
 extern BOSS boss;

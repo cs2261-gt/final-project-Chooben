@@ -147,6 +147,10 @@ void game1(){
     //Go to pause screen
     if(BUTTON_PRESSED(BUTTON_START))
         goToPause();
+    if(BUTTON_PRESSED(BUTTON_B)) {
+        playerHealth = 100;
+        damage = 10;
+    }
     //Loss condition
     if(playerHealth == 0)
         goToLose();

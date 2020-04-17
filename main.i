@@ -1341,7 +1341,6 @@ typedef struct {
     int srow;
     int width;
     int height;
-    int damage;
     int del;
     int active;
     int direction;
@@ -1377,9 +1376,10 @@ typedef struct {
     int curFrame;
     int numFrames;
 } BOSS;
-# 54 "game.h"
+# 53 "game.h"
 extern ANISPRITE player;
 extern int playerHealth;
+extern int damage;
 extern BULLET bullets[1];
 extern ENEMY enemies[2];
 extern BOSS boss;
@@ -1614,6 +1614,10 @@ void game1(){
 
     if((!(~(oldButtons)&((1<<3))) && (~buttons & ((1<<3)))))
         goToPause();
+    if((!(~(oldButtons)&((1<<1))) && (~buttons & ((1<<1))))) {
+        playerHealth = 100;
+        damage = 10;
+    }
 
     if(playerHealth == 0)
         goToLose();

@@ -52,25 +52,27 @@ initPlayer:
 	@ Function supports interworking.
 	@ args = 0, pretend = 0, frame = 0
 	@ frame_needed = 0, uses_anonymous_args = 0
-	mov	ip, #16
 	push	{r4, lr}
-	mov	r0, #2
+	mov	ip, #2
+	mov	lr, #16
 	mov	r4, #3
-	mov	r1, #20
-	mov	r2, #0
-	mov	lr, #1
+	mov	r0, #20
+	mov	r1, #0
+	mov	r2, #1
 	ldr	r3, .L7
-	str	ip, [r3, #24]
-	str	ip, [r3, #28]
-	ldr	ip, .L7+4
+	str	lr, [r3, #24]
+	str	lr, [r3, #28]
+	str	ip, [r3, #16]
+	ldr	lr, .L7+4
+	str	ip, [r3, #20]
+	ldr	ip, .L7+8
 	str	r4, [r3, #48]
-	str	lr, [ip]
-	str	r0, [r3, #16]
-	str	r0, [r3, #20]
-	str	r1, [r3, #8]
-	str	r1, [r3, #12]
-	str	r2, [r3, #44]
-	str	r2, [r3, #36]
+	str	r2, [lr]
+	str	r0, [r3, #8]
+	str	r0, [r3, #12]
+	str	r1, [r3, #44]
+	str	r1, [r3, #36]
+	str	r2, [ip]
 	pop	{r4, lr}
 	bx	lr
 .L8:
@@ -78,6 +80,7 @@ initPlayer:
 .L7:
 	.word	player
 	.word	playerHealth
+	.word	damage
 	.size	initPlayer, .-initPlayer
 	.global	__aeabi_idivmod
 	.align	2
@@ -200,14 +203,12 @@ initBullet:
 	@ link register save eliminated.
 	mov	r2, #0
 	mov	r1, #2
-	mov	ip, #3
-	mov	r0, #1
+	mov	r0, #3
 	ldr	r3, .L31
-	str	r2, [r3, #32]
+	str	r2, [r3, #28]
 	str	r2, [r3]
 	str	r2, [r3, #4]
-	str	r2, [r3, #36]
-	str	ip, [r3, #28]
+	str	r2, [r3, #32]
 	str	r0, [r3, #24]
 	str	r1, [r3, #16]
 	str	r1, [r3, #20]
@@ -229,14 +230,14 @@ fireBullet:
 	@ frame_needed = 0, uses_anonymous_args = 0
 	@ link register save eliminated.
 	ldr	r2, .L42
-	ldr	r3, [r2, #32]
+	ldr	r3, [r2, #28]
 	cmp	r3, #0
 	bxne	lr
 	mov	r0, #1
 	ldr	r1, .L42+4
 	ldr	r3, [r1, #36]
 	cmp	r3, #0
-	str	r0, [r2, #32]
+	str	r0, [r2, #28]
 	beq	.L40
 	cmp	r3, #1
 	beq	.L40
@@ -247,14 +248,14 @@ fireBullet:
 .L41:
 	add	r0, r1, #8
 	ldm	r0, {r0, r1}
-	str	r3, [r2, #36]
+	str	r3, [r2, #32]
 	str	r0, [r2, #4]
 	str	r1, [r2]
 	bx	lr
 .L40:
 	ldr	r0, [r1, #12]
 	ldr	r1, [r1, #8]
-	str	r3, [r2, #36]
+	str	r3, [r2, #32]
 	stm	r2, {r0, r1}
 	bx	lr
 .L43:
@@ -440,16 +441,16 @@ updateBullet:
 	@ args = 0, pretend = 0, frame = 0
 	@ frame_needed = 0, uses_anonymous_args = 0
 	@ link register save eliminated.
-	ldr	r3, [r0, #32]
+	ldr	r3, [r0, #28]
 	cmp	r3, #0
 	ldm	r0, {r2, r3}
 	beq	.L75
-	ldr	r1, [r0, #36]
+	ldr	r1, [r0, #32]
 	cmp	r1, #0
 	bne	.L76
 	cmp	r3, #256
 	ble	.L77
-	str	r1, [r0, #32]
+	str	r1, [r0, #28]
 .L75:
 	ldr	ip, .L90
 	ldr	r1, .L90+4
@@ -467,19 +468,19 @@ updateBullet:
 	beq	.L89
 	cmp	r2, #256
 	bgt	.L87
-	ldr	r1, [r0, #28]
+	ldr	r1, [r0, #24]
 	add	r2, r2, r1
 	str	r2, [r0]
 	b	.L75
 .L77:
-	ldr	r1, [r0, #28]
+	ldr	r1, [r0, #24]
 	add	r3, r3, r1
 	str	r3, [r0, #4]
 	b	.L75
 .L88:
 	cmp	r3, #0
 	blt	.L87
-	ldr	r1, [r0, #28]
+	ldr	r1, [r0, #24]
 	sub	r3, r3, r1
 	str	r3, [r0, #4]
 	b	.L75
@@ -488,10 +489,10 @@ updateBullet:
 	bgt	.L81
 .L87:
 	mov	r1, #0
-	str	r1, [r0, #32]
+	str	r1, [r0, #28]
 	b	.L75
 .L81:
-	ldr	r1, [r0, #28]
+	ldr	r1, [r0, #24]
 	sub	r2, r2, r1
 	str	r2, [r0]
 	b	.L75
@@ -512,7 +513,7 @@ drawBullet:
 	@ args = 0, pretend = 0, frame = 0
 	@ frame_needed = 0, uses_anonymous_args = 0
 	@ link register save eliminated.
-	ldr	r3, [r0, #32]
+	ldr	r3, [r0, #28]
 	cmp	r3, #0
 	beq	.L93
 	mov	r1, #8
@@ -612,42 +613,43 @@ initGame:
 	@ frame_needed = 0, uses_anonymous_args = 0
 	push	{r4, r5, r6, r7, r8, lr}
 	mov	r5, #2
-	mov	r2, #20
 	mov	r4, #0
 	mov	r7, #3
 	mov	r1, #16
+	mov	r2, #20
 	mov	r6, #1
 	ldr	r3, .L105
 	str	r5, [r3]
 	ldr	r3, .L105+4
-	str	r2, [r3, #8]
-	str	r2, [r3, #12]
-	ldr	r2, .L105+8
 	str	r5, [r3, #16]
 	str	r5, [r3, #20]
 	str	r1, [r3, #24]
 	str	r1, [r3, #28]
-	str	r4, [r3, #36]
+	str	r2, [r3, #8]
+	str	r2, [r3, #12]
 	str	r4, [r3, #44]
+	str	r4, [r3, #36]
 	str	r7, [r3, #48]
+	ldr	r2, .L105+8
 	ldr	r3, .L105+12
 	str	r4, [r2]
+	str	r4, [r3]
 	ldr	r1, .L105+16
 	ldr	r2, .L105+20
-	str	r4, [r3, #32]
-	str	r7, [r3, #28]
-	str	r4, [r3]
+	str	r4, [r3, #28]
+	str	r7, [r3, #24]
 	str	r4, [r3, #4]
-	str	r4, [r3, #36]
+	str	r4, [r3, #32]
 	str	r5, [r3, #16]
 	str	r5, [r3, #20]
-	str	r6, [r3, #24]
+	ldr	r3, .L105+24
 	str	r4, [r1]
 	str	r6, [r2]
+	str	r6, [r3]
 	bl	initEnemy
 	mov	r2, #32
 	mov	r1, #112
-	ldr	r3, .L105+24
+	ldr	r3, .L105+28
 	str	r5, [r3]
 	str	r6, [r3, #20]
 	str	r6, [r3, #16]
@@ -669,6 +671,7 @@ initGame:
 	.word	bullets
 	.word	hOff
 	.word	playerHealth
+	.word	damage
 	.word	boss
 	.size	initGame, .-initGame
 	.align	2
@@ -750,11 +753,12 @@ updateEnemy:
 	bx	lr
 .L116:
 	mov	r2, #0
+	ldr	r1, .L121+24
 	ldr	r3, [r5, #24]
-	ldr	r1, [r4, #24]
+	ldr	r1, [r1]
 	sub	r3, r3, r1
 	str	r3, [r5, #24]
-	str	r2, [r4, #32]
+	str	r2, [r4, #28]
 	b	.L115
 .L109:
 	cmp	r1, #0
@@ -773,6 +777,7 @@ updateEnemy:
 	.word	collision
 	.word	currRegion
 	.word	shadowOAM+800
+	.word	damage
 	.size	updateEnemy, .-updateEnemy
 	.align	2
 	.global	drawEnemy
@@ -854,7 +859,7 @@ drawGame:
 	strh	r2, [r3]	@ movhi
 .L133:
 	ldr	r1, .L142+8
-	ldr	r2, [r1, #32]
+	ldr	r2, [r1, #28]
 	cmp	r2, #0
 	beq	.L141
 	mov	r0, #8
@@ -1006,7 +1011,7 @@ updateBoss:
 	add	r0, r0, ip
 	ldr	r2, [r2]
 	ldr	r3, [r3]
-	ldr	ip, [r5, #32]
+	ldr	ip, [r5, #28]
 	sub	r3, r1, r3
 	sub	r2, r0, r2
 	cmp	ip, #1
@@ -1038,7 +1043,7 @@ updateBoss:
 	ldrne	r3, [r2]
 	subne	r3, r3, #1
 	strne	r3, [r2]
-	strne	r1, [r5, #32]
+	strne	r1, [r5, #28]
 	ldr	r3, [r4, #32]
 .L155:
 	cmp	r3, #1
@@ -1175,7 +1180,8 @@ drawBoss:
 	.comm	bossHealth,4,4
 	.comm	boss,56,4
 	.comm	enemies,80,4
-	.comm	bullets,40,4
+	.comm	bullets,36,4
+	.comm	damage,4,4
 	.comm	playerHealth,4,4
 	.comm	player,56,4
 	.ident	"GCC: (devkitARM release 53) 9.1.0"

@@ -930,7 +930,6 @@ typedef struct {
     int srow;
     int width;
     int height;
-    int damage;
     int del;
     int active;
     int direction;
@@ -966,9 +965,10 @@ typedef struct {
     int curFrame;
     int numFrames;
 } BOSS;
-# 54 "game.h"
+# 53 "game.h"
 extern ANISPRITE player;
 extern int playerHealth;
+extern int damage;
 extern BULLET bullets[1];
 extern ENEMY enemies[2];
 extern BOSS boss;
@@ -1002,6 +1002,7 @@ void drawBoss();
 
 ANISPRITE player;
 int playerHealth;
+int damage;
 BULLET bullets[1];
 ENEMY enemies[2];
 BOSS boss;
@@ -1089,6 +1090,7 @@ void initPlayer() {
     player.numFrames = 3;
     player.aniState = PFRONT;
     playerHealth = 1;
+    damage = 1;
 }
 
 void updatePlayer() {
@@ -1197,7 +1199,6 @@ void initBullet() {
         bullets[i].del = 3;
         bullets[i].col = 0;
         bullets[i].row = 0;
-        bullets[i].damage = 1;
         bullets[i].direction = DOWN;
         bullets[i].width = 2;
         bullets[i].height = 2;
@@ -1307,7 +1308,7 @@ void updateEnemy(ENEMY* e) {
     for(int i = 0; i < 1; i++) {
         if(e->active == 1) {
             if(collision(e->col, e->row, e->width, e->height, bullets[i].col, bullets[i].row, bullets[i].width, bullets[i].height)) {
-                e->health -= bullets[0].damage;
+                e->health -= damage;
                 bullets[i].active = 0;
             }
         }

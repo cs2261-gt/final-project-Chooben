@@ -5,6 +5,7 @@
 //Variables
 ANISPRITE player;
 int playerHealth;
+int damage;
 BULLET bullets[BULLETCOUNT];
 ENEMY enemies[ENEMYCOUNT];
 BOSS boss;
@@ -92,6 +93,7 @@ void initPlayer() {
     player.numFrames = 3;
     player.aniState = PFRONT;
     playerHealth = 1;
+    damage = 1;
 }
 //Update player movement
 void updatePlayer() {
@@ -200,7 +202,6 @@ void initBullet() {
         bullets[i].del = 3;
         bullets[i].col = 0;
         bullets[i].row = 0;
-        bullets[i].damage = 1;
         bullets[i].direction = DOWN;
         bullets[i].width = 2;
         bullets[i].height = 2;
@@ -310,7 +311,7 @@ void updateEnemy(ENEMY* e) {
     for(int i = 0; i < BULLETCOUNT; i++) {
         if(e->active == 1) {
             if(collision(e->col, e->row, e->width, e->height, bullets[i].col, bullets[i].row, bullets[i].width, bullets[i].height)) {
-                e->health -= bullets[0].damage;
+                e->health -= damage;
                 bullets[i].active = 0;
             } 
         }
