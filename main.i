@@ -1620,7 +1620,7 @@ void game1(){
 
     if(player.worldCol < 0) {
         goToGame2();
-        hOff = 16;
+        hOff = 17;
     }
 
     if(bossHealth == 0)

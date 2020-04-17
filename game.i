@@ -1081,8 +1081,8 @@ void initPlayer() {
 
     player.width = 16;
     player.height = 16;
-    player.rdel = 1;
-    player.cdel = 1;
+    player.rdel = 2;
+    player.cdel = 2;
     player.worldRow = 20;
     player.worldCol = 20;
     player.curFrame = 0;
@@ -1194,7 +1194,7 @@ void drawPlayer() {
 void initBullet() {
     for(int i = 0; i < 1; i++) {
         bullets[i].active = 0;
-        bullets[i].del = 2;
+        bullets[i].del = 3;
         bullets[i].col = 0;
         bullets[i].row = 0;
         bullets[i].damage = 1;
@@ -1279,7 +1279,7 @@ void initEnemy() {
         enemies[i].col = (rand() % 240);
         enemies[i].row = (rand() % 160);
         enemies[i].health = 1;
-        enemies[i].del = 1;
+        enemies[i].del = 2;
         enemies[i].direction = rand() % 2;
         enemies[i].active = 1;
     }
@@ -1340,8 +1340,12 @@ void drawEnemy() {
 }
 
 void initBoss() {
-    boss.col = 100;
-    boss.row = 100;
+    boss.width = 32;
+    boss.height = 32;
+    boss.col = 2;
+    boss.row = 256/2 - (boss.width/2);
+    boss.cdel = 1;
+    boss.rdel = 1;
     boss.width = 32;
     boss.height = 32;
     boss.active = 0;
@@ -1351,6 +1355,19 @@ void initBoss() {
 }
 
 void updateBoss() {
+    if(boss.col - player.worldCol < 0) {
+        boss.cdel = 1;
+    } else {
+        boss.cdel = -1;
+    }
+    if(boss.row - player.worldRow < 0) {
+        boss.rdel = 1;
+    } else {
+        boss.rdel = -1;
+    }
+
+    boss.col+=boss.cdel;
+    boss.row+=boss.rdel;
 
 
     boss.scol = boss.col - hOff;
