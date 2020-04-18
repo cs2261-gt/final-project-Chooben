@@ -129,8 +129,7 @@ void stopSound();
 # 3 "sound.c" 2
 
 
-void setupSounds()
-{
+void setupSounds() {
     *(volatile u16 *)0x04000084 = (1<<7);
 
     *(volatile u16*)0x04000082 = (1<<1) |
@@ -192,8 +191,7 @@ void playSoundB(const signed char* sound, int length, int loops) {
 
 }
 
-void setupInterrupts()
-{
+void setupInterrupts() {
     *(unsigned short*)0x4000208 = 0;
 
     *(unsigned int*)0x3007FFC = interruptHandler;
@@ -245,31 +243,28 @@ void interruptHandler() {
     *(unsigned short*)0x4000208 = 1;
 }
 
-void pauseSound() {
 
+void pauseSound() {
     *(volatile unsigned short*)0x4000102 = (0<<7);
     *(volatile unsigned short*)0x4000106 = (0<<7);
     soundA.isPlaying = 0;
     soundB.isPlaying = 0;
-
 }
 
-void unpauseSound() {
 
+void unpauseSound() {
     *(volatile unsigned short*)0x4000102 = (1<<7);
     *(volatile unsigned short*)0x4000106 = (1<<7);
     soundA.isPlaying = 1;
     soundB.isPlaying = 1;
-
 }
 
-void stopSound() {
 
+void stopSound() {
     dma[1].cnt = 0;
     dma[2].cnt = 0;
     *(volatile unsigned short*)0x4000102 = (0<<7);
     *(volatile unsigned short*)0x4000106 = (0<<7);
     soundA.isPlaying = 0;
     soundB.isPlaying = 0;
-
 }

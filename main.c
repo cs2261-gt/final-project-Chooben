@@ -12,11 +12,9 @@
 #include "region2.h"
 #include "sound.h"
 #include "bossTheme.h"
-#include "gunSound.h"
 
 //Prototypes
 void initialize();
-
 void goToStart();
 void start();
 void goToGame1();
@@ -38,7 +36,6 @@ int currRegion;
 //Variables
 unsigned short buttons;
 unsigned short oldButtons;
-
 int seed;
 
 //Run through whole game
