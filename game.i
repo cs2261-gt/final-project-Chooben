@@ -998,6 +998,10 @@ void updateBoss();
 void animateBoss();
 void drawBoss();
 # 4 "game.c" 2
+# 1 "gunSound.h" 1
+# 20 "gunSound.h"
+extern const unsigned char gunSound[10727];
+# 5 "game.c" 2
 
 
 ANISPRITE player;
@@ -1150,6 +1154,7 @@ void updatePlayer() {
 
 
     if((!(~(oldButtons)&((1<<0))) && (~buttons & ((1<<0))))) {
+        playSoundB(gunSound, 10727, 0);
         fireBullet();
     }
 }

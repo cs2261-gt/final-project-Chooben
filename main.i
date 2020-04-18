@@ -1544,6 +1544,10 @@ void stopSound();
 # 20 "bossTheme.h"
 extern const unsigned char bossTheme[539712];
 # 15 "main.c" 2
+# 1 "gunSound.h" 1
+# 20 "gunSound.h"
+extern const unsigned char gunSound[10727];
+# 16 "main.c" 2
 
 
 void initialize();

@@ -366,8 +366,8 @@ updatePlayer:
 	tst	r3, #1
 	beq	.L44
 	ldr	r3, .L72+36
-	ldrh	r3, [r3]
-	tst	r3, #1
+	ldrh	r2, [r3]
+	ands	r2, r2, #1
 	beq	.L71
 .L44:
 	add	sp, sp, #16
@@ -412,6 +412,11 @@ updatePlayer:
 	strgt	r1, [ip]
 	b	.L52
 .L71:
+	ldr	r1, .L72+40
+	ldr	r3, .L72+44
+	ldr	r0, .L72+48
+	mov	lr, pc
+	bx	r3
 	add	sp, sp, #16
 	@ sp needed
 	pop	{r4, r5, r6, r7, r8, lr}
@@ -429,6 +434,9 @@ updatePlayer:
 	.word	playerHealth
 	.word	oldButtons
 	.word	buttons
+	.word	10727
+	.word	playSoundB
+	.word	gunSound
 	.size	updatePlayer, .-updatePlayer
 	.align	2
 	.global	updateBullet

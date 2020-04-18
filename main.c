@@ -12,6 +12,7 @@
 #include "region2.h"
 #include "sound.h"
 #include "bossTheme.h"
+#include "gunSound.h"
 
 //Prototypes
 void initialize();

@@ -1,6 +1,7 @@
 #include <stdlib.h>
 #include "myLib.h"
 #include "game.h"
+#include "gunSound.h"
 
 //Variables
 ANISPRITE player;
@@ -153,6 +154,7 @@ void updatePlayer() {
 
     //Player fires bullet
     if(BUTTON_PRESSED(BUTTON_A)) {
+        playSoundB(gunSound, GUNSOUNDLEN, 0);
         fireBullet();
     }
 }
