@@ -154,7 +154,6 @@ void updatePlayer() {
 
     //Player fires bullet
     if(BUTTON_PRESSED(BUTTON_A)) {
-        playSoundB(gunSound, GUNSOUNDLEN, 0);
         fireBullet();
     }
 }
@@ -213,6 +212,7 @@ void initBullet() {
 void fireBullet() {
     for(int i = 0; i < BULLETCOUNT; i++) {
         if(bullets[i].active == 0) {
+            playSoundB(gunSound, GUNSOUNDLEN, 0);
             bullets[i].active = 1;
             if(player.aniState == PFRONT) {
                 bullets[i].direction = DOWN;
@@ -320,7 +320,7 @@ void updateEnemy(ENEMY* e) {
     }
 
     //Enemy defeated when health equals 0
-    if(e->health < 0)
+    if(e->health <= 0)
         e->active = 0;
 
     //Deactivates enemies if in boss area

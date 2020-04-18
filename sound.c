@@ -2,8 +2,7 @@
 #include "sound.h"
 
 //Setup for sounds
-void setupSounds()
-{
+void setupSounds() {
     REG_SOUNDCNT_X = SND_ENABLED;
 
     REG_SOUNDCNT_H = SND_OUTPUT_RATIO_100 |
@@ -65,8 +64,7 @@ void playSoundB(const signed char* sound, int length, int loops) {
 
 }
 
-void setupInterrupts()
-{
+void setupInterrupts() {
     REG_IME = 0;
 
     REG_INTERRUPT = interruptHandler;
@@ -118,31 +116,28 @@ void interruptHandler() {
     REG_IME = 1;
 }
 
+//Pauses sounds
 void pauseSound() {
-
     REG_TM0CNT = TIMER_OFF;
     REG_TM1CNT = TIMER_OFF;
     soundA.isPlaying = 0;
     soundB.isPlaying = 0;
-
 }
 
+//Unpauses and resumes sounds
 void unpauseSound() {
-
     REG_TM0CNT = TIMER_ON;
     REG_TM1CNT = TIMER_ON;
     soundA.isPlaying = 1;
     soundB.isPlaying = 1;
-
 }
 
+//Stops and resets all sounds
 void stopSound() {
-
     dma[1].cnt = 0;
     dma[2].cnt = 0;
     REG_TM0CNT = TIMER_OFF;
     REG_TM1CNT = TIMER_OFF;
     soundA.isPlaying = 0;
     soundB.isPlaying = 0;
-
 }

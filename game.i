@@ -1000,7 +1000,7 @@ void drawBoss();
 # 4 "game.c" 2
 # 1 "gunSound.h" 1
 # 20 "gunSound.h"
-extern const unsigned char gunSound[10727];
+extern const unsigned char gunSound[3968];
 # 5 "game.c" 2
 
 
@@ -1154,7 +1154,6 @@ void updatePlayer() {
 
 
     if((!(~(oldButtons)&((1<<0))) && (~buttons & ((1<<0))))) {
-        playSoundB(gunSound, 10727, 0);
         fireBullet();
     }
 }
@@ -1213,6 +1212,7 @@ void initBullet() {
 void fireBullet() {
     for(int i = 0; i < 1; i++) {
         if(bullets[i].active == 0) {
+            playSoundB(gunSound, 3968, 0);
             bullets[i].active = 1;
             if(player.aniState == PFRONT) {
                 bullets[i].direction = DOWN;
@@ -1320,7 +1320,7 @@ void updateEnemy(ENEMY* e) {
     }
 
 
-    if(e->health < 0)
+    if(e->health <= 0)
         e->active = 0;
 
 
