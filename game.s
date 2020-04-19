@@ -52,28 +52,29 @@ initPlayer:
 	@ Function supports interworking.
 	@ args = 0, pretend = 0, frame = 0
 	@ frame_needed = 0, uses_anonymous_args = 0
-	push	{r4, lr}
+	push	{r4, r5, lr}
 	mov	ip, #2
-	mov	lr, #16
-	mov	r4, #3
+	mov	lr, #3
+	mov	r5, #14
+	mov	r4, #16
 	mov	r0, #20
 	mov	r1, #0
 	mov	r2, #1
 	ldr	r3, .L7
-	str	lr, [r3, #24]
-	str	lr, [r3, #28]
+	str	lr, [r3, #48]
 	str	ip, [r3, #16]
 	ldr	lr, .L7+4
 	str	ip, [r3, #20]
 	ldr	ip, .L7+8
-	str	r4, [r3, #48]
+	str	r5, [r3, #24]
+	str	r4, [r3, #28]
 	str	r2, [lr]
 	str	r0, [r3, #8]
 	str	r0, [r3, #12]
 	str	r1, [r3, #44]
 	str	r1, [r3, #36]
 	str	r2, [ip]
-	pop	{r4, lr}
+	pop	{r4, r5, lr}
 	bx	lr
 .L8:
 	.align	2
@@ -239,33 +240,57 @@ fireBullet:
 	mov	lr, pc
 	bx	r3
 	mov	r1, #1
-	ldr	r2, .L43+12
-	ldr	r3, [r2, #36]
-	cmp	r3, #0
+	ldr	r3, .L43+12
+	ldr	r2, [r3, #36]
+	cmp	r2, #0
 	str	r1, [r4, #28]
-	beq	.L41
-	cmp	r3, #1
-	beq	.L41
-	cmp	r3, #2
-	beq	.L42
-	cmp	r3, #3
-	beq	.L42
+	bne	.L36
+	ldr	r1, [r3, #8]
+	ldr	r0, [r3, #12]
+	add	r3, r1, #11
+	stm	r4, {r0, r3}
+	str	r2, [r4, #32]
 .L33:
 	pop	{r4, lr}
 	bx	lr
+.L36:
+	cmp	r2, #1
+	beq	.L41
+	cmp	r2, #2
+	beq	.L42
+	cmp	r2, #3
+	bne	.L33
+	ldr	r1, [r3, #12]
+	ldr	ip, [r3, #24]
+	ldr	r0, [r3, #8]
+	add	r3, r1, ip
+	sub	r3, r3, #1
+	add	r1, r0, #6
+	str	r2, [r4, #32]
+	str	r3, [r4]
+	str	r1, [r4, #4]
+	pop	{r4, lr}
+	bx	lr
 .L41:
-	ldr	r1, [r2, #12]
-	ldr	r2, [r2, #8]
-	str	r3, [r4, #32]
-	stm	r4, {r1, r2}
+	ldr	r1, [r3, #12]
+	ldr	ip, [r3, #24]
+	ldr	r0, [r3, #8]
+	add	r3, r1, ip
+	sub	r3, r3, #1
+	add	r1, r0, #2
+	str	r2, [r4, #32]
+	str	r3, [r4]
+	str	r1, [r4, #4]
 	pop	{r4, lr}
 	bx	lr
 .L42:
-	add	r1, r2, #8
-	ldm	r1, {r1, r2}
-	str	r3, [r4, #32]
+	add	r1, r3, #8
+	ldm	r1, {r1, r3}
+	add	r1, r1, #6
+	sub	r3, r3, #1
+	str	r2, [r4, #32]
 	str	r1, [r4, #4]
-	str	r2, [r4]
+	str	r3, [r4]
 	b	.L33
 .L44:
 	.align	2
@@ -626,16 +651,17 @@ initGame:
 	mov	r5, #2
 	mov	r4, #0
 	mov	r7, #3
-	mov	r1, #16
 	mov	r2, #20
+	mov	r0, #14
+	mov	r1, #16
 	mov	r6, #1
 	ldr	r3, .L106
 	str	r5, [r3]
 	ldr	r3, .L106+4
 	str	r5, [r3, #16]
 	str	r5, [r3, #20]
-	str	r1, [r3, #24]
 	str	r1, [r3, #28]
+	str	r0, [r3, #24]
 	str	r2, [r3, #8]
 	str	r2, [r3, #12]
 	str	r4, [r3, #44]

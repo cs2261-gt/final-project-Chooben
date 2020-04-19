@@ -22,6 +22,8 @@ enum{BFRONT, BBACK, BLEFT, BRIGHT, BIDLE};
 
 //Initialize all game attributes
 void initGame() {
+
+    //Initialize boss health
     bossHealth = 2;
 
     hOff = 0;
@@ -84,7 +86,7 @@ void drawGame() {
 //Initialize player
 void initPlayer() {
 
-    player.width = 16;
+    player.width = 14;
     player.height = 16;
     player.rdel = 2;
     player.cdel = 2;
@@ -217,19 +219,19 @@ void fireBullet() {
             if(player.aniState == PFRONT) {
                 bullets[i].direction = DOWN;
                 bullets[i].col = player.worldCol;
-                bullets[i].row = player.worldRow;
+                bullets[i].row = player.worldRow+11;
             } else if(player.aniState == PBACK) {
                 bullets[i].direction = UP;
-                bullets[i].col = player.worldCol;
-                bullets[i].row = player.worldRow;
+                bullets[i].col = player.worldCol+player.width-1;
+                bullets[i].row = player.worldRow+2;
             } else if(player.aniState == PLEFT) {
                 bullets[i].direction = LEFT;
-                bullets[i].row = player.worldRow;
-                bullets[i].col = player.worldCol;
+                bullets[i].row = player.worldRow+6;
+                bullets[i].col = player.worldCol-1;
             } else if(player.aniState == PRIGHT) {
                 bullets[i].direction = RIGHT;
-                bullets[i].row = player.worldRow;
-                bullets[i].col = player.worldCol;
+                bullets[i].row = player.worldRow+6;
+                bullets[i].col = player.worldCol+player.width-1;
             }
         }
     }

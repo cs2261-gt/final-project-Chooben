@@ -1547,7 +1547,6 @@ extern const unsigned char bossTheme[539712];
 
 
 void initialize();
-
 void goToStart();
 void start();
 void goToGame1();
@@ -1569,7 +1568,6 @@ int currRegion;
 
 unsigned short buttons;
 unsigned short oldButtons;
-
 int seed;
 
 
@@ -1682,6 +1680,7 @@ void game1(){
 
     updateGame();
     drawGame();
+    waitForVBlank();
 
 
     if((!(~(oldButtons)&((1<<3))) && (~buttons & ((1<<3)))))
@@ -1735,6 +1734,7 @@ void game2() {
 
     updateGame();
     drawGame();
+    waitForVBlank();
 
 
     if((!(~(oldButtons)&((1<<3))) && (~buttons & ((1<<3))))){

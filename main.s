@@ -592,34 +592,37 @@ game1:
 	@ frame_needed = 0, uses_anonymous_args = 0
 	push	{r4, lr}
 	ldr	r3, .L64
-	ldr	r4, .L64+4
 	mov	lr, pc
 	bx	r3
+	ldr	r4, .L64+4
 	ldr	r3, .L64+8
+	mov	lr, pc
+	bx	r3
+	ldr	r3, .L64+12
 	mov	lr, pc
 	bx	r3
 	ldrh	r3, [r4]
 	tst	r3, #8
 	beq	.L51
-	ldr	r2, .L64+12
+	ldr	r2, .L64+16
 	ldrh	r2, [r2]
 	tst	r2, #8
 	beq	.L62
 .L51:
 	tst	r3, #2
 	beq	.L52
-	ldr	r3, .L64+12
+	ldr	r3, .L64+16
 	ldrh	r3, [r3]
 	tst	r3, #2
 	bne	.L52
 	mvn	r0, #0
-	ldr	r1, .L64+16
-	ldr	r3, .L64+20
-	ldr	r2, .L64+24
+	ldr	r1, .L64+20
+	ldr	r3, .L64+24
+	ldr	r2, .L64+28
 	str	r0, [r1]
 	str	r2, [r3]
 .L53:
-	ldr	r3, .L64+28
+	ldr	r3, .L64+32
 	ldr	r3, [r3, #12]
 	cmp	r3, #0
 	blt	.L63
@@ -627,19 +630,19 @@ game1:
 	pop	{r4, lr}
 	bx	lr
 .L52:
-	ldr	r3, .L64+16
+	ldr	r3, .L64+20
 	ldr	r3, [r3]
 	cmp	r3, #0
 	bne	.L53
 	bl	goToLose
-	ldr	r3, .L64+28
+	ldr	r3, .L64+32
 	ldr	r3, [r3, #12]
 	cmp	r3, #0
 	bge	.L50
 .L63:
 	bl	goToGame2
 	mov	r2, #17
-	ldr	r3, .L64+32
+	ldr	r3, .L64+36
 	pop	{r4, lr}
 	str	r2, [r3]
 	bx	lr
@@ -653,6 +656,7 @@ game1:
 	.word	updateGame
 	.word	oldButtons
 	.word	drawGame
+	.word	waitForVBlank
 	.word	buttons
 	.word	playerHealth
 	.word	damage
@@ -678,19 +682,22 @@ game2:
 	mov	lr, pc
 	bx	r3
 	ldr	r3, .L77+8
+	mov	lr, pc
+	bx	r3
+	ldr	r3, .L77+12
 	ldrh	r3, [r3]
 	tst	r3, #8
 	beq	.L67
-	ldr	r3, .L77+12
+	ldr	r3, .L77+16
 	ldrh	r3, [r3]
 	tst	r3, #8
 	beq	.L74
 .L67:
-	ldr	r3, .L77+16
+	ldr	r3, .L77+20
 	ldr	r3, [r3]
 	cmp	r3, #0
 	beq	.L75
-	ldr	r3, .L77+20
+	ldr	r3, .L77+24
 	ldr	r3, [r3]
 	cmp	r3, #0
 	ble	.L76
@@ -699,18 +706,18 @@ game2:
 	bx	lr
 .L75:
 	bl	goToLose
-	ldr	r3, .L77+20
+	ldr	r3, .L77+24
 	ldr	r3, [r3]
 	cmp	r3, #0
 	bgt	.L66
 .L76:
-	ldr	r3, .L77+24
+	ldr	r3, .L77+28
 	mov	lr, pc
 	bx	r3
 	pop	{r4, lr}
 	b	goToWin
 .L74:
-	ldr	r3, .L77+28
+	ldr	r3, .L77+32
 	mov	lr, pc
 	bx	r3
 	bl	goToPause
@@ -720,6 +727,7 @@ game2:
 .L77:
 	.word	updateGame
 	.word	drawGame
+	.word	waitForVBlank
 	.word	oldButtons
 	.word	buttons
 	.word	playerHealth

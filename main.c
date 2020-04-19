@@ -148,6 +148,7 @@ void game1(){
 
     updateGame();
     drawGame();
+    waitForVBlank();
 
     //Go to pause screen
     if(BUTTON_PRESSED(BUTTON_START))
@@ -201,6 +202,7 @@ void game2() {
 
     updateGame();
     drawGame();
+    waitForVBlank();
 
     //Go to pause screen
     if(BUTTON_PRESSED(BUTTON_START)){
