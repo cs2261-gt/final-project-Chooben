@@ -282,8 +282,8 @@ void drawBullet(BULLET* b) {
 //Initialize enemies
 void initEnemy() {
     for(int i = 0; i < ENEMYCOUNT; i++) {
-        enemies[i].width = 16;
-        enemies[i].height = 16;
+        enemies[i].width = 12;
+        enemies[i].height = 15;
         enemies[i].col = (rand() % 240);
         enemies[i].row = (rand() % 160);
         enemies[i].health = 1;
@@ -337,8 +337,8 @@ void updateEnemy(ENEMY* e) {
 void drawEnemy() {
     for(int i = 0; i < ENEMYCOUNT; i++) {
         if(enemies[i].active == 1) {
-            shadowOAM[100 + i].attr0 = (ROWMASK & enemies[i].srow) | ATTR0_SQUARE;
-            shadowOAM[100 + i].attr1 = (COLMASK & enemies[i].scol) | ATTR1_SMALL;
+            shadowOAM[100 + i].attr0 = (ROWMASK & enemies[i].srow) | ATTR0_WIDE;
+            shadowOAM[100 + i].attr1 = (COLMASK & enemies[i].scol) | ATTR1_MEDIUM;
             shadowOAM[100 + i].attr2 = ATTR2_TILEID(10, 0);
         } else {
             shadowOAM[100 + i].attr0 = ATTR0_HIDE;
@@ -407,5 +407,5 @@ void animateBoss() {
 void drawBoss() {
     shadowOAM[127].attr0 = (ROWMASK & boss.srow) | ATTR0_SQUARE;
     shadowOAM[127].attr1 = (COLMASK & boss.scol) | ATTR1_MEDIUM;
-    shadowOAM[127].attr2 = ATTR2_TILEID(boss.aniState + 12, 0);
+    shadowOAM[127].attr2 = ATTR2_TILEID(boss.aniState + 14, 0);
 }

@@ -585,14 +585,15 @@ initEnemy:
 	@ frame_needed = 0, uses_anonymous_args = 0
 	push	{r4, r5, r6, r7, r8, r9, r10, lr}
 	mov	r9, #0
-	mov	r8, #16
+	mov	r8, #12
 	ldr	r4, .L102
 	ldr	r5, .L102+4
 	ldr	r7, .L102+8
 	ldr	r6, .L102+12
 .L99:
+	mov	r3, #15
 	str	r8, [r4, #16]
-	str	r8, [r4, #20]
+	str	r3, [r4, #20]
 	mov	lr, pc
 	bx	r5
 	smull	r3, r2, r7, r0
@@ -844,30 +845,34 @@ drawEnemy:
 	strh	r2, [r3]	@ movhi
 	bx	lr
 .L125:
-	mov	r0, #10
 	ldr	r2, [r3, #8]
 	lsl	r2, r2, #23
-	ldr	r1, .L130+4
 	lsr	r2, r2, #23
-	orr	r2, r2, #16384
+	mvn	r2, r2, lsl #17
+	mvn	r2, r2, lsr #17
+	mov	ip, #10
+	ldr	r1, .L130+4
+	ldrb	r0, [r3, #12]	@ zero_extendqisi2
 	strh	r2, [r1, #2]	@ movhi
 	ldr	r2, [r3, #76]
-	ldrb	ip, [r3, #12]	@ zero_extendqisi2
+	orr	r0, r0, #16384
 	cmp	r2, #1
-	strh	ip, [r1]	@ movhi
-	strh	r0, [r1, #4]	@ movhi
+	strh	r0, [r1]	@ movhi
+	strh	ip, [r1, #4]	@ movhi
 	bne	.L129
 .L127:
-	mov	r1, #10
 	ldr	r2, [r3, #48]
 	lsl	r2, r2, #23
-	ldrb	r0, [r3, #52]	@ zero_extendqisi2
 	lsr	r2, r2, #23
+	mvn	r2, r2, lsl #17
+	mov	r0, #10
+	mvn	r2, r2, lsr #17
+	ldrb	r1, [r3, #52]	@ zero_extendqisi2
 	ldr	r3, .L130+8
-	orr	r2, r2, #16384
+	orr	r1, r1, #16384
 	strh	r2, [r3, #2]	@ movhi
-	strh	r0, [r3]	@ movhi
-	strh	r1, [r3, #4]	@ movhi
+	strh	r1, [r3]	@ movhi
+	strh	r0, [r3, #4]	@ movhi
 	bx	lr
 .L131:
 	.align	2
@@ -924,7 +929,7 @@ drawGame:
 	ldr	r1, [r0, #40]
 	ldr	r2, .L143+20
 	ldrb	r0, [r0, #12]	@ zero_extendqisi2
-	add	r1, r1, #12
+	add	r1, r1, #14
 	strh	r3, [r2, #2]	@ movhi
 	strh	r0, [r2]	@ movhi
 	strh	r1, [r2, #4]	@ movhi
@@ -1201,7 +1206,7 @@ drawBoss:
 	ldr	r2, .L179+4
 	ldr	r1, [r0, #40]
 	ldrb	ip, [r0, #12]	@ zero_extendqisi2
-	add	r1, r1, #12
+	add	r1, r1, #14
 	add	r0, r2, #1016
 	add	r2, r2, #1020
 	strh	r3, [r0, #2]	@ movhi

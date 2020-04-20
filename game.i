@@ -1282,8 +1282,8 @@ void drawBullet(BULLET* b) {
 
 void initEnemy() {
     for(int i = 0; i < 2; i++) {
-        enemies[i].width = 16;
-        enemies[i].height = 16;
+        enemies[i].width = 12;
+        enemies[i].height = 15;
         enemies[i].col = (rand() % 240);
         enemies[i].row = (rand() % 160);
         enemies[i].health = 1;
@@ -1337,8 +1337,8 @@ void updateEnemy(ENEMY* e) {
 void drawEnemy() {
     for(int i = 0; i < 2; i++) {
         if(enemies[i].active == 1) {
-            shadowOAM[100 + i].attr0 = (0xFF & enemies[i].srow) | (0<<14);
-            shadowOAM[100 + i].attr1 = (0x1FF & enemies[i].scol) | (1<<14);
+            shadowOAM[100 + i].attr0 = (0xFF & enemies[i].srow) | (1<<14);
+            shadowOAM[100 + i].attr1 = (0x1FF & enemies[i].scol) | (2<<14);
             shadowOAM[100 + i].attr2 = ((0)*32+(10));
         } else {
             shadowOAM[100 + i].attr0 = (2<<8);
@@ -1407,5 +1407,5 @@ void animateBoss() {
 void drawBoss() {
     shadowOAM[127].attr0 = (0xFF & boss.srow) | (0<<14);
     shadowOAM[127].attr1 = (0x1FF & boss.scol) | (2<<14);
-    shadowOAM[127].attr2 = ((0)*32+(boss.aniState + 12));
+    shadowOAM[127].attr2 = ((0)*32+(boss.aniState + 14));
 }
