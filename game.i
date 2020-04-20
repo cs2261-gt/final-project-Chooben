@@ -1399,13 +1399,18 @@ void updateBoss() {
             playerHealth--;
         }
     }
+    animateBoss();
 }
 
 void animateBoss() {
+    if(boss.aniCounter % 20 == 0) {
+        boss.curFrame = (boss.curFrame + 1) % boss.numFrames;
+    }
+    boss.aniCounter++;
 }
 
 void drawBoss() {
     shadowOAM[127].attr0 = (0xFF & boss.srow) | (0<<14);
     shadowOAM[127].attr1 = (0x1FF & boss.scol) | (2<<14);
-    shadowOAM[127].attr2 = ((0)*32+(boss.aniState + 14));
+    shadowOAM[127].attr2 = ((0+(4*boss.curFrame))*32+(boss.aniState + 14));
 }

@@ -399,13 +399,18 @@ void updateBoss() {
             playerHealth--;
         }
     }
+    animateBoss();
 }
 //Animate boss sprite
 void animateBoss() {
+    if(boss.aniCounter % 20 == 0) {
+        boss.curFrame = (boss.curFrame + 1) % boss.numFrames;
+    }
+    boss.aniCounter++;
 }
 //Draw boss sprite
 void drawBoss() {
     shadowOAM[127].attr0 = (ROWMASK & boss.srow) | ATTR0_SQUARE;
     shadowOAM[127].attr1 = (COLMASK & boss.scol) | ATTR1_MEDIUM;
-    shadowOAM[127].attr2 = ATTR2_TILEID(boss.aniState + 14, 0);
+    shadowOAM[127].attr2 = ATTR2_TILEID(boss.aniState + 14, 0+(4*boss.curFrame));
 }

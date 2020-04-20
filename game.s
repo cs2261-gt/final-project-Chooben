@@ -920,19 +920,21 @@ drawGame:
 	ldr	r3, [r3]
 	cmp	r3, #2
 	bne	.L136
-	ldr	r0, .L143+16
-	ldr	r3, [r0, #8]
+	ldr	r1, .L143+16
+	ldr	r3, [r1, #8]
 	lsl	r3, r3, #23
 	lsr	r3, r3, #23
 	mvn	r3, r3, lsl #17
 	mvn	r3, r3, lsr #17
-	ldr	r1, [r0, #40]
-	ldr	r2, .L143+20
-	ldrb	r0, [r0, #12]	@ zero_extendqisi2
-	add	r1, r1, #14
-	strh	r3, [r2, #2]	@ movhi
-	strh	r0, [r2]	@ movhi
-	strh	r1, [r2, #4]	@ movhi
+	ldr	r2, [r1, #40]
+	ldr	ip, [r1, #48]
+	ldr	r0, .L143+20
+	ldrb	r1, [r1, #12]	@ zero_extendqisi2
+	add	r2, r2, #14
+	add	r2, r2, ip, lsl #7
+	strh	r3, [r0, #2]	@ movhi
+	strh	r1, [r0]	@ movhi
+	strh	r2, [r0, #4]	@ movhi
 .L136:
 	ldr	r3, .L143+24
 	mov	lr, pc
@@ -1020,8 +1022,8 @@ updateBoss:
 	@ args = 0, pretend = 0, frame = 0
 	@ frame_needed = 0, uses_anonymous_args = 0
 	push	{r4, r5, r6, r7, lr}
-	ldr	r4, .L169
-	ldr	r6, .L169+4
+	ldr	r4, .L170
+	ldr	r6, .L170+4
 	ldr	r0, [r4]
 	ldr	r3, [r6, #12]
 	sub	r2, r0, r3
@@ -1039,7 +1041,7 @@ updateBoss:
 	ldr	r3, [r6, #8]
 	sub	r2, r1, r3
 	cmp	r2, #0
-	blt	.L167
+	blt	.L168
 	cmp	r1, r3
 	mvnne	r3, #0
 	moveq	r3, #0
@@ -1048,9 +1050,9 @@ updateBoss:
 	addne	r1, r1, r3
 .L154:
 	ldr	ip, [r4, #20]
-	ldr	r2, .L169+8
-	ldr	r3, .L169+12
-	ldr	r5, .L169+16
+	ldr	r2, .L170+8
+	ldr	r3, .L170+12
+	ldr	r5, .L170+16
 	add	r0, r0, ip
 	ldr	r2, [r2]
 	ldr	r3, [r3]
@@ -1062,28 +1064,46 @@ updateBoss:
 	ldr	r3, [r4, #32]
 	bne	.L156
 	cmp	r3, #1
-	beq	.L168
-.L149:
+	beq	.L169
+.L158:
+	ldr	r5, [r4, #36]
+	ldr	r3, .L170+20
+	smull	r1, r2, r3, r5
+	asr	r3, r5, #31
+	rsb	r3, r3, r2, asr #3
+	add	r3, r3, r3, lsl #2
+	cmp	r5, r3, lsl #2
+	bne	.L162
+	ldr	r0, [r4, #48]
+	ldr	r3, .L170+24
+	ldr	r1, [r4, #52]
+	add	r0, r0, #1
+	mov	lr, pc
+	bx	r3
+	str	r1, [r4, #48]
+.L162:
+	add	r5, r5, #1
+	str	r5, [r4, #36]
 	add	sp, sp, #20
 	@ sp needed
 	pop	{r4, r5, r6, r7, lr}
 	bx	lr
-.L168:
+.L169:
 	add	ip, r5, #16
-	ldm	ip, {ip, lr}
 	ldr	r2, [r5, #4]
+	ldm	ip, {ip, lr}
 	ldr	r3, [r5]
 	stmib	sp, {r2, ip, lr}
 	str	r3, [sp]
 	add	r2, r4, #24
 	ldm	r2, {r2, r3}
-	ldr	r7, .L169+20
+	ldr	r7, .L170+28
 	mov	lr, pc
 	bx	r7
 	cmp	r0, #0
 	movne	r1, #0
-	ldrne	r2, .L169+24
-	ldrne	r0, .L169+28
+	ldrne	r2, .L170+32
+	ldrne	r0, .L170+36
 	ldrne	r3, [r2]
 	ldrne	r0, [r0]
 	subne	r3, r3, r0
@@ -1092,43 +1112,42 @@ updateBoss:
 	ldr	r3, [r4, #32]
 .L156:
 	cmp	r3, #1
-	bne	.L149
+	bne	.L158
 	add	r2, r6, #8
 	ldm	r2, {r2, r3}
 	ldr	r0, [r6, #28]
 	ldr	r1, [r6, #24]
-	str	r2, [sp, #4]
 	str	r0, [sp, #12]
 	str	r1, [sp, #8]
+	str	r2, [sp, #4]
 	str	r3, [sp]
 	add	r2, r4, #24
 	ldm	r2, {r2, r3}
 	ldm	r4, {r0, r1}
-	ldr	r4, .L169+20
+	ldr	r5, .L170+28
 	mov	lr, pc
-	bx	r4
+	bx	r5
 	cmp	r0, #0
-	ldrne	r2, .L169+32
+	ldrne	r2, .L170+40
 	ldrne	r3, [r2]
 	subne	r3, r3, #1
 	strne	r3, [r2]
-	add	sp, sp, #20
-	@ sp needed
-	pop	{r4, r5, r6, r7, lr}
-	bx	lr
-.L167:
+	b	.L158
+.L168:
 	mov	r3, #1
 	str	r3, [r4, #16]
 	add	r1, r1, r3
 	b	.L154
-.L170:
+.L171:
 	.align	2
-.L169:
+.L170:
 	.word	boss
 	.word	player
 	.word	hOff
 	.word	vOff
 	.word	bullets
+	.word	1717986919
+	.word	__aeabi_idivmod
 	.word	collision
 	.word	bossHealth
 	.word	damage
@@ -1146,27 +1165,27 @@ updateGame:
 	@ frame_needed = 0, uses_anonymous_args = 0
 	push	{r4, lr}
 	bl	updatePlayer
-	ldr	r0, .L175
+	ldr	r0, .L176
 	bl	updateBullet
-	ldr	r0, .L175+4
+	ldr	r0, .L176+4
 	bl	updateEnemy
-	ldr	r0, .L175+8
+	ldr	r0, .L176+8
 	bl	updateEnemy
-	ldr	r3, .L175+12
+	ldr	r3, .L176+12
 	ldr	r3, [r3]
 	cmp	r3, #2
-	beq	.L174
+	beq	.L175
 	pop	{r4, lr}
 	bx	lr
-.L174:
+.L175:
 	mov	r2, #1
-	ldr	r3, .L175+16
+	ldr	r3, .L176+16
 	pop	{r4, lr}
 	str	r2, [r3, #32]
 	b	updateBoss
-.L176:
+.L177:
 	.align	2
-.L175:
+.L176:
 	.word	bullets
 	.word	enemies
 	.word	enemies+40
@@ -1183,8 +1202,34 @@ animateBoss:
 	@ Function supports interworking.
 	@ args = 0, pretend = 0, frame = 0
 	@ frame_needed = 0, uses_anonymous_args = 0
-	@ link register save eliminated.
+	push	{r4, r5, r6, lr}
+	ldr	r5, .L181
+	ldr	r3, .L181+4
+	ldr	r4, [r5, #36]
+	smull	r1, r2, r3, r4
+	asr	r3, r4, #31
+	rsb	r3, r3, r2, asr #3
+	add	r3, r3, r3, lsl #2
+	cmp	r4, r3, lsl #2
+	bne	.L179
+	ldr	r0, [r5, #48]
+	ldr	r3, .L181+8
+	ldr	r1, [r5, #52]
+	add	r0, r0, #1
+	mov	lr, pc
+	bx	r3
+	str	r1, [r5, #48]
+.L179:
+	add	r4, r4, #1
+	str	r4, [r5, #36]
+	pop	{r4, r5, r6, lr}
 	bx	lr
+.L182:
+	.align	2
+.L181:
+	.word	boss
+	.word	1717986919
+	.word	__aeabi_idivmod
 	.size	animateBoss, .-animateBoss
 	.align	2
 	.global	drawBoss
@@ -1196,26 +1241,29 @@ drawBoss:
 	@ Function supports interworking.
 	@ args = 0, pretend = 0, frame = 0
 	@ frame_needed = 0, uses_anonymous_args = 0
-	@ link register save eliminated.
-	ldr	r0, .L179
+	ldr	r0, .L185
 	ldr	r3, [r0, #8]
 	lsl	r3, r3, #23
 	lsr	r3, r3, #23
 	mvn	r3, r3, lsl #17
 	mvn	r3, r3, lsr #17
-	ldr	r2, .L179+4
-	ldr	r1, [r0, #40]
+	ldr	r2, [r0, #40]
+	str	lr, [sp, #-4]!
+	ldr	r1, .L185+4
+	ldr	lr, [r0, #48]
 	ldrb	ip, [r0, #12]	@ zero_extendqisi2
-	add	r1, r1, #14
-	add	r0, r2, #1016
-	add	r2, r2, #1020
+	add	r2, r2, #14
+	add	r0, r1, #1016
+	add	r2, r2, lr, lsl #7
+	add	r1, r1, #1020
 	strh	r3, [r0, #2]	@ movhi
 	strh	ip, [r0]	@ movhi
-	strh	r1, [r2]	@ movhi
+	strh	r2, [r1]	@ movhi
+	ldr	lr, [sp], #4
 	bx	lr
-.L180:
+.L186:
 	.align	2
-.L179:
+.L185:
 	.word	boss
 	.word	shadowOAM
 	.size	drawBoss, .-drawBoss
