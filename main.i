@@ -1478,7 +1478,7 @@ extern const unsigned short region1Pal[256];
 # 8 "main.c" 2
 # 1 "pause.h" 1
 # 22 "pause.h"
-extern const unsigned short pauseTiles[944];
+extern const unsigned short pauseTiles[1504];
 
 
 extern const unsigned short pauseMap[1024];
@@ -1486,6 +1486,16 @@ extern const unsigned short pauseMap[1024];
 
 extern const unsigned short pausePal[256];
 # 9 "main.c" 2
+# 1 "instruct.h" 1
+# 22 "instruct.h"
+extern const unsigned short instructTiles[2800];
+
+
+extern const unsigned short instructMap[1024];
+
+
+extern const unsigned short instructPal[256];
+# 10 "main.c" 2
 # 1 "win.h" 1
 # 22 "win.h"
 extern const unsigned short winTiles[752];
@@ -1495,7 +1505,7 @@ extern const unsigned short winMap[1024];
 
 
 extern const unsigned short winPal[256];
-# 10 "main.c" 2
+# 11 "main.c" 2
 # 1 "lose.h" 1
 # 22 "lose.h"
 extern const unsigned short loseTiles[704];
@@ -1505,14 +1515,14 @@ extern const unsigned short loseMap[1024];
 
 
 extern const unsigned short losePal[256];
-# 11 "main.c" 2
+# 12 "main.c" 2
 # 1 "spritesheet.h" 1
 # 21 "spritesheet.h"
 extern const unsigned short spritesheetTiles[16384];
 
 
 extern const unsigned short spritesheetPal[256];
-# 12 "main.c" 2
+# 13 "main.c" 2
 # 1 "region2.h" 1
 # 22 "region2.h"
 extern const unsigned short region2Tiles[32];
@@ -1522,7 +1532,7 @@ extern const unsigned short region2Map[1024];
 
 
 extern const unsigned short region2Pal[256];
-# 13 "main.c" 2
+# 14 "main.c" 2
 # 1 "sound.h" 1
 SOUND soundA;
 SOUND soundB;
@@ -1539,11 +1549,11 @@ void interruptHandler();
 void pauseSound();
 void unpauseSound();
 void stopSound();
-# 14 "main.c" 2
+# 15 "main.c" 2
 # 1 "bossTheme.h" 1
 # 20 "bossTheme.h"
 extern const unsigned char bossTheme[539712];
-# 15 "main.c" 2
+# 16 "main.c" 2
 
 
 void initialize();
@@ -1555,13 +1565,15 @@ void goToGame2();
 void game2();
 void goToPause();
 void pause();
+void goToInstruct();
+void instruct();
 void goToWin();
 void win();
 void goToLose();
 void lose();
 
 
-enum{START, GAME1, GAME2, PAUSE, WIN, LOSE};
+enum{START, GAME1, GAME2, PAUSE, WIN, LOSE, INSTRUCT};
 int state;
 int currRegion;
 
@@ -1594,6 +1606,9 @@ int main() {
                 break;
             case PAUSE:
                 pause();
+                break;
+            case INSTRUCT:
+                instruct();
                 break;
             case WIN:
                 win();
@@ -1756,7 +1771,7 @@ void goToPause(){
     waitForVBlank();
 
     DMANow(3, pausePal, ((unsigned short *)0x5000000), 256);
-    DMANow(3, pauseTiles, &((charblock *)0x6000000)[0], 1888/2);
+    DMANow(3, pauseTiles, &((charblock *)0x6000000)[0], 3008/2);
     DMANow(3, pauseMap, &((screenblock *)0x6000000)[31], 2048/2);
 
     (*(volatile unsigned short *)0x04000012) = 0;
@@ -1786,10 +1801,30 @@ void pause(){
 
     else if ((!(~(oldButtons)&((1<<2))) && (~buttons & ((1<<2)))))
         goToStart();
-    else if ((!(~(oldButtons)&((1<<1))) && (~buttons & ((1<<1)))))
-        goToLose();
-    else if ((!(~(oldButtons)&((1<<0))) && (~buttons & ((1<<0)))))
-        goToWin();
+    else if ((!(~(oldButtons)&((1<<0))) && (~buttons & ((1<<0))))) {
+        goToInstruct();
+    }
+}
+void goToInstruct() {
+    waitForVBlank();
+
+    DMANow(3, instructPal, ((unsigned short *)0x5000000), 256);
+    DMANow(3, instructTiles, &((charblock *)0x6000000)[0], 5600/2);
+    DMANow(3, instructMap, &((screenblock *)0x6000000)[31], 2048/2);
+
+    (*(volatile unsigned short *)0x04000012) = 0;
+    (*(volatile unsigned short *)0x04000010) = 0;
+
+    hideSprites();
+    DMANow(3, shadowOAM, ((OBJ_ATTR*)(0x7000000)), 128*4);
+
+    state = INSTRUCT;
+}
+void instruct() {
+    waitForVBlank();
+
+    if((!(~(oldButtons)&((1<<0))) && (~buttons & ((1<<0)))))
+        goToPause();
 }
 
 void goToWin(){

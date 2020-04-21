@@ -6,6 +6,7 @@
 #include "startScreen.h"
 #include "region1.h"
 #include "pause.h"
+#include "instruct.h"
 #include "win.h"
 #include "lose.h"
 #include "spritesheet.h"
@@ -23,13 +24,15 @@ void goToGame2();
 void game2();
 void goToPause();
 void pause();
+void goToInstruct();
+void instruct();
 void goToWin();
 void win();
 void goToLose();
 void lose();
 
 //States
-enum{START, GAME1, GAME2, PAUSE, WIN, LOSE};
+enum{START, GAME1, GAME2, PAUSE, WIN, LOSE, INSTRUCT};
 int state;
 int currRegion;
 
@@ -62,6 +65,9 @@ int main() {
                 break;
             case PAUSE:
                 pause();
+                break;
+            case INSTRUCT:
+                instruct();
                 break;
             case WIN:
                 win();
@@ -254,10 +260,30 @@ void pause(){
     //Restart game from pause
     else if (BUTTON_PRESSED(BUTTON_SELECT))
         goToStart();
-    else if (BUTTON_PRESSED(BUTTON_B))
-        goToLose();
-    else if (BUTTON_PRESSED(BUTTON_A))
-        goToWin();
+    else if (BUTTON_PRESSED(BUTTON_A)) {
+        goToInstruct();
+    }
+}
+void goToInstruct() {
+    waitForVBlank();
+
+    DMANow(3, instructPal, PALETTE, 256);
+    DMANow(3, instructTiles, &CHARBLOCK[0], instructTilesLen/2);
+    DMANow(3, instructMap, &SCREENBLOCK[31], instructMapLen/2);
+
+    REG_BG0VOFF = 0;
+    REG_BG0HOFF = 0;
+
+    hideSprites();
+    DMANow(3, shadowOAM, OAM, 128*4);
+
+    state = INSTRUCT;
+}
+void instruct() {
+    waitForVBlank();
+
+    if(BUTTON_PRESSED(BUTTON_A))
+        goToPause();
 }
 //Setup win screen
 void goToWin(){

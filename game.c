@@ -24,7 +24,7 @@ enum{BFRONT, BBACK, BLEFT, BRIGHT, BIDLE};
 void initGame() {
 
     //Initialize boss health
-    bossHealth = 5;
+    bossHealth = 10;
 
     hOff = 0;
     vOff = 0;
@@ -284,8 +284,8 @@ void initEnemy() {
     for(int i = 0; i < ENEMYCOUNT; i++) {
         enemies[i].width = 22;
         enemies[i].height = 15;
-        enemies[i].col = (rand() % 240);
-        enemies[i].row = (rand() % 160);
+        enemies[i].col = (rand() % 224);
+        enemies[i].row = (rand() % 152);
         enemies[i].health = 3;
         enemies[i].del = 2;
         enemies[i].direction = rand() % 2;
@@ -315,16 +315,13 @@ void updateEnemy(ENEMY* e) {
     for(int i = 0; i < BULLETCOUNT; i++) {
         if(e->active == 1) {
             if(collision(e->col, e->row, e->width, e->height, bullets[i].col, bullets[i].row, bullets[i].width, bullets[i].height)) {
-                e->health -= damage;
+                e->active = 0;
                 bullets[i].active = 0;
+                damage++;
             } 
         }
     }
-
-    //Enemy defeated when health equals 0
-    if(e->health <= 0)
-        e->active = 0;
-
+        
     //Deactivates enemies if in boss area
     if(currRegion == 2) {
         for(int i = 0; i < ENEMYCOUNT; i++) {

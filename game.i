@@ -1284,8 +1284,8 @@ void initEnemy() {
     for(int i = 0; i < 2; i++) {
         enemies[i].width = 22;
         enemies[i].height = 15;
-        enemies[i].col = (rand() % 240);
-        enemies[i].row = (rand() % 160);
+        enemies[i].col = (rand() % 224);
+        enemies[i].row = (rand() % 152);
         enemies[i].health = 3;
         enemies[i].del = 2;
         enemies[i].direction = rand() % 2;
@@ -1315,15 +1315,12 @@ void updateEnemy(ENEMY* e) {
     for(int i = 0; i < 1; i++) {
         if(e->active == 1) {
             if(collision(e->col, e->row, e->width, e->height, bullets[i].col, bullets[i].row, bullets[i].width, bullets[i].height)) {
-                e->health -= damage;
+                e->active = 0;
                 bullets[i].active = 0;
+                damage++;
             }
         }
     }
-
-
-    if(e->health <= 0)
-        e->active = 0;
 
 
     if(currRegion == 2) {
