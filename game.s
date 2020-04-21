@@ -320,7 +320,7 @@ updatePlayer:
 	ldr	r2, [r4, #8]
 	sub	sp, sp, #16
 	bne	.L46
-	cmp	r2, #0
+	cmp	r2, #8
 	ldrgt	r1, [r4, #16]
 	subgt	r2, r2, r1
 	strgt	r2, [r4, #8]
@@ -336,7 +336,7 @@ updatePlayer:
 	tst	r1, #128
 	bne	.L48
 	ldr	r1, [r4, #28]
-	rsb	r1, r1, #256
+	rsb	r1, r1, #248
 	cmp	r1, r2
 	ldrgt	r1, [r4, #16]
 	addgt	r2, r2, r1
@@ -355,7 +355,7 @@ updatePlayer:
 	ldr	lr, [lr]
 	cmp	lr, #1
 	beq	.L68
-	cmp	r3, #0
+	cmp	r3, #8
 	ble	.L52
 .L68:
 	ldr	lr, [r4, #20]
@@ -374,7 +374,7 @@ updatePlayer:
 	tst	lr, #16
 	bne	.L53
 	ldr	lr, [r4, #24]
-	rsb	lr, lr, #256
+	rsb	lr, lr, #248
 	cmp	lr, r3
 	ldrgt	lr, [r4, #20]
 	addgt	r3, r3, lr
@@ -585,7 +585,7 @@ initEnemy:
 	@ frame_needed = 0, uses_anonymous_args = 0
 	push	{r4, r5, r6, r7, r8, r9, r10, lr}
 	mov	r9, #0
-	mov	r8, #12
+	mov	r8, #22
 	ldr	r4, .L102
 	ldr	r5, .L102+4
 	ldr	r7, .L102+8
@@ -606,29 +606,30 @@ initEnemy:
 	mov	lr, pc
 	bx	r5
 	mov	r2, #2
-	mov	r10, #1
-	smull	r3, r1, r6, r0
+	mov	r1, #3
+	smull	r3, ip, r6, r0
 	asr	r3, r0, #31
-	rsb	r3, r3, r1, asr #6
+	rsb	r3, r3, ip, asr #6
 	add	r3, r3, r3, lsl r2
 	sub	r0, r0, r3, lsl #5
 	str	r0, [r4, #4]
-	str	r10, [r4, #24]
+	str	r1, [r4, #24]
 	str	r2, [r4, #28]
 	mov	lr, pc
 	bx	r5
+	mov	r3, #1
 	cmp	r0, #0
-	and	r0, r0, r10
+	and	r0, r0, r3
 	rsblt	r0, r0, #0
-	cmp	r9, r10
+	cmp	r9, r3
 	str	r0, [r4, #32]
-	str	r10, [r4, #36]
+	str	r3, [r4, #36]
 	add	r4, r4, #40
 	bne	.L100
 	pop	{r4, r5, r6, r7, r8, r9, r10, lr}
 	bx	lr
 .L100:
-	mov	r9, r10
+	mov	r9, r3
 	b	.L99
 .L103:
 	.align	2
@@ -648,41 +649,42 @@ initGame:
 	@ Function supports interworking.
 	@ args = 0, pretend = 0, frame = 0
 	@ frame_needed = 0, uses_anonymous_args = 0
+	mov	ip, #5
 	push	{r4, r5, r6, r7, r8, lr}
-	mov	r5, #2
 	mov	r4, #0
+	mov	r2, #16
+	mov	r5, #2
 	mov	r7, #3
-	mov	r2, #20
+	mov	r1, #20
 	mov	r0, #14
-	mov	r1, #16
 	mov	r6, #1
 	ldr	r3, .L106
-	str	r5, [r3]
+	str	ip, [r3]
 	ldr	r3, .L106+4
-	str	r5, [r3, #16]
-	str	r5, [r3, #20]
-	str	r1, [r3, #28]
-	str	r0, [r3, #24]
-	str	r2, [r3, #8]
-	str	r2, [r3, #12]
+	str	r4, [r3]
+	ldr	r3, .L106+8
+	str	r4, [r3]
+	ldr	r3, .L106+12
+	str	r2, [r3, #28]
+	ldr	r2, .L106+16
 	str	r4, [r3, #44]
 	str	r4, [r3, #36]
-	str	r7, [r3, #48]
-	ldr	r2, .L106+8
-	ldr	r3, .L106+12
-	str	r4, [r2]
-	str	r4, [r3]
-	ldr	r1, .L106+16
-	ldr	r2, .L106+20
-	str	r4, [r3, #28]
-	str	r7, [r3, #24]
-	str	r4, [r3, #4]
-	str	r4, [r3, #32]
 	str	r5, [r3, #16]
 	str	r5, [r3, #20]
+	str	r1, [r3, #8]
+	str	r1, [r3, #12]
+	str	r7, [r3, #48]
+	ldr	r1, .L106+20
+	str	r0, [r3, #24]
 	ldr	r3, .L106+24
-	str	r4, [r1]
-	str	r6, [r2]
+	str	r4, [r2, #28]
+	str	r7, [r2, #24]
+	str	r4, [r2]
+	str	r4, [r2, #4]
+	str	r4, [r2, #32]
+	str	r5, [r2, #16]
+	str	r5, [r2, #20]
+	str	r6, [r1]
 	str	r6, [r3]
 	bl	initEnemy
 	mov	r2, #32
@@ -704,10 +706,10 @@ initGame:
 	.align	2
 .L106:
 	.word	bossHealth
-	.word	player
-	.word	vOff
-	.word	bullets
 	.word	hOff
+	.word	vOff
+	.word	player
+	.word	bullets
 	.word	playerHealth
 	.word	damage
 	.word	boss
@@ -725,14 +727,14 @@ updateEnemy:
 	push	{r4, r5, r6, lr}
 	mov	r5, r0
 	ldr	r0, [r0]
-	cmp	r0, #0
+	cmp	r0, #8
 	ldr	r1, [r5, #4]
 	ldr	r3, [r5, #28]
 	sub	sp, sp, #16
 	ble	.L112
 	ldr	r2, [r5, #16]
 	add	r2, r0, r2
-	cmp	r2, #255
+	cmp	r2, #247
 	ble	.L110
 .L112:
 	rsb	r3, r3, #0
@@ -800,11 +802,11 @@ updateEnemy:
 	str	r2, [r4, #28]
 	b	.L116
 .L110:
-	cmp	r1, #0
+	cmp	r1, #8
 	ble	.L112
 	ldr	r2, [r5, #20]
 	add	r2, r1, r2
-	cmp	r2, #255
+	cmp	r2, #247
 	ble	.L111
 	b	.L112
 .L123:

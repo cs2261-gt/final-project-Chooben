@@ -1468,7 +1468,7 @@ extern const unsigned short startScreenPal[256];
 # 7 "main.c" 2
 # 1 "region1.h" 1
 # 22 "region1.h"
-extern const unsigned short region1Tiles[128];
+extern const unsigned short region1Tiles[96];
 
 
 extern const unsigned short region1Map[1024];
@@ -1515,7 +1515,7 @@ extern const unsigned short spritesheetPal[256];
 # 12 "main.c" 2
 # 1 "region2.h" 1
 # 22 "region2.h"
-extern const unsigned short region2Tiles[320];
+extern const unsigned short region2Tiles[32];
 
 
 extern const unsigned short region2Map[1024];
@@ -1660,7 +1660,7 @@ void goToGame1(){
 
 
     DMANow(3, region1Pal, ((unsigned short *)0x5000000), 256);
-    DMANow(3, region1Tiles, &((charblock *)0x6000000)[0], 256/2);
+    DMANow(3, region1Tiles, &((charblock *)0x6000000)[0], 192/2);
     DMANow(3, region1Map, &((screenblock *)0x6000000)[31], 2048/2);
 
     (*(volatile unsigned short *)0x04000012) = vOff;
@@ -1705,7 +1705,7 @@ void goToGame2() {
 
 
     DMANow(3, region2Pal, ((unsigned short *)0x5000000), 256);
-    DMANow(3, region2Tiles, &((charblock *)0x6000000)[0], 640/2);
+    DMANow(3, region2Tiles, &((charblock *)0x6000000)[0], 64/2);
     DMANow(3, region2Map, &((screenblock *)0x6000000)[31], 2048/2);
 
     (*(volatile unsigned short *)0x04000012) = vOff;

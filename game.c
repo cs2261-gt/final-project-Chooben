@@ -24,7 +24,7 @@ enum{BFRONT, BBACK, BLEFT, BRIGHT, BIDLE};
 void initGame() {
 
     //Initialize boss health
-    bossHealth = 2;
+    bossHealth = 5;
 
     hOff = 0;
     vOff = 0;
@@ -103,7 +103,7 @@ void updatePlayer() {
 
     //Complex player movement
     if(BUTTON_HELD(BUTTON_UP)) {
-        if(player.worldRow > 0) {
+        if(player.worldRow > 8) {
             player.worldRow-=player.rdel;
         }
         if((vOff >- 0) && (player.screenRow < SCREENHEIGHT/2)) {
@@ -111,7 +111,7 @@ void updatePlayer() {
         }
     }
     if(BUTTON_HELD(BUTTON_DOWN)) {
-        if(player.worldRow < MAPHEIGHT - player.height) {
+        if(player.worldRow < MAPHEIGHT - player.height - 8) {
             player.worldRow+=player.rdel;
         }
         if((vOff < MAPHEIGHT - SCREENHEIGHT) && (player.screenRow > SCREENHEIGHT/2)) {
@@ -121,7 +121,7 @@ void updatePlayer() {
     if(BUTTON_HELD(BUTTON_LEFT)) {
         if(currRegion == 1) {
             player.worldCol-=player.cdel;
-        } else if(player.worldCol > 0) {
+        } else if(player.worldCol > 8) {
             player.worldCol-=player.cdel;
         }
 
@@ -130,7 +130,7 @@ void updatePlayer() {
         }
     }
     if(BUTTON_HELD(BUTTON_RIGHT)) {
-        if(player.worldCol < MAPWIDTH - player.width) {
+        if(player.worldCol < MAPWIDTH - player.width - 8) {
             player.worldCol+=player.cdel;
         }
         if((hOff < MAPWIDTH - SCREENWIDTH) && (player.screenCol > SCREENWIDTH/2)) {
@@ -282,11 +282,11 @@ void drawBullet(BULLET* b) {
 //Initialize enemies
 void initEnemy() {
     for(int i = 0; i < ENEMYCOUNT; i++) {
-        enemies[i].width = 12;
+        enemies[i].width = 22;
         enemies[i].height = 15;
         enemies[i].col = (rand() % 240);
         enemies[i].row = (rand() % 160);
-        enemies[i].health = 1;
+        enemies[i].health = 3;
         enemies[i].del = 2;
         enemies[i].direction = rand() % 2;
         enemies[i].active = 1;
@@ -295,9 +295,9 @@ void initEnemy() {
 //Update enemies
 void updateEnemy(ENEMY* e) {
     //Boundary checks
-    if(e->col < 1 || ((e->col + e->width) > (MAPWIDTH - 1))) {
+    if(e->col < 9 || ((e->col + e->width) > (MAPWIDTH - 9))) {
         e->del *= -1;
-    } else if(e->row < 1 || ((e->row + e->height) > (MAPHEIGHT - 1))) {
+    } else if(e->row < 9 || ((e->row + e->height) > (MAPHEIGHT - 9))) {
         e->del *= -1;
     }
 

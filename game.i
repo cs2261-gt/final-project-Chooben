@@ -1024,7 +1024,7 @@ enum{BFRONT, BBACK, BLEFT, BRIGHT, BIDLE};
 void initGame() {
 
 
-    bossHealth = 2;
+    bossHealth = 5;
 
     hOff = 0;
     vOff = 0;
@@ -1103,7 +1103,7 @@ void updatePlayer() {
 
 
     if((~((*(volatile unsigned short *)0x04000130)) & ((1<<6)))) {
-        if(player.worldRow > 0) {
+        if(player.worldRow > 8) {
             player.worldRow-=player.rdel;
         }
         if((vOff >- 0) && (player.screenRow < 160/2)) {
@@ -1111,7 +1111,7 @@ void updatePlayer() {
         }
     }
     if((~((*(volatile unsigned short *)0x04000130)) & ((1<<7)))) {
-        if(player.worldRow < 256 - player.height) {
+        if(player.worldRow < 256 - player.height - 8) {
             player.worldRow+=player.rdel;
         }
         if((vOff < 256 - 160) && (player.screenRow > 160/2)) {
@@ -1121,7 +1121,7 @@ void updatePlayer() {
     if((~((*(volatile unsigned short *)0x04000130)) & ((1<<5)))) {
         if(currRegion == 1) {
             player.worldCol-=player.cdel;
-        } else if(player.worldCol > 0) {
+        } else if(player.worldCol > 8) {
             player.worldCol-=player.cdel;
         }
 
@@ -1130,7 +1130,7 @@ void updatePlayer() {
         }
     }
     if((~((*(volatile unsigned short *)0x04000130)) & ((1<<4)))) {
-        if(player.worldCol < 256 - player.width) {
+        if(player.worldCol < 256 - player.width - 8) {
             player.worldCol+=player.cdel;
         }
         if((hOff < 256 - 240) && (player.screenCol > 240/2)) {
@@ -1282,11 +1282,11 @@ void drawBullet(BULLET* b) {
 
 void initEnemy() {
     for(int i = 0; i < 2; i++) {
-        enemies[i].width = 12;
+        enemies[i].width = 22;
         enemies[i].height = 15;
         enemies[i].col = (rand() % 240);
         enemies[i].row = (rand() % 160);
-        enemies[i].health = 1;
+        enemies[i].health = 3;
         enemies[i].del = 2;
         enemies[i].direction = rand() % 2;
         enemies[i].active = 1;
@@ -1295,9 +1295,9 @@ void initEnemy() {
 
 void updateEnemy(ENEMY* e) {
 
-    if(e->col < 1 || ((e->col + e->width) > (256 - 1))) {
+    if(e->col < 9 || ((e->col + e->width) > (256 - 9))) {
         e->del *= -1;
-    } else if(e->row < 1 || ((e->row + e->height) > (256 - 1))) {
+    } else if(e->row < 9 || ((e->row + e->height) > (256 - 9))) {
         e->del *= -1;
     }
 

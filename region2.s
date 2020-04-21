@@ -20,7 +20,7 @@
 region2Pal:
 	.short	0
 	.short	13943
-	.short	512
+	.short	480
 	.short	528
 	.short	16384
 	.short	16400
@@ -277,39 +277,6 @@ region2Pal:
 	.type	region2Map, %object
 	.size	region2Map, 2048
 region2Map:
-	.short	0
-	.short	0
-	.short	0
-	.short	0
-	.short	0
-	.short	0
-	.short	0
-	.short	0
-	.short	0
-	.short	0
-	.short	0
-	.short	0
-	.short	0
-	.short	0
-	.short	0
-	.short	0
-	.short	0
-	.short	0
-	.short	0
-	.short	0
-	.short	0
-	.short	0
-	.short	0
-	.short	0
-	.short	0
-	.short	0
-	.short	0
-	.short	0
-	.short	0
-	.short	0
-	.short	0
-	.short	0
-	.short	0
 	.short	1
 	.short	1
 	.short	1
@@ -341,7 +308,6 @@ region2Map:
 	.short	1
 	.short	1
 	.short	1
-	.short	0
 	.short	1
 	.short	1
 	.short	1
@@ -373,7 +339,6 @@ region2Map:
 	.short	1
 	.short	1
 	.short	1
-	.short	0
 	.short	1
 	.short	1
 	.short	1
@@ -405,7 +370,6 @@ region2Map:
 	.short	1
 	.short	1
 	.short	1
-	.short	0
 	.short	1
 	.short	1
 	.short	1
@@ -437,7 +401,6 @@ region2Map:
 	.short	1
 	.short	1
 	.short	1
-	.short	0
 	.short	1
 	.short	1
 	.short	1
@@ -469,7 +432,6 @@ region2Map:
 	.short	1
 	.short	1
 	.short	1
-	.short	0
 	.short	1
 	.short	1
 	.short	1
@@ -501,7 +463,6 @@ region2Map:
 	.short	1
 	.short	1
 	.short	1
-	.short	0
 	.short	1
 	.short	1
 	.short	1
@@ -533,7 +494,6 @@ region2Map:
 	.short	1
 	.short	1
 	.short	1
-	.short	0
 	.short	1
 	.short	1
 	.short	1
@@ -565,7 +525,6 @@ region2Map:
 	.short	1
 	.short	1
 	.short	1
-	.short	0
 	.short	1
 	.short	1
 	.short	1
@@ -579,9 +538,6 @@ region2Map:
 	.short	1
 	.short	1
 	.short	1
-	.short	2
-	.short	3
-	.short	4
 	.short	1
 	.short	1
 	.short	1
@@ -597,7 +553,6 @@ region2Map:
 	.short	1
 	.short	1
 	.short	1
-	.short	0
 	.short	1
 	.short	1
 	.short	1
@@ -610,10 +565,6 @@ region2Map:
 	.short	1
 	.short	1
 	.short	1
-	.short	5
-	.short	6
-	.short	7
-	.short	8
 	.short	1
 	.short	1
 	.short	1
@@ -629,7 +580,6 @@ region2Map:
 	.short	1
 	.short	1
 	.short	1
-	.short	0
 	.short	1
 	.short	1
 	.short	1
@@ -644,8 +594,6 @@ region2Map:
 	.short	1
 	.short	1
 	.short	1
-	.short	9
-	.short	10
 	.short	1
 	.short	1
 	.short	1
@@ -661,7 +609,6 @@ region2Map:
 	.short	1
 	.short	1
 	.short	1
-	.short	0
 	.short	1
 	.short	1
 	.short	1
@@ -675,8 +622,6 @@ region2Map:
 	.short	1
 	.short	1
 	.short	1
-	.short	11
-	.short	12
 	.short	1
 	.short	1
 	.short	1
@@ -693,7 +638,6 @@ region2Map:
 	.short	1
 	.short	1
 	.short	1
-	.short	0
 	.short	1
 	.short	1
 	.short	1
@@ -706,10 +650,6 @@ region2Map:
 	.short	1
 	.short	1
 	.short	1
-	.short	13
-	.short	14
-	.short	15
-	.short	16
 	.short	1
 	.short	1
 	.short	1
@@ -725,7 +665,6 @@ region2Map:
 	.short	1
 	.short	1
 	.short	1
-	.short	0
 	.short	1
 	.short	1
 	.short	1
@@ -738,10 +677,6 @@ region2Map:
 	.short	1
 	.short	1
 	.short	1
-	.short	17
-	.short	18
-	.short	18
-	.short	19
 	.short	1
 	.short	1
 	.short	1
@@ -757,7 +692,6 @@ region2Map:
 	.short	1
 	.short	1
 	.short	1
-	.short	0
 	.short	1
 	.short	1
 	.short	1
@@ -789,7 +723,6 @@ region2Map:
 	.short	1
 	.short	1
 	.short	1
-	.short	0
 	.short	1
 	.short	1
 	.short	1
@@ -821,7 +754,6 @@ region2Map:
 	.short	1
 	.short	1
 	.short	1
-	.short	0
 	.short	1
 	.short	1
 	.short	1
@@ -853,7 +785,6 @@ region2Map:
 	.short	1
 	.short	1
 	.short	1
-	.short	0
 	.short	1
 	.short	1
 	.short	1
@@ -885,7 +816,6 @@ region2Map:
 	.short	1
 	.short	1
 	.short	1
-	.short	0
 	.short	1
 	.short	1
 	.short	1
@@ -917,7 +847,6 @@ region2Map:
 	.short	1
 	.short	1
 	.short	1
-	.short	0
 	.short	1
 	.short	1
 	.short	1
@@ -949,7 +878,6 @@ region2Map:
 	.short	1
 	.short	1
 	.short	1
-	.short	0
 	.short	1
 	.short	1
 	.short	1
@@ -981,7 +909,6 @@ region2Map:
 	.short	1
 	.short	1
 	.short	1
-	.short	0
 	.short	1
 	.short	1
 	.short	1
@@ -1013,7 +940,6 @@ region2Map:
 	.short	1
 	.short	1
 	.short	1
-	.short	0
 	.short	1
 	.short	1
 	.short	1
@@ -1045,7 +971,6 @@ region2Map:
 	.short	1
 	.short	1
 	.short	1
-	.short	0
 	.short	1
 	.short	1
 	.short	1
@@ -1077,7 +1002,6 @@ region2Map:
 	.short	1
 	.short	1
 	.short	1
-	.short	0
 	.short	1
 	.short	1
 	.short	1
@@ -1109,7 +1033,6 @@ region2Map:
 	.short	1
 	.short	1
 	.short	1
-	.short	0
 	.short	1
 	.short	1
 	.short	1
@@ -1141,7 +1064,6 @@ region2Map:
 	.short	1
 	.short	1
 	.short	1
-	.short	0
 	.short	1
 	.short	1
 	.short	1
@@ -1173,7 +1095,6 @@ region2Map:
 	.short	1
 	.short	1
 	.short	1
-	.short	0
 	.short	1
 	.short	1
 	.short	1
@@ -1205,7 +1126,6 @@ region2Map:
 	.short	1
 	.short	1
 	.short	1
-	.short	0
 	.short	1
 	.short	1
 	.short	1
@@ -1237,7 +1157,6 @@ region2Map:
 	.short	1
 	.short	1
 	.short	1
-	.short	0
 	.short	1
 	.short	1
 	.short	1
@@ -1269,40 +1188,121 @@ region2Map:
 	.short	1
 	.short	1
 	.short	1
-	.short	0
-	.short	0
-	.short	0
-	.short	0
-	.short	0
-	.short	0
-	.short	0
-	.short	0
-	.short	0
-	.short	0
-	.short	0
-	.short	0
-	.short	0
-	.short	0
 	.short	1
 	.short	1
 	.short	1
 	.short	1
-	.short	0
-	.short	0
-	.short	0
-	.short	0
-	.short	0
-	.short	0
-	.short	0
-	.short	0
-	.short	0
-	.short	0
-	.short	0
-	.short	0
-	.short	0
-	.short	0
+	.short	1
+	.short	1
+	.short	1
+	.short	1
+	.short	1
+	.short	1
+	.short	1
+	.short	1
+	.short	1
+	.short	1
+	.short	1
+	.short	1
+	.short	1
+	.short	1
+	.short	1
+	.short	1
+	.short	1
+	.short	1
+	.short	1
+	.short	1
+	.short	1
+	.short	1
+	.short	1
+	.short	1
+	.short	1
+	.short	1
+	.short	1
+	.short	1
+	.short	1
+	.short	1
+	.short	1
+	.short	1
+	.short	1
+	.short	1
+	.short	1
+	.short	1
+	.short	1
+	.short	1
+	.short	1
+	.short	1
+	.short	1
+	.short	1
+	.short	1
+	.short	1
+	.short	1
+	.short	1
+	.short	1
+	.short	1
+	.short	1
+	.short	1
+	.short	1
+	.short	1
+	.short	1
+	.short	1
+	.short	1
+	.short	1
+	.short	1
+	.short	1
+	.short	1
+	.short	1
+	.short	1
+	.short	1
+	.short	1
+	.short	1
+	.short	1
+	.short	1
+	.short	1
+	.short	1
+	.short	1
+	.short	1
+	.short	1
+	.short	1
+	.short	1
+	.short	1
+	.short	1
+	.short	1
+	.short	1
+	.short	1
+	.short	1
+	.short	1
+	.short	1
+	.short	1
+	.short	1
+	.short	1
+	.short	1
+	.short	1
+	.short	1
+	.short	1
+	.short	1
+	.short	1
+	.short	1
+	.short	1
+	.short	1
+	.short	1
+	.short	1
+	.short	1
+	.short	1
+	.short	1
+	.short	1
+	.short	1
+	.short	1
+	.short	1
+	.short	1
+	.short	1
+	.short	1
+	.short	1
+	.short	1
+	.short	1
+	.short	1
 	.type	region2Tiles, %object
-	.size	region2Tiles, 640
+	.size	region2Tiles, 64
 region2Tiles:
 	.short	0
 	.short	0
@@ -1320,308 +1320,20 @@ region2Tiles:
 	.short	0
 	.short	0
 	.short	0
-	.short	4369
-	.short	4369
-	.short	4369
-	.short	4369
-	.short	4369
-	.short	4369
-	.short	4369
-	.short	4369
-	.short	4369
-	.short	4369
-	.short	4369
-	.short	4369
-	.short	4369
-	.short	4369
-	.short	4369
-	.short	4369
-	.short	4369
-	.short	4369
-	.short	4369
-	.short	4369
-	.short	4369
-	.short	4369
-	.short	4369
-	.short	17
-	.short	4369
-	.short	0
-	.short	273
-	.short	0
-	.short	17
-	.short	0
-	.short	1
-	.short	4368
-	.short	4369
-	.short	4369
-	.short	4369
-	.short	4369
-	.short	4369
-	.short	4369
-	.short	0
-	.short	4368
-	.short	0
-	.short	4096
-	.short	0
-	.short	0
-	.short	0
-	.short	0
-	.short	17
-	.short	0
-	.short	4369
-	.short	4369
-	.short	4369
-	.short	4369
-	.short	4369
-	.short	4369
-	.short	4369
-	.short	4369
-	.short	4369
-	.short	4369
-	.short	4368
-	.short	4369
-	.short	4352
-	.short	4369
-	.short	4352
-	.short	4369
-	.short	4369
-	.short	4369
-	.short	4369
-	.short	4369
-	.short	4369
-	.short	4369
-	.short	4369
-	.short	273
-	.short	4369
-	.short	273
-	.short	4369
-	.short	4369
-	.short	4369
-	.short	4369
-	.short	4369
-	.short	4369
-	.short	4096
-	.short	4369
-	.short	4352
-	.short	4369
-	.short	4368
-	.short	4369
-	.short	4368
-	.short	4369
-	.short	4369
-	.short	4369
-	.short	4369
-	.short	4369
-	.short	4369
-	.short	4369
-	.short	4369
-	.short	4369
-	.short	4369
-	.short	0
-	.short	4369
-	.short	1
-	.short	4369
-	.short	17
-	.short	4369
-	.short	17
-	.short	4369
-	.short	273
-	.short	4369
-	.short	273
-	.short	4369
-	.short	273
-	.short	4369
-	.short	273
-	.short	4096
-	.short	4369
-	.short	4096
-	.short	4369
-	.short	0
-	.short	4369
-	.short	0
-	.short	4369
-	.short	0
-	.short	4369
-	.short	0
-	.short	4369
-	.short	0
-	.short	4369
-	.short	0
-	.short	4369
-	.short	4369
-	.short	273
-	.short	4369
-	.short	273
-	.short	4369
-	.short	273
-	.short	4369
-	.short	17
-	.short	4369
-	.short	17
-	.short	4369
-	.short	17
-	.short	4369
-	.short	1
-	.short	4369
-	.short	1
-	.short	4096
-	.short	4369
-	.short	4096
-	.short	4369
-	.short	4096
-	.short	4369
-	.short	4352
-	.short	4369
-	.short	4352
-	.short	4369
-	.short	4368
-	.short	4369
-	.short	4369
-	.short	4369
-	.short	4369
-	.short	4369
-	.short	4369
-	.short	4369
-	.short	4369
-	.short	4369
-	.short	4369
-	.short	4369
-	.short	4369
-	.short	4369
-	.short	4369
-	.short	4369
-	.short	4369
-	.short	4369
-	.short	4369
-	.short	273
-	.short	4369
-	.short	17
-	.short	4369
-	.short	4096
-	.short	273
-	.short	4352
-	.short	273
-	.short	4352
-	.short	17
-	.short	4368
-	.short	1
-	.short	4369
-	.short	4096
-	.short	4369
-	.short	4352
-	.short	4369
-	.short	4368
-	.short	4369
-	.short	4369
-	.short	4369
-	.short	4369
-	.short	4369
-	.short	4369
-	.short	4369
-	.short	4369
-	.short	4369
-	.short	4369
-	.short	4369
-	.short	4369
-	.short	4369
-	.short	4369
-	.short	4369
-	.short	4369
-	.short	273
-	.short	4369
-	.short	17
-	.short	4369
-	.short	4097
-	.short	4369
-	.short	4352
-	.short	273
-	.short	4368
-	.short	17
-	.short	4369
-	.short	1
-	.short	0
-	.short	0
-	.short	0
-	.short	0
-	.short	0
-	.short	4369
-	.short	4369
-	.short	4369
-	.short	4369
-	.short	4369
-	.short	4369
-	.short	4369
-	.short	4369
-	.short	4369
-	.short	4369
-	.short	0
-	.short	0
-	.short	0
-	.short	0
-	.short	0
-	.short	0
-	.short	4369
-	.short	4369
-	.short	4369
-	.short	4369
-	.short	4369
-	.short	4353
-	.short	4369
-	.short	4368
-	.short	17
-	.short	4368
-	.short	0
-	.short	4368
-	.short	0
-	.short	4369
-	.short	0
-	.short	4369
-	.short	4369
-	.short	17
-	.short	4369
-	.short	4369
-	.short	4369
-	.short	4369
-	.short	4369
-	.short	4369
-	.short	4369
-	.short	4369
-	.short	4369
-	.short	4369
-	.short	4369
-	.short	4369
-	.short	4369
-	.short	4369
-	.short	0
-	.short	0
-	.short	4369
-	.short	4369
-	.short	4369
-	.short	4369
-	.short	4369
-	.short	4369
-	.short	4369
-	.short	4369
-	.short	4369
-	.short	4369
-	.short	4369
-	.short	4369
-	.short	4369
-	.short	4369
-	.short	0
-	.short	4369
-	.short	4369
-	.short	4369
-	.short	4369
-	.short	4369
-	.short	4369
-	.short	4369
-	.short	4369
-	.short	4369
-	.short	4369
-	.short	4369
-	.short	4369
-	.short	4369
-	.short	4369
-	.short	4369
+	.short	-4370
+	.short	-4370
+	.short	-4370
+	.short	-4370
+	.short	-4370
+	.short	-4370
+	.short	-4370
+	.short	-4370
+	.short	-4370
+	.short	-4370
+	.short	-4370
+	.short	-4370
+	.short	-4370
+	.short	-4370
+	.short	-4370
+	.short	-4370
 	.ident	"GCC: (devkitARM release 53) 9.1.0"

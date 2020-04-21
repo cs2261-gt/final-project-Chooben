@@ -130,7 +130,7 @@ goToGame1:
 	ldr	r1, .L12+8
 	mov	lr, pc
 	bx	r4
-	mov	r3, #128
+	mov	r3, #96
 	mov	r2, #100663296
 	mov	r0, #3
 	ldr	r1, .L12+12
@@ -267,7 +267,7 @@ goToGame2:
 	ldr	r1, .L27+8
 	mov	lr, pc
 	bx	r4
-	mov	r3, #320
+	mov	r3, #32
 	mov	r2, #100663296
 	mov	r0, #3
 	ldr	r1, .L27+12
