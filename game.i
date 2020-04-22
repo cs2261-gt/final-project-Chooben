@@ -1103,16 +1103,28 @@ void updatePlayer() {
 
 
     if((~((*(volatile unsigned short *)0x04000130)) & ((1<<6)))) {
-        if(player.worldRow > 8) {
-            player.worldRow-=player.rdel;
+        if(currRegion == 1) {
+            if(player.worldRow > 8) {
+                player.worldRow-=player.rdel;
+            }
+        } else {
+            if(player.worldRow > 0) {
+                player.worldRow-=player.rdel;
+            }
         }
         if((vOff >- 0) && (player.screenRow < 160/2)) {
             vOff-=2;
         }
     }
     if((~((*(volatile unsigned short *)0x04000130)) & ((1<<7)))) {
-        if(player.worldRow < 256 - player.height - 8) {
-            player.worldRow+=player.rdel;
+        if(currRegion == 1) {
+            if(player.worldRow < 256 - player.height - 8) {
+                player.worldRow+=player.rdel;
+            }
+        } else {
+            if(player.worldRow < 256 - player.height) {
+                player.worldRow+=player.rdel;
+            }
         }
         if((vOff < 256 - 160) && (player.screenRow > 160/2)) {
             vOff+=2;
@@ -1130,8 +1142,14 @@ void updatePlayer() {
         }
     }
     if((~((*(volatile unsigned short *)0x04000130)) & ((1<<4)))) {
-        if(player.worldCol < 256 - player.width - 8) {
-            player.worldCol+=player.cdel;
+        if(currRegion == 1) {
+            if(player.worldCol < 256 - player.width - 8) {
+                player.worldCol+=player.cdel;
+            }
+        } else {
+            if(player.worldCol < 256 - player.width) {
+                player.worldCol+=player.cdel;
+            }
         }
         if((hOff < 256 - 240) && (player.screenCol > 240/2)) {
             hOff+=2;
