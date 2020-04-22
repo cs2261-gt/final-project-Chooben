@@ -103,16 +103,28 @@ void updatePlayer() {
 
     //Complex player movement
     if(BUTTON_HELD(BUTTON_UP)) {
-        if(player.worldRow > 8) {
-            player.worldRow-=player.rdel;
+        if(currRegion == 1) {
+            if(player.worldRow > 8) {
+                player.worldRow-=player.rdel;
+            }
+        } else {
+            if(player.worldRow > 0) {
+                player.worldRow-=player.rdel;
+            }
         }
         if((vOff >- 0) && (player.screenRow < SCREENHEIGHT/2)) {
             vOff-=2;
         }
     }
     if(BUTTON_HELD(BUTTON_DOWN)) {
-        if(player.worldRow < MAPHEIGHT - player.height - 8) {
-            player.worldRow+=player.rdel;
+        if(currRegion == 1) {
+            if(player.worldRow < MAPHEIGHT - player.height - 8) {
+                player.worldRow+=player.rdel;
+            }
+        } else {
+            if(player.worldRow < MAPHEIGHT - player.height) {
+                player.worldRow+=player.rdel;
+            }
         }
         if((vOff < MAPHEIGHT - SCREENHEIGHT) && (player.screenRow > SCREENHEIGHT/2)) {
             vOff+=2;
@@ -121,7 +133,7 @@ void updatePlayer() {
     if(BUTTON_HELD(BUTTON_LEFT)) {
         if(currRegion == 1) {
             player.worldCol-=player.cdel;
-        } else if(player.worldCol > 8) {
+        } else if(player.worldCol > 0) {
             player.worldCol-=player.cdel;
         }
 
@@ -130,8 +142,14 @@ void updatePlayer() {
         }
     }
     if(BUTTON_HELD(BUTTON_RIGHT)) {
-        if(player.worldCol < MAPWIDTH - player.width - 8) {
-            player.worldCol+=player.cdel;
+        if(currRegion == 1) {
+            if(player.worldCol < MAPWIDTH - player.width - 8) {
+                player.worldCol+=player.cdel;
+            }
+        } else {
+            if(player.worldCol < MAPWIDTH - player.width) {
+                player.worldCol+=player.cdel;
+            }
         }
         if((hOff < MAPWIDTH - SCREENWIDTH) && (player.screenCol > SCREENWIDTH/2)) {
             hOff+=2;
