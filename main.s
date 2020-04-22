@@ -438,7 +438,7 @@ goToInstruct:
 	ldr	r1, .L35+8
 	mov	lr, pc
 	bx	r4
-	mov	r3, #2800
+	mov	r3, #3264
 	mov	r2, #100663296
 	mov	r0, #3
 	ldr	r1, .L35+12

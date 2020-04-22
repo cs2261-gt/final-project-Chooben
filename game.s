@@ -650,7 +650,7 @@ initGame:
 	@ Function supports interworking.
 	@ args = 0, pretend = 0, frame = 0
 	@ frame_needed = 0, uses_anonymous_args = 0
-	mov	ip, #5
+	mov	ip, #10
 	push	{r4, r5, r6, r7, r8, lr}
 	mov	r4, #0
 	mov	r2, #16

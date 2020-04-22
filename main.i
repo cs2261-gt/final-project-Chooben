@@ -1488,7 +1488,7 @@ extern const unsigned short pausePal[256];
 # 9 "main.c" 2
 # 1 "instruct.h" 1
 # 22 "instruct.h"
-extern const unsigned short instructTiles[2800];
+extern const unsigned short instructTiles[3264];
 
 
 extern const unsigned short instructMap[1024];
@@ -1809,7 +1809,7 @@ void goToInstruct() {
     waitForVBlank();
 
     DMANow(3, instructPal, ((unsigned short *)0x5000000), 256);
-    DMANow(3, instructTiles, &((charblock *)0x6000000)[0], 5600/2);
+    DMANow(3, instructTiles, &((charblock *)0x6000000)[0], 6528/2);
     DMANow(3, instructMap, &((screenblock *)0x6000000)[31], 2048/2);
 
     (*(volatile unsigned short *)0x04000012) = 0;

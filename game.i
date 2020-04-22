@@ -1024,7 +1024,7 @@ enum{BFRONT, BBACK, BLEFT, BRIGHT, BIDLE};
 void initGame() {
 
 
-    bossHealth = 5;
+    bossHealth = 10;
 
     hOff = 0;
     vOff = 0;
