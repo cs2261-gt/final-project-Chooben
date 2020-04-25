@@ -26,7 +26,7 @@ void initGame() {
     //Initialize boss health
     bossHealth = 10;
 
-    hOff = 0;
+    hOff = 16;
     vOff = 0;
 
     initPlayer();
@@ -90,8 +90,8 @@ void initPlayer() {
     player.height = 16;
     player.rdel = 2;
     player.cdel = 2;
-    player.worldRow = 20;
-    player.worldCol = 20;
+    player.worldRow = 10;
+    player.worldCol = 230;
     player.curFrame = 0;
     player.numFrames = 3;
     player.aniState = PFRONT;
@@ -302,11 +302,9 @@ void initEnemy() {
     for(int i = 0; i < ENEMYCOUNT; i++) {
         enemies[i].width = 22;
         enemies[i].height = 15;
-        enemies[i].col = (rand() % 224);
-        enemies[i].row = (rand() % 152);
-        enemies[i].health = 3;
-        enemies[i].del = 2;
-        enemies[i].direction = rand() % 2;
+        enemies[i].col = 10 + (26*i);
+        enemies[i].row = 10;
+        enemies[i].del = 5 - i;
         enemies[i].active = 1;
     }
 }
@@ -319,19 +317,14 @@ void updateEnemy(ENEMY* e) {
         e->del *= -1;
     }
 
-    //Update enmey
-    if(e->direction == 0) {
-        e->col += e->del;
-    } else {
-        e->row += e->del;
-    }
+    e->row += e->del;
 
     e->scol = e->col - hOff;
     e->srow = e->row - vOff;
 
     //Collision handler for enemy and bullet
     for(int i = 0; i < BULLETCOUNT; i++) {
-        if(e->active == 1) {
+        if(e->active == 1 && bullets[i].active == 1) {
             if(collision(e->col, e->row, e->width, e->height, bullets[i].col, bullets[i].row, bullets[i].width, bullets[i].height)) {
                 e->active = 0;
                 bullets[i].active = 0;

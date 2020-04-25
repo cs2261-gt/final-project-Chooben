@@ -19,11 +19,11 @@
 	.size	region2Pal, 512
 region2Pal:
 	.short	0
-	.short	13943
+	.short	607
 	.short	480
 	.short	528
 	.short	16384
-	.short	16400
+	.short	22195
 	.short	16896
 	.short	25368
 	.short	16912

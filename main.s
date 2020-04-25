@@ -82,20 +82,22 @@ initialize:
 	mov	r3, #67108864
 	mov	r2, #7936
 	push	{r4, lr}
-	mov	lr, #4352
+	mov	lr, #4864
 	mov	r1, #0
+	ldr	r0, .L8
 	strh	r2, [r3, #8]	@ movhi
-	ldr	r2, .L8
-	ldr	r0, .L8+4
+	strh	r0, [r3, #10]	@ movhi
+	ldr	r2, .L8+4
+	ldr	r0, .L8+8
 	ldrh	ip, [r2, #48]
-	ldr	r2, .L8+8
+	ldr	r2, .L8+12
 	strh	lr, [r3]	@ movhi
-	ldr	r3, .L8+12
+	ldr	r3, .L8+16
 	strh	ip, [r0]	@ movhi
 	strh	r1, [r2]	@ movhi
 	mov	lr, pc
 	bx	r3
-	ldr	r3, .L8+16
+	ldr	r3, .L8+20
 	mov	lr, pc
 	bx	r3
 	pop	{r4, lr}
@@ -103,6 +105,7 @@ initialize:
 .L9:
 	.align	2
 .L8:
+	.word	4100
 	.word	67109120
 	.word	buttons
 	.word	oldButtons
@@ -258,9 +261,9 @@ goToGame2:
 	@ frame_needed = 0, uses_anonymous_args = 0
 	push	{r4, r5, r6, lr}
 	ldr	r3, .L27
+	ldr	r4, .L27+4
 	mov	lr, pc
 	bx	r3
-	ldr	r4, .L27+4
 	mov	r3, #256
 	mov	r2, #83886080
 	mov	r0, #3
@@ -268,64 +271,76 @@ goToGame2:
 	mov	lr, pc
 	bx	r4
 	mov	r3, #32
-	mov	r2, #100663296
 	mov	r0, #3
-	ldr	r1, .L27+12
+	ldr	r2, .L27+12
+	ldr	r1, .L27+16
 	mov	lr, pc
 	bx	r4
 	mov	r3, #1024
 	mov	r0, #3
-	ldr	r2, .L27+16
-	ldr	r1, .L27+20
+	ldr	r2, .L27+20
+	ldr	r1, .L27+24
+	mov	lr, pc
+	bx	r4
+	mov	r3, #64
+	mov	r2, #100663296
+	mov	r0, #3
+	ldr	r1, .L27+28
+	mov	lr, pc
+	bx	r4
+	mov	r3, #1024
+	mov	r0, #3
+	ldr	r2, .L27+32
+	ldr	r1, .L27+36
 	mov	lr, pc
 	bx	r4
 	mov	r2, #67108864
-	ldr	r3, .L27+24
+	ldr	r3, .L27+40
 	ldrh	r1, [r3]
-	ldr	r3, .L27+28
+	ldr	r3, .L27+44
 	strh	r1, [r2, #18]	@ movhi
 	ldrh	r1, [r3]
 	mov	r0, #3
 	strh	r1, [r2, #16]	@ movhi
 	mov	r3, #256
-	ldr	r2, .L27+32
-	ldr	r1, .L27+36
-	ldr	r5, .L27+40
+	ldr	r2, .L27+48
+	ldr	r1, .L27+52
+	ldr	r5, .L27+56
 	mov	lr, pc
 	bx	r4
-	ldr	r2, .L27+44
+	ldr	r2, .L27+60
 	mov	r3, #16384
 	mov	r0, #3
-	ldr	r1, .L27+48
+	ldr	r1, .L27+64
 	mov	lr, pc
 	bx	r4
 	ldr	r2, [r5]
 	cmp	r2, #1
 	beq	.L26
 .L24:
-	ldr	r3, .L27+52
+	ldr	r3, .L27+68
 	mov	lr, pc
 	bx	r3
 	mov	r3, #512
 	mov	r2, #117440512
 	mov	r0, #3
-	ldr	r1, .L27+56
+	ldr	r1, .L27+72
 	mov	lr, pc
 	bx	r4
 	mov	r3, #2
-	ldr	r2, .L27+60
+	ldr	r2, .L27+76
 	str	r3, [r5]
 	str	r3, [r2]
 	pop	{r4, r5, r6, lr}
 	bx	lr
 .L26:
-	ldr	ip, .L27+64
+	ldr	ip, .L27+80
 	ldr	r3, [ip, #24]
 	rsb	r3, r3, #256
 	str	r3, [ip, #12]
-	ldr	r1, .L27+68
-	ldr	r3, .L27+72
-	ldr	r0, .L27+76
+	ldr	r1, .L27+84
+	ldr	r3, .L27+88
+	ldr	r0, .L27+92
 	mov	lr, pc
 	bx	r3
 	b	.L24
@@ -335,9 +350,13 @@ goToGame2:
 	.word	waitForVBlank
 	.word	DMANow
 	.word	region2Pal
+	.word	100679680
 	.word	region2Tiles
-	.word	100726784
+	.word	100696064
 	.word	region2Map
+	.word	fishTiles
+	.word	100726784
+	.word	fishMap
 	.word	vOff
 	.word	hOff
 	.word	83886592
@@ -854,20 +873,29 @@ game2:
 	ldr	r3, .L111+8
 	mov	lr, pc
 	bx	r3
+	mov	r2, #67108864
 	ldr	r3, .L111+12
+	ldrh	r1, [r3]
+	ldr	r3, .L111+16
+	ldr	r3, [r3]
+	lsl	r3, r3, #17
+	lsr	r3, r3, #16
+	strh	r1, [r2, #20]	@ movhi
+	strh	r3, [r2, #20]	@ movhi
+	ldr	r3, .L111+20
 	ldrh	r3, [r3]
 	tst	r3, #8
 	beq	.L101
-	ldr	r3, .L111+16
+	ldr	r3, .L111+24
 	ldrh	r3, [r3]
 	tst	r3, #8
 	beq	.L108
 .L101:
-	ldr	r3, .L111+20
+	ldr	r3, .L111+28
 	ldr	r3, [r3]
 	cmp	r3, #0
 	beq	.L109
-	ldr	r3, .L111+24
+	ldr	r3, .L111+32
 	ldr	r3, [r3]
 	cmp	r3, #0
 	ble	.L110
@@ -876,18 +904,18 @@ game2:
 	bx	lr
 .L109:
 	bl	goToLose
-	ldr	r3, .L111+24
+	ldr	r3, .L111+32
 	ldr	r3, [r3]
 	cmp	r3, #0
 	bgt	.L100
 .L110:
-	ldr	r3, .L111+28
+	ldr	r3, .L111+36
 	mov	lr, pc
 	bx	r3
 	pop	{r4, lr}
 	b	goToWin
 .L108:
-	ldr	r3, .L111+32
+	ldr	r3, .L111+40
 	mov	lr, pc
 	bx	r3
 	bl	goToPause
@@ -898,6 +926,8 @@ game2:
 	.word	updateGame
 	.word	drawGame
 	.word	waitForVBlank
+	.word	vOff
+	.word	hOff
 	.word	oldButtons
 	.word	buttons
 	.word	playerHealth

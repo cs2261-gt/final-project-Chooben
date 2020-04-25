@@ -1401,9 +1401,7 @@ typedef struct {
     int srow;
     int width;
     int height;
-    int health;
     int del;
-    int direction;
     int active;
 }ENEMY;
 
@@ -1423,12 +1421,12 @@ typedef struct {
     int curFrame;
     int numFrames;
 } BOSS;
-# 53 "game.h"
+# 51 "game.h"
 extern ANISPRITE player;
 extern int playerHealth;
 extern int damage;
 extern BULLET bullets[1];
-extern ENEMY enemies[2];
+extern ENEMY enemies[5];
 extern BOSS boss;
 extern int bossHealth;
 extern int currRegion;
@@ -1533,6 +1531,16 @@ extern const unsigned short region2Map[1024];
 
 extern const unsigned short region2Pal[256];
 # 14 "main.c" 2
+# 1 "fish.h" 1
+# 22 "fish.h"
+extern const unsigned short fishTiles[64];
+
+
+extern const unsigned short fishMap[1024];
+
+
+extern const unsigned short fishPal[256];
+# 15 "main.c" 2
 # 1 "sound.h" 1
 SOUND soundA;
 SOUND soundB;
@@ -1549,11 +1557,11 @@ void interruptHandler();
 void pauseSound();
 void unpauseSound();
 void stopSound();
-# 15 "main.c" 2
+# 16 "main.c" 2
 # 1 "bossTheme.h" 1
 # 20 "bossTheme.h"
 extern const unsigned char bossTheme[539712];
-# 16 "main.c" 2
+# 17 "main.c" 2
 
 
 void initialize();
@@ -1623,9 +1631,10 @@ int main() {
 
 void initialize() {
 
-    (*(unsigned short *)0x4000000) = 0 | (1<<8) | (1<<12);
+    (*(unsigned short *)0x4000000) = 0 | (1<<8) | (1<<9) | (1<<12);
 
     (*(volatile unsigned short*)0x4000008) = ((0)<<2) | ((31)<<8) | (0<<14);
+    (*(volatile unsigned short*)0x400000A) = ((1)<<2) | ((16)<<8) | (0<<14);
 
     buttons = (*(volatile unsigned short *)0x04000130);
     oldButtons = 0;
@@ -1720,11 +1729,16 @@ void goToGame2() {
 
 
     DMANow(3, region2Pal, ((unsigned short *)0x5000000), 256);
-    DMANow(3, region2Tiles, &((charblock *)0x6000000)[0], 64/2);
-    DMANow(3, region2Map, &((screenblock *)0x6000000)[31], 2048/2);
+    DMANow(3, region2Tiles, &((charblock *)0x6000000)[1], 64/2);
+    DMANow(3, region2Map, &((screenblock *)0x6000000)[16], 2048/2);
+
+    DMANow(3, fishTiles, &((charblock *)0x6000000)[0], 128/2);
+    DMANow(3, fishMap, &((screenblock *)0x6000000)[31], 2048/2);
 
     (*(volatile unsigned short *)0x04000012) = vOff;
     (*(volatile unsigned short *)0x04000010) = hOff;
+
+
 
     DMANow(3, spritesheetPal, ((unsigned short *)0x5000200), 512/2);
     DMANow(3, spritesheetTiles, & ((charblock *)0x6000000)[4], 32768/2);
@@ -1750,6 +1764,9 @@ void game2() {
     updateGame();
     drawGame();
     waitForVBlank();
+
+    (*(volatile unsigned short *)0x04000014) = vOff;
+    (*(volatile unsigned short *)0x04000014) = hOff*2;
 
 
     if((!(~(oldButtons)&((1<<3))) && (~buttons & ((1<<3))))){

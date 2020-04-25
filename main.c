@@ -11,6 +11,7 @@
 #include "lose.h"
 #include "spritesheet.h"
 #include "region2.h"
+#include "fish.h"
 #include "sound.h"
 #include "bossTheme.h"
 
@@ -82,9 +83,10 @@ int main() {
 //Setup game
 void initialize() {
 
-    REG_DISPCTL = MODE0 | BG0_ENABLE | SPRITE_ENABLE;
+    REG_DISPCTL = MODE0 | BG0_ENABLE | BG1_ENABLE | SPRITE_ENABLE;
 
     REG_BG0CNT = BG_CHARBLOCK(0) | BG_SCREENBLOCK(31) | BG_SIZE_SMALL;
+    REG_BG1CNT = BG_CHARBLOCK(1) | BG_SCREENBLOCK(16) | BG_SIZE_SMALL;
 
     buttons = BUTTONS;
     oldButtons = 0;
@@ -179,11 +181,16 @@ void goToGame2() {
 
     //Setup game background
     DMANow(3, region2Pal, PALETTE, 256);
-    DMANow(3, region2Tiles, &CHARBLOCK[0], region2TilesLen/2);
-    DMANow(3, region2Map, &SCREENBLOCK[31], region2MapLen/2);    
+    DMANow(3, region2Tiles, &CHARBLOCK[1], region2TilesLen/2);
+    DMANow(3, region2Map, &SCREENBLOCK[16], region2MapLen/2);
+
+    DMANow(3, fishTiles, &CHARBLOCK[0], fishTilesLen/2);
+    DMANow(3, fishMap, &SCREENBLOCK[31], fishMapLen/2);
 
     REG_BG0VOFF = vOff;
     REG_BG0HOFF = hOff;
+
+    
 
     DMANow(3, spritesheetPal, SPRITEPALETTE, spritesheetPalLen/2);
     DMANow(3, spritesheetTiles, & CHARBLOCK[4], spritesheetTilesLen/2);
@@ -209,6 +216,9 @@ void game2() {
     updateGame();
     drawGame();
     waitForVBlank();
+
+    REG_BG1HOFF = vOff;
+    REG_BG1HOFF = hOff*2;
 
     //Go to pause screen
     if(BUTTON_PRESSED(BUTTON_START)){

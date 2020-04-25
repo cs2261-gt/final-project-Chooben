@@ -19,9 +19,7 @@ typedef struct {
     int srow;
     int width;
     int height;
-    int health;
     int del;
-    int direction;
     int active;
 }ENEMY;
 
@@ -46,7 +44,7 @@ typedef struct {
 #define MAPHEIGHT 256
 #define MAPWIDTH 256
 #define BULLETCOUNT 1
-#define ENEMYCOUNT 2
+#define ENEMYCOUNT 5
 
 
 //Variables
