@@ -190,6 +190,8 @@ void goToGame2() {
     REG_BG0VOFF = vOff;
     REG_BG0HOFF = hOff;
 
+    REG_BG1HOFF = vOff;
+    REG_BG1HOFF = hOff*2;
     
 
     DMANow(3, spritesheetPal, SPRITEPALETTE, spritesheetPalLen/2);
@@ -217,8 +219,7 @@ void game2() {
     drawGame();
     waitForVBlank();
 
-    REG_BG1HOFF = vOff;
-    REG_BG1HOFF = hOff*2;
+    
 
     //Go to pause screen
     if(BUTTON_PRESSED(BUTTON_START)){
