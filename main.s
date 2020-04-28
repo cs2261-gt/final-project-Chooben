@@ -294,18 +294,22 @@ goToGame2:
 	ldr	r1, .L27+36
 	mov	lr, pc
 	bx	r4
-	mov	r2, #67108864
+	mov	r1, #67108864
 	ldr	r3, .L27+40
-	ldrh	r1, [r3]
+	ldrh	r2, [r3]
 	ldr	r3, .L27+44
-	strh	r1, [r2, #18]	@ movhi
-	ldrh	r1, [r3]
-	mov	r0, #3
-	strh	r1, [r2, #16]	@ movhi
+	ldrh	r3, [r3]
+	lsl	r0, r3, #17
+	lsr	r0, r0, #16
+	strh	r2, [r1, #18]	@ movhi
+	ldr	r5, .L27+48
+	strh	r3, [r1, #16]	@ movhi
+	strh	r2, [r1, #20]	@ movhi
 	mov	r3, #256
-	ldr	r2, .L27+48
-	ldr	r1, .L27+52
-	ldr	r5, .L27+56
+	strh	r0, [r1, #20]	@ movhi
+	ldr	r2, .L27+52
+	mov	r0, #3
+	ldr	r1, .L27+56
 	mov	lr, pc
 	bx	r4
 	ldr	r2, .L27+60
@@ -359,9 +363,9 @@ goToGame2:
 	.word	fishMap
 	.word	vOff
 	.word	hOff
+	.word	currRegion
 	.word	83886592
 	.word	spritesheetPal
-	.word	currRegion
 	.word	100728832
 	.word	spritesheetTiles
 	.word	hideSprites
@@ -873,29 +877,20 @@ game2:
 	ldr	r3, .L111+8
 	mov	lr, pc
 	bx	r3
-	mov	r2, #67108864
 	ldr	r3, .L111+12
-	ldrh	r1, [r3]
-	ldr	r3, .L111+16
-	ldr	r3, [r3]
-	lsl	r3, r3, #17
-	lsr	r3, r3, #16
-	strh	r1, [r2, #20]	@ movhi
-	strh	r3, [r2, #20]	@ movhi
-	ldr	r3, .L111+20
 	ldrh	r3, [r3]
 	tst	r3, #8
 	beq	.L101
-	ldr	r3, .L111+24
+	ldr	r3, .L111+16
 	ldrh	r3, [r3]
 	tst	r3, #8
 	beq	.L108
 .L101:
-	ldr	r3, .L111+28
+	ldr	r3, .L111+20
 	ldr	r3, [r3]
 	cmp	r3, #0
 	beq	.L109
-	ldr	r3, .L111+32
+	ldr	r3, .L111+24
 	ldr	r3, [r3]
 	cmp	r3, #0
 	ble	.L110
@@ -904,18 +899,18 @@ game2:
 	bx	lr
 .L109:
 	bl	goToLose
-	ldr	r3, .L111+32
+	ldr	r3, .L111+24
 	ldr	r3, [r3]
 	cmp	r3, #0
 	bgt	.L100
 .L110:
-	ldr	r3, .L111+36
+	ldr	r3, .L111+28
 	mov	lr, pc
 	bx	r3
 	pop	{r4, lr}
 	b	goToWin
 .L108:
-	ldr	r3, .L111+40
+	ldr	r3, .L111+32
 	mov	lr, pc
 	bx	r3
 	bl	goToPause
@@ -926,8 +921,6 @@ game2:
 	.word	updateGame
 	.word	drawGame
 	.word	waitForVBlank
-	.word	vOff
-	.word	hOff
 	.word	oldButtons
 	.word	buttons
 	.word	playerHealth

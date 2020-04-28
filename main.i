@@ -1738,6 +1738,8 @@ void goToGame2() {
     (*(volatile unsigned short *)0x04000012) = vOff;
     (*(volatile unsigned short *)0x04000010) = hOff;
 
+    (*(volatile unsigned short *)0x04000014) = vOff;
+    (*(volatile unsigned short *)0x04000014) = hOff*2;
 
 
     DMANow(3, spritesheetPal, ((unsigned short *)0x5000200), 512/2);
@@ -1765,8 +1767,7 @@ void game2() {
     drawGame();
     waitForVBlank();
 
-    (*(volatile unsigned short *)0x04000014) = vOff;
-    (*(volatile unsigned short *)0x04000014) = hOff*2;
+
 
 
     if((!(~(oldButtons)&((1<<3))) && (~buttons & ((1<<3))))){

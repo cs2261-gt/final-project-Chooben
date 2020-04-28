@@ -1357,7 +1357,7 @@ fishTiles:
 	.short	4607
 	.short	-7681
 	.short	4607
-	.short	4351
+	.short	4607
 	.short	4607
 	.short	4607
 	.short	4607
