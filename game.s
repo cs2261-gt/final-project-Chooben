@@ -53,48 +53,49 @@ initGame:
 	@ args = 0, pretend = 0, frame = 0
 	@ frame_needed = 0, uses_anonymous_args = 0
 	push	{r4, r5, r6, r7, r8, r9, r10, fp, lr}
-	mov	r8, #10
-	mov	r7, #1
+	mov	r10, #10
 	ldr	r1, .L9
-	str	r8, [r1]
-	ldr	r1, .L9+4
+	mov	r2, r10
+	str	r10, [r1, #8]
+	mov	r5, r10
+	mov	r10, #230
 	mov	ip, #0
 	mov	r6, #2
-	mov	r10, #16
-	mov	r9, #3
-	str	r8, [r1, #8]
-	mov	r2, r8
+	mov	r9, #16
+	mov	r8, #3
 	mov	fp, #14
-	mov	r5, r8
-	mov	r8, #230
-	mov	r0, r7
-	mov	r3, #5
-	mov	r4, #22
-	mov	lr, #15
+	mov	r7, #1
+	str	r10, [r1, #12]
+	ldr	r10, .L9+4
+	str	r9, [r1, #28]
 	str	fp, [r1, #24]
-	str	r8, [r1, #12]
-	str	r10, [r1, #28]
 	str	r6, [r1, #16]
 	str	r6, [r1, #20]
 	str	ip, [r1, #44]
 	str	ip, [r1, #36]
-	str	r9, [r1, #48]
-	ldr	r1, .L9+8
-	ldr	r8, .L9+12
+	str	r9, [r10]
+	str	r8, [r1, #48]
+	ldr	r9, .L9+8
+	ldr	r1, .L9+12
+	str	ip, [r9]
 	str	ip, [r1]
-	str	r9, [r1, #24]
 	str	ip, [r1, #28]
 	str	ip, [r1, #4]
 	str	ip, [r1, #32]
+	mov	ip, #30
+	mov	r0, r7
+	mov	r3, #5
+	mov	r4, #22
+	mov	lr, #15
+	str	r8, [r1, #24]
 	str	r6, [r1, #16]
 	str	r6, [r1, #20]
 	ldr	r1, .L9+16
-	str	r10, [r8]
 	str	r7, [r1]
-	ldr	r8, .L9+20
+	ldr	r1, .L9+20
+	str	r7, [r1]
 	ldr	r1, .L9+24
-	str	ip, [r8]
-	str	r7, [r1]
+	str	ip, [r1]
 	ldr	r1, .L9+28
 .L6:
 	str	r3, [r1, #24]
@@ -125,13 +126,13 @@ initGame:
 .L10:
 	.align	2
 .L9:
-	.word	bossHealth
 	.word	player
-	.word	bullets
 	.word	hOff
-	.word	playerHealth
 	.word	vOff
+	.word	bullets
+	.word	playerHealth
 	.word	damage
+	.word	bossHealth
 	.word	enemies
 	.word	boss
 	.size	initGame, .-initGame
